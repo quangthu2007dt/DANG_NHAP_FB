@@ -193,6 +193,12 @@
   <data name="colTrangThai.HeaderText" xml:space="preserve">
     <value>Trạng Thái</value>
   </data>
+  <metadata name="colCookie.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colCookie.HeaderText" xml:space="preserve">
+    <value>Cookie</value>
+  </data>
   <metadata name="cmsGirdRightClick.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>132, 17</value>
   </metadata>
@@ -210,31 +216,67 @@
     <value>Các dòng đã chọn</value>
   </data>
   <data name="chọnToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>173, 22</value>
   </data>
   <data name="chọnToolStripMenuItem.Text" xml:space="preserve">
     <value>Chọn</value>
   </data>
   <data name="bỏChọnTấtCảToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>173, 22</value>
   </data>
   <data name="bỏChọnTấtCảToolStripMenuItem.Text" xml:space="preserve">
     <value>Bỏ chọn tất cả</value>
   </data>
   <data name="dòngToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>171, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="dòngToolStripMenuItem.Text" xml:space="preserve">
     <value>Dòng</value>
   </data>
   <data name="cácDòngBôiĐenToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>171, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="cácDòngBôiĐenToolStripMenuItem1.Text" xml:space="preserve">
     <value>Các dòng đã chọn</value>
   </data>
-  <data name="copyToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="uIDToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
     <value>180, 22</value>
+  </data>
+  <data name="uIDToolStripMenuItem1.Text" xml:space="preserve">
+    <value>UID</value>
+  </data>
+  <data name="tênToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="tênToolStripMenuItem1.Text" xml:space="preserve">
+    <value>Tên</value>
+  </data>
+  <data name="passToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="passToolStripMenuItem.Text" xml:space="preserve">
+    <value>Pass</value>
+  </data>
+  <data name="emailToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="emailToolStripMenuItem1.Text" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="cookieToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="cookieToolStripMenuItem.Text" xml:space="preserve">
+    <value>Cookie</value>
+  </data>
+  <data name="ghiChúToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="ghiChúToolStripMenuItem1.Text" xml:space="preserve">
+    <value>Ghi Chú</value>
+  </data>
+  <data name="copyToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>173, 22</value>
   </data>
   <data name="copyToolStripMenuItem.Text" xml:space="preserve">
     <value>Copy</value>
@@ -258,109 +300,109 @@
     <value>Xóa tài khoản trùng nhau</value>
   </data>
   <data name="chứcNăngToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>173, 22</value>
   </data>
   <data name="chứcNăngToolStripMenuItem.Text" xml:space="preserve">
     <value>Chức năng</value>
   </data>
   <data name="checkProfileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>165, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="checkProfileToolStripMenuItem.Text" xml:space="preserve">
     <value>Check profile</value>
   </data>
   <data name="xóaProfileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>165, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="xóaProfileToolStripMenuItem.Text" xml:space="preserve">
     <value>Xóa Profile</value>
   </data>
   <data name="dọnDẹpProfileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>165, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="dọnDẹpProfileToolStripMenuItem.Text" xml:space="preserve">
     <value>Dọn dẹp Profile</value>
   </data>
   <data name="xóaCaToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>165, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="xóaCaToolStripMenuItem.Text" xml:space="preserve">
     <value>Xóa cache Profile</value>
   </data>
   <data name="profileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>173, 22</value>
   </data>
   <data name="profileToolStripMenuItem.Text" xml:space="preserve">
     <value>Profile</value>
   </data>
   <data name="dòngToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>171, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="dòngToolStripMenuItem1.Text" xml:space="preserve">
     <value>Dòng</value>
   </data>
   <data name="cácDòngĐãChọnToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>171, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="cácDòngĐãChọnToolStripMenuItem.Text" xml:space="preserve">
     <value>Các dòng đã chọn</value>
   </data>
   <data name="xóaToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>173, 22</value>
   </data>
   <data name="xóaToolStripMenuItem.Text" xml:space="preserve">
     <value>Xóa</value>
   </data>
   <data name="uIDToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="uIDToolStripMenuItem.Text" xml:space="preserve">
     <value>UID</value>
   </data>
   <data name="tênToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="tênToolStripMenuItem.Text" xml:space="preserve">
     <value>Tên</value>
   </data>
   <data name="passwordToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="passwordToolStripMenuItem.Text" xml:space="preserve">
     <value>Password</value>
   </data>
   <data name="emailToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="emailToolStripMenuItem.Text" xml:space="preserve">
     <value>Email</value>
   </data>
   <data name="ghiChúToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="ghiChúToolStripMenuItem.Text" xml:space="preserve">
     <value>Ghi chú</value>
   </data>
   <data name="cậpNhậtDữLiệuToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>173, 22</value>
   </data>
   <data name="cậpNhậtDữLiệuToolStripMenuItem.Text" xml:space="preserve">
     <value>Cập nhật dữ liệu</value>
   </data>
   <data name="mởChromeMẫuToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>173, 22</value>
   </data>
   <data name="mởChromeMẫuToolStripMenuItem.Text" xml:space="preserve">
     <value>Mở Chrome mẫu</value>
   </data>
   <data name="làmMớiToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>173, 22</value>
   </data>
   <data name="làmMớiToolStripMenuItem.Text" xml:space="preserve">
     <value>Làm mới</value>
   </data>
   <data name="nhậpDanhSáchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>173, 22</value>
   </data>
   <data name="nhậpDanhSáchToolStripMenuItem.Text" xml:space="preserve">
     <value>Nhập Danh sách</value>
@@ -368,8 +410,26 @@
   <data name="nhậpDanhSáchToolStripMenuItem.ToolTipText" xml:space="preserve">
     <value>Nhập tk|mk theo dạng UID|PASS</value>
   </data>
+  <data name="checkWallToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="checkWallToolStripMenuItem.Text" xml:space="preserve">
+    <value>Check Wall</value>
+  </data>
+  <data name="checkÌnorToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="checkÌnorToolStripMenuItem.Text" xml:space="preserve">
+    <value>Check Info UID</value>
+  </data>
+  <data name="kiểmTraTàiKhoảnToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>173, 22</value>
+  </data>
+  <data name="kiểmTraTàiKhoảnToolStripMenuItem.Text" xml:space="preserve">
+    <value>Kiểm Tra Tài Khoản</value>
+  </data>
   <data name="cmsGirdRightClick.Size" type="System.Drawing.Size, System.Drawing">
-    <value>181, 246</value>
+    <value>174, 246</value>
   </data>
   <data name="&gt;&gt;cmsGirdRightClick.Name" xml:space="preserve">
     <value>cmsGirdRightClick</value>
@@ -381,7 +441,7 @@
     <value>12, 147</value>
   </data>
   <data name="dataGridView1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>985, 354</value>
+    <value>1070, 354</value>
   </data>
   <data name="dataGridView1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -411,7 +471,7 @@
     <value>Segoe UI, 9pt, style=Bold</value>
   </data>
   <data name="tssTrangThai.Size" type="System.Drawing.Size, System.Drawing">
-    <value>664, 17</value>
+    <value>749, 17</value>
   </data>
   <data name="tssTrangThai.Text" xml:space="preserve">
     <value>Trạng Thái</value>
@@ -468,7 +528,7 @@
     <value>0, 504</value>
   </data>
   <data name="statusStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1009, 22</value>
+    <value>1094, 22</value>
   </data>
   <data name="statusStrip1.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -636,7 +696,7 @@
     <value>Segoe UI, 9pt, style=Bold</value>
   </data>
   <data name="btnDangNhap.Location" type="System.Drawing.Point, System.Drawing">
-    <value>794, 68</value>
+    <value>879, 68</value>
   </data>
   <data name="btnDangNhap.Size" type="System.Drawing.Size, System.Drawing">
     <value>90, 35</value>
@@ -670,7 +730,7 @@
     <value>NoControl</value>
   </data>
   <data name="btnTiepTuc.Location" type="System.Drawing.Point, System.Drawing">
-    <value>907, 68</value>
+    <value>992, 68</value>
   </data>
   <data name="btnTiepTuc.Size" type="System.Drawing.Size, System.Drawing">
     <value>90, 35</value>
@@ -700,7 +760,7 @@
     <value>True</value>
   </data>
   <data name="lblUserAgent.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 118</value>
+    <value>12, 117</value>
   </data>
   <data name="lblUserAgent.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 15</value>
@@ -724,10 +784,10 @@
     <value>4</value>
   </data>
   <data name="cboUserAgent.Location" type="System.Drawing.Point, System.Drawing">
-    <value>121, 110</value>
+    <value>121, 109</value>
   </data>
   <data name="cboUserAgent.Size" type="System.Drawing.Size, System.Drawing">
-    <value>564, 23</value>
+    <value>634, 23</value>
   </data>
   <data name="cboUserAgent.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -751,7 +811,7 @@
     <value>True</value>
   </data>
   <data name="lblChonGiaoDien.Location" type="System.Drawing.Point, System.Drawing">
-    <value>692, 118</value>
+    <value>777, 117</value>
   </data>
   <data name="lblChonGiaoDien.Size" type="System.Drawing.Size, System.Drawing">
     <value>96, 15</value>
@@ -784,7 +844,7 @@
     <value>Facebook.com</value>
   </data>
   <data name="cboGiaoDien.Location" type="System.Drawing.Point, System.Drawing">
-    <value>794, 110</value>
+    <value>879, 109</value>
   </data>
   <data name="cboGiaoDien.Size" type="System.Drawing.Size, System.Drawing">
     <value>203, 23</value>
@@ -814,7 +874,7 @@
     <value>7, 15</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1009, 526</value>
+    <value>1094, 526</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>ĐIỆN TỬ QUANG THƯ</value>
@@ -1094,6 +1154,66 @@
   </data>
   <data name="&gt;&gt;ttMain.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colCookie.Name" xml:space="preserve">
+    <value>colCookie</value>
+  </data>
+  <data name="&gt;&gt;colCookie.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;uIDToolStripMenuItem1.Name" xml:space="preserve">
+    <value>uIDToolStripMenuItem1</value>
+  </data>
+  <data name="&gt;&gt;uIDToolStripMenuItem1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tênToolStripMenuItem1.Name" xml:space="preserve">
+    <value>tênToolStripMenuItem1</value>
+  </data>
+  <data name="&gt;&gt;tênToolStripMenuItem1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;passToolStripMenuItem.Name" xml:space="preserve">
+    <value>passToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;passToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;emailToolStripMenuItem1.Name" xml:space="preserve">
+    <value>emailToolStripMenuItem1</value>
+  </data>
+  <data name="&gt;&gt;emailToolStripMenuItem1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cookieToolStripMenuItem.Name" xml:space="preserve">
+    <value>cookieToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;cookieToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ghiChúToolStripMenuItem1.Name" xml:space="preserve">
+    <value>ghiChúToolStripMenuItem1</value>
+  </data>
+  <data name="&gt;&gt;ghiChúToolStripMenuItem1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;kiểmTraTàiKhoảnToolStripMenuItem.Name" xml:space="preserve">
+    <value>kiểmTraTàiKhoảnToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;kiểmTraTàiKhoảnToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkWallToolStripMenuItem.Name" xml:space="preserve">
+    <value>checkWallToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;checkWallToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkÌnorToolStripMenuItem.Name" xml:space="preserve">
+    <value>checkÌnorToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;checkÌnorToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>Form1</value>

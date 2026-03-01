@@ -6,10 +6,5 @@ namespace DANG_NHAP_FACEBOOK
         {
             InitializeComponent();
         }
-
-        private void lblUid_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

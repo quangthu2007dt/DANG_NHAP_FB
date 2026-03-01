@@ -90,6 +90,16 @@
             lblChonGiaoDien = new Label();
             cboGiaoDien = new ComboBox();
             ttMain = new ToolTip(components);
+            colCookie = new DataGridViewTextBoxColumn();
+            uIDToolStripMenuItem1 = new ToolStripMenuItem();
+            tênToolStripMenuItem1 = new ToolStripMenuItem();
+            passToolStripMenuItem = new ToolStripMenuItem();
+            emailToolStripMenuItem1 = new ToolStripMenuItem();
+            cookieToolStripMenuItem = new ToolStripMenuItem();
+            ghiChúToolStripMenuItem1 = new ToolStripMenuItem();
+            kiểmTraTàiKhoảnToolStripMenuItem = new ToolStripMenuItem();
+            checkWallToolStripMenuItem = new ToolStripMenuItem();
+            checkÌnorToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             cmsGirdRightClick.SuspendLayout();
             statusStrip1.SuspendLayout();
@@ -100,7 +110,7 @@
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.AllowUserToResizeRows = false;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { colSTT, colChon, colUID, colPass, colTen, colEmail, colNgayTao, colGhiChu, colTuongTacCuoi, colTrangThai });
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { colSTT, colChon, colUID, colPass, colTen, colEmail, colNgayTao, colGhiChu, colTuongTacCuoi, colTrangThai, colCookie });
             dataGridView1.ContextMenuStrip = cmsGirdRightClick;
             resources.ApplyResources(dataGridView1, "dataGridView1");
             dataGridView1.Name = "dataGridView1";
@@ -170,7 +180,7 @@
             // 
             // cmsGirdRightClick
             // 
-            cmsGirdRightClick.Items.AddRange(new ToolStripItem[] { chọnToolStripMenuItem, bỏChọnTấtCảToolStripMenuItem, copyToolStripMenuItem, chứcNăngToolStripMenuItem, profileToolStripMenuItem, xóaToolStripMenuItem, cậpNhậtDữLiệuToolStripMenuItem, mởChromeMẫuToolStripMenuItem, làmMớiToolStripMenuItem, nhậpDanhSáchToolStripMenuItem });
+            cmsGirdRightClick.Items.AddRange(new ToolStripItem[] { chọnToolStripMenuItem, bỏChọnTấtCảToolStripMenuItem, copyToolStripMenuItem, chứcNăngToolStripMenuItem, profileToolStripMenuItem, xóaToolStripMenuItem, cậpNhậtDữLiệuToolStripMenuItem, mởChromeMẫuToolStripMenuItem, làmMớiToolStripMenuItem, nhậpDanhSáchToolStripMenuItem, kiểmTraTàiKhoảnToolStripMenuItem });
             cmsGirdRightClick.Name = "cmsGirdRightClick";
             resources.ApplyResources(cmsGirdRightClick, "cmsGirdRightClick");
             // 
@@ -197,7 +207,7 @@
             // 
             // copyToolStripMenuItem
             // 
-            copyToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dòngToolStripMenuItem, cácDòngBôiĐenToolStripMenuItem1 });
+            copyToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dòngToolStripMenuItem, cácDòngBôiĐenToolStripMenuItem1, uIDToolStripMenuItem1, tênToolStripMenuItem1, passToolStripMenuItem, emailToolStripMenuItem1, cookieToolStripMenuItem, ghiChúToolStripMenuItem1 });
             copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             resources.ApplyResources(copyToolStripMenuItem, "copyToolStripMenuItem");
             // 
@@ -376,7 +386,6 @@
             // 
             resources.ApplyResources(lblUid, "lblUid");
             lblUid.Name = "lblUid";
-            lblUid.Click += lblUid_Click;
             // 
             // lblPass
             // 
@@ -438,6 +447,58 @@
             resources.ApplyResources(cboGiaoDien, "cboGiaoDien");
             cboGiaoDien.Name = "cboGiaoDien";
             ttMain.SetToolTip(cboGiaoDien, resources.GetString("cboGiaoDien.ToolTip"));
+            // 
+            // colCookie
+            // 
+            resources.ApplyResources(colCookie, "colCookie");
+            colCookie.Name = "colCookie";
+            colCookie.ReadOnly = true;
+            // 
+            // uIDToolStripMenuItem1
+            // 
+            uIDToolStripMenuItem1.Name = "uIDToolStripMenuItem1";
+            resources.ApplyResources(uIDToolStripMenuItem1, "uIDToolStripMenuItem1");
+            // 
+            // tênToolStripMenuItem1
+            // 
+            tênToolStripMenuItem1.Name = "tênToolStripMenuItem1";
+            resources.ApplyResources(tênToolStripMenuItem1, "tênToolStripMenuItem1");
+            // 
+            // passToolStripMenuItem
+            // 
+            passToolStripMenuItem.Name = "passToolStripMenuItem";
+            resources.ApplyResources(passToolStripMenuItem, "passToolStripMenuItem");
+            // 
+            // emailToolStripMenuItem1
+            // 
+            emailToolStripMenuItem1.Name = "emailToolStripMenuItem1";
+            resources.ApplyResources(emailToolStripMenuItem1, "emailToolStripMenuItem1");
+            // 
+            // cookieToolStripMenuItem
+            // 
+            cookieToolStripMenuItem.Name = "cookieToolStripMenuItem";
+            resources.ApplyResources(cookieToolStripMenuItem, "cookieToolStripMenuItem");
+            // 
+            // ghiChúToolStripMenuItem1
+            // 
+            ghiChúToolStripMenuItem1.Name = "ghiChúToolStripMenuItem1";
+            resources.ApplyResources(ghiChúToolStripMenuItem1, "ghiChúToolStripMenuItem1");
+            // 
+            // kiểmTraTàiKhoảnToolStripMenuItem
+            // 
+            kiểmTraTàiKhoảnToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { checkWallToolStripMenuItem, checkÌnorToolStripMenuItem });
+            kiểmTraTàiKhoảnToolStripMenuItem.Name = "kiểmTraTàiKhoảnToolStripMenuItem";
+            resources.ApplyResources(kiểmTraTàiKhoảnToolStripMenuItem, "kiểmTraTàiKhoảnToolStripMenuItem");
+            // 
+            // checkWallToolStripMenuItem
+            // 
+            checkWallToolStripMenuItem.Name = "checkWallToolStripMenuItem";
+            resources.ApplyResources(checkWallToolStripMenuItem, "checkWallToolStripMenuItem");
+            // 
+            // checkÌnorToolStripMenuItem
+            // 
+            checkÌnorToolStripMenuItem.Name = "checkÌnorToolStripMenuItem";
+            resources.ApplyResources(checkÌnorToolStripMenuItem, "checkÌnorToolStripMenuItem");
             // 
             // Form1
             // 
@@ -527,5 +588,15 @@
         private DataGridViewTextBoxColumn colTuongTacCuoi;
         private DataGridViewTextBoxColumn colTrangThai;
         private ToolStripMenuItem nhậpDanhSáchToolStripMenuItem;
+        private DataGridViewTextBoxColumn colCookie;
+        private ToolStripMenuItem uIDToolStripMenuItem1;
+        private ToolStripMenuItem tênToolStripMenuItem1;
+        private ToolStripMenuItem passToolStripMenuItem;
+        private ToolStripMenuItem emailToolStripMenuItem1;
+        private ToolStripMenuItem cookieToolStripMenuItem;
+        private ToolStripMenuItem ghiChúToolStripMenuItem1;
+        private ToolStripMenuItem kiểmTraTàiKhoảnToolStripMenuItem;
+        private ToolStripMenuItem checkWallToolStripMenuItem;
+        private ToolStripMenuItem checkÌnorToolStripMenuItem;
     }
 }
