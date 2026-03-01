@@ -1,0 +1,220 @@
+NHAT KY HOI THOAI DANG NHAP FACEBOOK
+===================================
+
+1. MUC DICH FILE NAY
+--------------------
+- File nay duoc tao de mang sang may khac va van giu duoc luong thao luan.
+- Day khong phai ban sao nguyen van toan bo chat.
+- Day la ban ghi nho lai cac quy tac, quyet dinh, cach lam viec va tinh trang du an.
+
+
+2. CACH LAM VIEC DA THONG NHAT
+------------------------------
+- Voi viec phat trien app:
+  truoc khi sua code hoac tao file lien quan den logic, phai thong bao ro se lam gi.
+
+- Voi viec backup va day GitHub:
+  khong can hoi lai.
+  Day la viec nen tu dong lam de giu an toan du an.
+
+- Cach day hoc:
+  huong dan tung buoc 1.
+  Khong tu y lam thay truoc.
+  Chi khi doan nao qua kho hoac nguoi dung yeu cau thi moi truc tiep sua code.
+
+
+3. TRANG THAI DU AN O THOI DIEM DANG GHI NHAT KY
+------------------------------------------------
+- Du an dang thao luan va chot nghiep vu.
+- Chua bat dau phat trien logic chinh theo cach moi.
+- Da tung co mot buoc them scaffold ds.txt vao Form1.cs.
+- Buoc do da duoc hoan tac de quay ve cach hoc "cam tay chi viec".
+
+- Repo GitHub dang dung:
+  https://github.com/quangthu2007dt/DANG_NHAP_FB
+
+
+4. CAC FILE TXT QUAN TRONG DA TAO
+---------------------------------
+- HUONG_DAN_APP_DANG_NHAP_FB.txt
+  la file huong dan chinh ve y tuong va thu tu code.
+
+- NHAT_KY_HOI_THOAI_DANG_NHAP_FB.txt
+  la file ghi nho luong trao doi va cach lam viec.
+
+
+5. MUC TIEU CUA APP
+-------------------
+- App nay dung de dang nhap Facebook thu cong.
+- Khong phai tool tu dong dang nhap hang loat.
+- App chi ho tro quy trinh:
+  lay tai khoan, gan profile, mo Facebook, dien san UID va Password 1 lan.
+- Nguoi dung van la nguoi thao tac chinh.
+
+
+6. CAC QUY TAC NGHIEP VU DA CHOT
+--------------------------------
+
+6.1. ds.txt
+- File ds.txt nam canh file exe.
+- Moi dong chi co dinh dang:
+  uid|password
+
+- Neu chua co ds.txt:
+  app tu tao moi.
+
+- Neu ds.txt rong:
+  app thong bao va mo file de nguoi dung tu nhap.
+
+- App khong tu dong xoa dong trong ds.txt khi bam Next.
+- Chi khi nguoi dung xoa dong trong app thi moi xoa dong tuong ung trong ds.txt.
+
+
+6.2. profile_mau va profile_ranh
+- Co 1 profile mau duy nhat:
+  ten la `profile_mau`
+
+- Co 1 profile ranh:
+  ten la `profile_ranh`
+
+- Khi bam Next:
+  neu co `profile_ranh` thi dung no.
+  neu khong co thi clone moi tu `profile_mau`.
+
+- Khi gan cho tai khoan moi:
+  doi ten profile thanh dung UID.
+
+
+6.3. Nut Next
+- Next la nut di dong moi tu ds.txt.
+- Khi bam Next:
+  lay 1 uid|password moi
+  gan profile
+  doi ten profile thanh UID
+  tao ngay 1 dong moi tren grid
+  chon ngay dong moi do
+  mo Facebook
+  dien san uid va password 1 lan
+
+- Next khong co nghia la dang nhap thanh cong.
+
+
+6.4. Nut Chay va Mo dong
+- Chay khong lay dong moi trong ds.txt.
+- Chay chi mo lai dong da ton tai tren grid.
+- Mo dong trong menu chuot phai co cung y nghia voi nut Chay.
+
+
+6.5. Xoa dong
+- Nguoi dung la nguoi tu quyet dinh xoa.
+- Ly do xoa chu yeu hien tai:
+  tai khoan bi bao doi mat khau.
+
+- Neu xoa 1 dong:
+  xoa dong tren grid
+  xoa dong tuong ung trong ds.txt
+  xoa dau vet phien dang nhap
+  doi ten profile ve `profile_ranh`
+
+- Neu xoa nhieu dong:
+  da tung thao luan se xoa han profile de tranh profile tang len.
+  Tuy nhien logic xoa nhieu dong chua phat trien o giai doan hien tai.
+  Tam thoi xoa chi nen xem la xoa 1 dong.
+
+
+6.6. Tieu chi giu hay xoa dong
+- App hien tai khong can qua tap trung vao:
+  dang nhap thanh cong hay that bai.
+
+- Dieu quan trong hien tai la:
+  tai khoan co bi bao doi mat khau hay khong.
+
+- Neu khong bi bao doi mat khau:
+  giu lai dong grid
+  giu lai dong trong ds.txt
+  giu lai profile
+
+- Neu bi bao doi mat khau:
+  xoa dong, xoa ds, reset profile
+
+- Hien tai chua can tu tim DOM de nhan dien.
+- Nguoi dung tu quan sat va tu thao tac xoa.
+
+
+7. QUY TAC UI DA CHOT
+---------------------
+- Khi khong co dong nao duoc chon:
+  Next sang
+  Chay khoa
+  menu theo dong khoa
+
+- Khi chon dung 1 dong:
+  Next khoa
+  Chay sang
+  Xoa dong sang
+  menu theo dong sang
+
+- Khi chon nhieu hon 1 dong:
+  Chay khoa
+  Hien tai cung khong xu ly xoa nhieu dong trong logic chinh
+
+- Grid van cho boi den nhieu dong.
+- Viec boi den nhieu dong duoc giu lai de sau nay phuc vu copy hoac cac viec khac.
+
+
+8. DU LIEU TOI THIEU CUA 1 DONG MOI
+-----------------------------------
+- Khi bam Next, dong moi chi can co ngay:
+  UID
+  Password
+  ProfileName = UID
+  Ngay tao = hien tai
+
+- Cac cot khac de trong:
+  Ten
+  Email
+  Ghi chu
+  Cookie
+  Trang thai
+  va cac cot phu khac
+
+- Trang thai tam thoi uu tien hien o label/status duoi form.
+
+
+9. NGUYEN TAC CODE DA THONG NHAT
+--------------------------------
+- Code se lam theo colName, khong phu thuoc thu tu cot tren grid.
+- Uu tien tan dung duoc phan nao tu tao_profile thi dung lai.
+- Tuy nhien phan ds.txt la logic moi, nen phai viet theo huong rieng.
+
+
+10. NHUNG VIEC DA XAY RA TRONG BUOI THAO LUAN
+---------------------------------------------
+- Da tao mot so file txt de giu huong dan.
+- Da co luc them code ds.txt vao Form1.cs.
+- Sau do nguoi dung yeu cau quay ve cach day hoc tung buoc va khong lam thay.
+- Code ds.txt da duoc hoan tac.
+- GitHub da duoc dung de backup nhieu lan trong qua trinh.
+
+
+11. TINH TRANG HIEN TAI CAN NHO
+-------------------------------
+- Form1.cs da duoc tra lai gan nhu ban goc de bat dau hoc lai tu dau.
+- Luong nghiep vu da ro hon rat nhieu so voi luc dau.
+- Chua bat dau thuc hien Buoc 2 theo cach moi.
+
+
+12. BUOC TIEP THEO NEN LAM
+--------------------------
+- Khong viet code ngay.
+- Truoc het thao luan va chot "lam cai gi dau tien".
+- Theo huong da thong nhat, thu tu hop ly la:
+  1. mo xe rieng luong Next
+  2. sau do moi vao ds.txt
+  3. roi profile_mau/profile_ranh
+
+
+13. GHI CHU QUAN TRONG
+----------------------
+- Neu mang file nay sang may tiem, chi can doc lai file nay va file HUONG_DAN_APP_DANG_NHAP_FB.txt la co the noi lai dung luong.
+- Khong can nho toan bo chat nguyen van.
