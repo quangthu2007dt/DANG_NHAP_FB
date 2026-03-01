@@ -1,0 +1,276 @@
+HUONG DAN APP DANG NHAP FACEBOOK
+================================
+
+1. MUC TIEU APP
+---------------
+- Day la app ho tro dang nhap Facebook thu cong.
+- Khong phai app tu dong dang nhap hang loat.
+- App chi ho tro quy trinh:
+  lay tai khoan moi, gan profile, mo Facebook, dien san UID va Password 1 lan.
+- Nguoi dung van la nguoi thao tac chinh trong qua trinh dang nhap.
+
+
+2. CAC THANH PHAN CHINH
+-----------------------
+- 1 profile mau duy nhat:
+  ten thu muc la `profile_mau`
+  da cai san extension can dung.
+
+- 1 profile ranh:
+  ten thu muc mac dinh la `profile_ranh`
+  day la profile da duoc lam sach de tai su dung.
+
+- 1 file ds.txt:
+  nam canh file exe.
+  Moi dong co dinh dang:
+  uid|password
+
+- Grid trong app:
+  luu cac dong tai khoan dang duoc giu lai de quan ly.
+
+- User-Agent:
+  app tu tao san danh sach de nguoi dung chon.
+
+- Giao dien Facebook:
+  co 2 lua chon de mo theo dung muc dich nguoi dung.
+
+
+3. LOGIC CUA ds.txt
+-------------------
+- ds.txt la nguon dau vao.
+- Moi dong chi co:
+  uid|password
+
+- Neu app chay ma chua co ds.txt:
+  app tu tao moi ds.txt.
+
+- Neu ds.txt rong:
+  app thong bao nguoi dung nhap them.
+  sau do mo luon ds.txt de nguoi dung tu nhap bang Notepad.
+
+- App khong tu dong xoa dong trong ds.txt khi bam Next.
+- Dong trong ds.txt chi bi xoa khi nguoi dung xoa dong do trong app.
+
+
+4. Y NGHIA CAC NUT CHINH
+------------------------
+
+4.1. Nut Next
+- Nut Next la nut di tai khoan moi.
+- Khi bam Next:
+  1. Lay 1 dong moi tu ds.txt.
+  2. Tach thanh uid va password.
+  3. Tim profile ranh ten `profile_ranh`.
+  4. Neu khong co profile ranh thi tao moi tu `profile_mau`.
+  5. Doi ten profile do thanh dung UID.
+  6. Tao ngay 1 dong moi tren grid.
+  7. Do ngay du lieu toi thieu vao dong moi.
+  8. Tu dong chon dong moi do.
+  9. Mo Facebook theo cau hinh da chon.
+  10. Dien san uid va password 1 lan.
+
+- Next khong phai la nut xac nhan dang nhap thanh cong.
+- Next chi co nhiem vu tao 1 phien moi de nguoi dung dang nhap thu cong.
+
+
+4.2. Nut Chay
+- Nut Chay khong lay dong moi tu ds.txt.
+- Nut Chay dung de mo lai dung dong da co tren grid.
+- Tuc la mo lai profile cu cua dong dang chon.
+
+
+4.3. Mo dong o menu chuot phai
+- Co cung y nghia voi nut Chay.
+- Tuc la chi mo lai dong da ton tai.
+- Khong tao profile moi.
+- Khong lay ds moi.
+
+
+5. QUY TAC SANG VA KHOA NUT
+---------------------------
+- Khi khong co dong nao duoc chon:
+  - Next sang.
+  - Chay khoa.
+  - Cac menu thao tac theo dong khoa.
+
+- Khi chon dung 1 dong:
+  - Next khoa.
+  - Chay sang.
+  - Xoa dong sang.
+  - Menu thao tac theo dong sang.
+
+- Khi chon nhieu hon 1 dong:
+  - Next khoa.
+  - Chay khoa.
+  - Xoa dong khoa o giai doan hien tai.
+  - Viec boi den nhieu dong chi de danh cho chuc nang sau nay nhu copy.
+
+- Khi app dang xu ly dong moi bang Next:
+  - Khong duoc phep bam Next tiep.
+
+
+6. LOGIC CUA PROFILE
+--------------------
+- Luon co 1 profile mau duy nhat ten `profile_mau`.
+- Profile mau khong dung truc tiep de dang nhap.
+- Profile mau chi dung de tao profile moi khi can.
+
+- Ngoai cac profile dang duoc giu lai theo tung dong, app chi can toi da 1 profile ranh ten `profile_ranh`.
+- Profile ranh la profile da duoc lam sach de tai su dung.
+
+- Khi bam Next:
+  - Neu co `profile_ranh` thi dung lai profile do.
+  - Neu khong co `profile_ranh` thi clone moi tu `profile_mau`.
+  - Sau do doi ten profile thanh dung UID.
+
+- Khi dong nao do duoc giu lai:
+  - profile cua no cung duoc giu lai.
+  - lan sau co the mo lai chinh profile do.
+
+
+7. DU LIEU TOI THIEU KHI TAO DONG MOI
+------------------------------------
+- Grid se dung theo cac cot da thiet ke.
+- Code phai thao tac theo `colName`, khong phu thuoc thu tu cot.
+
+- Khi bam Next va tao dong moi, chi can do ngay:
+  - UID
+  - Password
+  - ProfileName = UID
+  - Ngay tao = thoi gian hien tai
+
+- Cac cot con lai de trong:
+  - Ten
+  - Email
+  - Ghi chu
+  - Cookie
+  - Trang thai
+  - cac cot khac
+
+- Trang thai hien tai uu tien hien o label/status duoi form theo kieu dien giai.
+- Chua can ghi trang thai co dinh vao cot Trang thai.
+
+
+8. LOGIC XOA DONG
+-----------------
+- Viec xoa dong hien tai do nguoi dung tu quyet dinh.
+- Ly do xoa chu yeu hien tai:
+  tai khoan bi bao doi mat khau.
+
+- Neu xoa dung 1 dong:
+  1. Xoa dong tren grid.
+  2. Xoa dong tuong ung trong ds.txt.
+  3. Xoa sach dau vet phien dang nhap Facebook cua profile do.
+  4. Doi ten profile do ve `profile_ranh`.
+
+- Neu xoa tu 2 dong tro len trong giai doan sau:
+  - se xoa han cac profile tuong ung de tranh tang so luong profile.
+  - nhung logic nay tam thoi chua lam ngay.
+
+- Hien tai chua can app tu tim DOM de biet tai khoan bi doi mat khau.
+- Nguoi dung la nguoi tu xac nhan va thao tac xoa.
+
+
+9. KET LUAN NGHIEP VU
+--------------------
+- 1 dong trong grid dai dien cho 1 tai khoan dang duoc giu lai de quan ly.
+- 1 thoi diem app chi xu ly 1 tai khoan voi 1 profile dang hoat dong.
+- Khong chay nhieu tai khoan cung luc.
+
+- Next:
+  di tai khoan moi tu ds.txt
+
+- Chay / Mo dong:
+  mo lai tai khoan da co tren grid
+
+- Xoa 1 dong:
+  xoa du lieu quan ly cua tai khoan do
+  dong thoi tra profile ve trang thai profile ranh
+
+
+10. NHUNG PHAN CAN CODE TRUOC
+-----------------------------
+
+10.1. Phan ds.txt
+- Neu chua co ds.txt thi tao moi.
+- Doc file ds.txt.
+- Lay dong dau tien.
+- Tach uid va password.
+- Neu file rong thi thong bao va mo file de nguoi dung nhap.
+- Tim va xoa dung dong can xoa.
+
+10.2. Phan profile
+- Xac dinh thu muc `profile_mau`.
+- Xac dinh thu muc `profile_ranh`.
+- Neu co `profile_ranh` thi dung lai.
+- Neu khong co thi clone moi tu `profile_mau`.
+- Doi ten profile thanh UID.
+- Khi xoa 1 dong thi reset profile va doi ve `profile_ranh`.
+
+10.3. Phan grid
+- Them dong moi khi bam Next.
+- Tu dong chon dong moi vua tao.
+- Luu thong tin toi thieu:
+  UID
+  Password
+  ProfileName
+  Ngay tao
+
+10.4. Phan mo Chrome
+- Mo dung user-data-dir cua profile.
+- Mo dung giao dien Facebook da chon.
+- Dien san uid va password 1 lan.
+
+10.5. Phan khoa/mo nut
+- Dieu khien Next, Chay, Xoa dong, menu theo so luong dong dang chon.
+
+10.6. Phan xoa dong
+- Xoa tren grid.
+- Xoa trong ds.txt.
+- Reset profile ve `profile_ranh`.
+
+
+11. NHUNG PHAN TAM THOI CHUA CAN LAM
+------------------------------------
+- Tu dong kiem tra DOM de biet tai khoan doi mat khau.
+- Tu dong xac nhan dang nhap thanh cong.
+- Xu ly nhieu profile cung luc.
+- Xoa nhieu dong kem logic xoa hang loat profile.
+- Toi uu giao dien dep.
+- Tich hop logic VPN phuc tap ngoai extension.
+
+
+12. THU TU HOC VA CODE
+----------------------
+- Buoc 1:
+  chot du lieu cot loi cua 1 dong tren grid.
+
+- Buoc 2:
+  lam phan ds.txt.
+
+- Buoc 3:
+  lam logic `profile_mau` va `profile_ranh`.
+
+- Buoc 4:
+  lam nut Next.
+
+- Buoc 5:
+  lam nut Chay / Mo dong.
+
+- Buoc 6:
+  lam khoa/mo nut theo so dong duoc chon.
+
+- Buoc 7:
+  lam xoa 1 dong + reset profile.
+
+- Buoc 8:
+  moi gan logic dien uid/password vao Facebook.
+
+
+13. NGUYEN TAC PHAT TRIEN
+------------------------
+- Lam dung tung buoc nho.
+- Moi buoc xong phai chay thu.
+- Khong gop qua nhieu logic vao 1 lan.
+- Uu tien dung nghiep vu truoc, dep sau.
+- App nay la ban nang cap logic hon tao_profile, nhung van phai giu cach lam vua suc.

@@ -41,6 +41,7 @@
             colGhiChu = new DataGridViewTextBoxColumn();
             colTuongTacCuoi = new DataGridViewTextBoxColumn();
             colTrangThai = new DataGridViewTextBoxColumn();
+            colCookie = new DataGridViewTextBoxColumn();
             cmsGirdRightClick = new ContextMenuStrip(components);
             chọnToolStripMenuItem = new ToolStripMenuItem();
             tToolStripMenuItem = new ToolStripMenuItem();
@@ -49,6 +50,12 @@
             copyToolStripMenuItem = new ToolStripMenuItem();
             dòngToolStripMenuItem = new ToolStripMenuItem();
             cácDòngBôiĐenToolStripMenuItem1 = new ToolStripMenuItem();
+            uIDToolStripMenuItem1 = new ToolStripMenuItem();
+            tênToolStripMenuItem1 = new ToolStripMenuItem();
+            passToolStripMenuItem = new ToolStripMenuItem();
+            emailToolStripMenuItem1 = new ToolStripMenuItem();
+            cookieToolStripMenuItem = new ToolStripMenuItem();
+            ghiChúToolStripMenuItem1 = new ToolStripMenuItem();
             chứcNăngToolStripMenuItem = new ToolStripMenuItem();
             lọcTheoUIDToolStripMenuItem = new ToolStripMenuItem();
             lọcTàiKhoảnTrùngNhauToolStripMenuItem = new ToolStripMenuItem();
@@ -70,6 +77,9 @@
             mởChromeMẫuToolStripMenuItem = new ToolStripMenuItem();
             làmMớiToolStripMenuItem = new ToolStripMenuItem();
             nhậpDanhSáchToolStripMenuItem = new ToolStripMenuItem();
+            kiểmTraTàiKhoảnToolStripMenuItem = new ToolStripMenuItem();
+            checkWallToolStripMenuItem = new ToolStripMenuItem();
+            checkÌnorToolStripMenuItem = new ToolStripMenuItem();
             statusStrip1 = new StatusStrip();
             tssSpace1 = new ToolStripStatusLabel();
             tssTrangThai = new ToolStripStatusLabel();
@@ -90,16 +100,7 @@
             lblChonGiaoDien = new Label();
             cboGiaoDien = new ComboBox();
             ttMain = new ToolTip(components);
-            colCookie = new DataGridViewTextBoxColumn();
-            uIDToolStripMenuItem1 = new ToolStripMenuItem();
-            tênToolStripMenuItem1 = new ToolStripMenuItem();
-            passToolStripMenuItem = new ToolStripMenuItem();
-            emailToolStripMenuItem1 = new ToolStripMenuItem();
-            cookieToolStripMenuItem = new ToolStripMenuItem();
-            ghiChúToolStripMenuItem1 = new ToolStripMenuItem();
-            kiểmTraTàiKhoảnToolStripMenuItem = new ToolStripMenuItem();
-            checkWallToolStripMenuItem = new ToolStripMenuItem();
-            checkÌnorToolStripMenuItem = new ToolStripMenuItem();
+            mởToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             cmsGirdRightClick.SuspendLayout();
             statusStrip1.SuspendLayout();
@@ -178,9 +179,15 @@
             colTrangThai.Name = "colTrangThai";
             colTrangThai.ReadOnly = true;
             // 
+            // colCookie
+            // 
+            resources.ApplyResources(colCookie, "colCookie");
+            colCookie.Name = "colCookie";
+            colCookie.ReadOnly = true;
+            // 
             // cmsGirdRightClick
             // 
-            cmsGirdRightClick.Items.AddRange(new ToolStripItem[] { chọnToolStripMenuItem, bỏChọnTấtCảToolStripMenuItem, copyToolStripMenuItem, chứcNăngToolStripMenuItem, profileToolStripMenuItem, xóaToolStripMenuItem, cậpNhậtDữLiệuToolStripMenuItem, mởChromeMẫuToolStripMenuItem, làmMớiToolStripMenuItem, nhậpDanhSáchToolStripMenuItem, kiểmTraTàiKhoảnToolStripMenuItem });
+            cmsGirdRightClick.Items.AddRange(new ToolStripItem[] { chọnToolStripMenuItem, bỏChọnTấtCảToolStripMenuItem, copyToolStripMenuItem, chứcNăngToolStripMenuItem, profileToolStripMenuItem, xóaToolStripMenuItem, cậpNhậtDữLiệuToolStripMenuItem, mởChromeMẫuToolStripMenuItem, làmMớiToolStripMenuItem, nhậpDanhSáchToolStripMenuItem, kiểmTraTàiKhoảnToolStripMenuItem, mởToolStripMenuItem });
             cmsGirdRightClick.Name = "cmsGirdRightClick";
             resources.ApplyResources(cmsGirdRightClick, "cmsGirdRightClick");
             // 
@@ -220,6 +227,36 @@
             // 
             cácDòngBôiĐenToolStripMenuItem1.Name = "cácDòngBôiĐenToolStripMenuItem1";
             resources.ApplyResources(cácDòngBôiĐenToolStripMenuItem1, "cácDòngBôiĐenToolStripMenuItem1");
+            // 
+            // uIDToolStripMenuItem1
+            // 
+            uIDToolStripMenuItem1.Name = "uIDToolStripMenuItem1";
+            resources.ApplyResources(uIDToolStripMenuItem1, "uIDToolStripMenuItem1");
+            // 
+            // tênToolStripMenuItem1
+            // 
+            tênToolStripMenuItem1.Name = "tênToolStripMenuItem1";
+            resources.ApplyResources(tênToolStripMenuItem1, "tênToolStripMenuItem1");
+            // 
+            // passToolStripMenuItem
+            // 
+            passToolStripMenuItem.Name = "passToolStripMenuItem";
+            resources.ApplyResources(passToolStripMenuItem, "passToolStripMenuItem");
+            // 
+            // emailToolStripMenuItem1
+            // 
+            emailToolStripMenuItem1.Name = "emailToolStripMenuItem1";
+            resources.ApplyResources(emailToolStripMenuItem1, "emailToolStripMenuItem1");
+            // 
+            // cookieToolStripMenuItem
+            // 
+            cookieToolStripMenuItem.Name = "cookieToolStripMenuItem";
+            resources.ApplyResources(cookieToolStripMenuItem, "cookieToolStripMenuItem");
+            // 
+            // ghiChúToolStripMenuItem1
+            // 
+            ghiChúToolStripMenuItem1.Name = "ghiChúToolStripMenuItem1";
+            resources.ApplyResources(ghiChúToolStripMenuItem1, "ghiChúToolStripMenuItem1");
             // 
             // chứcNăngToolStripMenuItem
             // 
@@ -329,6 +366,22 @@
             // 
             nhậpDanhSáchToolStripMenuItem.Name = "nhậpDanhSáchToolStripMenuItem";
             resources.ApplyResources(nhậpDanhSáchToolStripMenuItem, "nhậpDanhSáchToolStripMenuItem");
+            // 
+            // kiểmTraTàiKhoảnToolStripMenuItem
+            // 
+            kiểmTraTàiKhoảnToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { checkWallToolStripMenuItem, checkÌnorToolStripMenuItem });
+            kiểmTraTàiKhoảnToolStripMenuItem.Name = "kiểmTraTàiKhoảnToolStripMenuItem";
+            resources.ApplyResources(kiểmTraTàiKhoảnToolStripMenuItem, "kiểmTraTàiKhoảnToolStripMenuItem");
+            // 
+            // checkWallToolStripMenuItem
+            // 
+            checkWallToolStripMenuItem.Name = "checkWallToolStripMenuItem";
+            resources.ApplyResources(checkWallToolStripMenuItem, "checkWallToolStripMenuItem");
+            // 
+            // checkÌnorToolStripMenuItem
+            // 
+            checkÌnorToolStripMenuItem.Name = "checkÌnorToolStripMenuItem";
+            resources.ApplyResources(checkÌnorToolStripMenuItem, "checkÌnorToolStripMenuItem");
             // 
             // statusStrip1
             // 
@@ -448,57 +501,10 @@
             cboGiaoDien.Name = "cboGiaoDien";
             ttMain.SetToolTip(cboGiaoDien, resources.GetString("cboGiaoDien.ToolTip"));
             // 
-            // colCookie
+            // mởToolStripMenuItem
             // 
-            resources.ApplyResources(colCookie, "colCookie");
-            colCookie.Name = "colCookie";
-            colCookie.ReadOnly = true;
-            // 
-            // uIDToolStripMenuItem1
-            // 
-            uIDToolStripMenuItem1.Name = "uIDToolStripMenuItem1";
-            resources.ApplyResources(uIDToolStripMenuItem1, "uIDToolStripMenuItem1");
-            // 
-            // tênToolStripMenuItem1
-            // 
-            tênToolStripMenuItem1.Name = "tênToolStripMenuItem1";
-            resources.ApplyResources(tênToolStripMenuItem1, "tênToolStripMenuItem1");
-            // 
-            // passToolStripMenuItem
-            // 
-            passToolStripMenuItem.Name = "passToolStripMenuItem";
-            resources.ApplyResources(passToolStripMenuItem, "passToolStripMenuItem");
-            // 
-            // emailToolStripMenuItem1
-            // 
-            emailToolStripMenuItem1.Name = "emailToolStripMenuItem1";
-            resources.ApplyResources(emailToolStripMenuItem1, "emailToolStripMenuItem1");
-            // 
-            // cookieToolStripMenuItem
-            // 
-            cookieToolStripMenuItem.Name = "cookieToolStripMenuItem";
-            resources.ApplyResources(cookieToolStripMenuItem, "cookieToolStripMenuItem");
-            // 
-            // ghiChúToolStripMenuItem1
-            // 
-            ghiChúToolStripMenuItem1.Name = "ghiChúToolStripMenuItem1";
-            resources.ApplyResources(ghiChúToolStripMenuItem1, "ghiChúToolStripMenuItem1");
-            // 
-            // kiểmTraTàiKhoảnToolStripMenuItem
-            // 
-            kiểmTraTàiKhoảnToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { checkWallToolStripMenuItem, checkÌnorToolStripMenuItem });
-            kiểmTraTàiKhoảnToolStripMenuItem.Name = "kiểmTraTàiKhoảnToolStripMenuItem";
-            resources.ApplyResources(kiểmTraTàiKhoảnToolStripMenuItem, "kiểmTraTàiKhoảnToolStripMenuItem");
-            // 
-            // checkWallToolStripMenuItem
-            // 
-            checkWallToolStripMenuItem.Name = "checkWallToolStripMenuItem";
-            resources.ApplyResources(checkWallToolStripMenuItem, "checkWallToolStripMenuItem");
-            // 
-            // checkÌnorToolStripMenuItem
-            // 
-            checkÌnorToolStripMenuItem.Name = "checkÌnorToolStripMenuItem";
-            resources.ApplyResources(checkÌnorToolStripMenuItem, "checkÌnorToolStripMenuItem");
+            mởToolStripMenuItem.Name = "mởToolStripMenuItem";
+            resources.ApplyResources(mởToolStripMenuItem, "mởToolStripMenuItem");
             // 
             // Form1
             // 
@@ -598,5 +604,6 @@
         private ToolStripMenuItem kiểmTraTàiKhoảnToolStripMenuItem;
         private ToolStripMenuItem checkWallToolStripMenuItem;
         private ToolStripMenuItem checkÌnorToolStripMenuItem;
+        private ToolStripMenuItem mởToolStripMenuItem;
     }
 }
