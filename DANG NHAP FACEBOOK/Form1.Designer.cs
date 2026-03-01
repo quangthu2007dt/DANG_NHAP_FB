@@ -28,9 +28,56 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             dataGridView1 = new DataGridView();
+            colSTT = new DataGridViewTextBoxColumn();
+            colChon = new DataGridViewTextBoxColumn();
+            colUID = new DataGridViewTextBoxColumn();
+            colPass = new DataGridViewTextBoxColumn();
+            colTen = new DataGridViewTextBoxColumn();
+            colEmail = new DataGridViewTextBoxColumn();
+            colNgayTao = new DataGridViewTextBoxColumn();
+            colGhiChu = new DataGridViewTextBoxColumn();
+            colTuongTacCuoi = new DataGridViewTextBoxColumn();
+            colTrangThai = new DataGridViewTextBoxColumn();
+            cmsGirdRightClick = new ContextMenuStrip(components);
+            chọnToolStripMenuItem = new ToolStripMenuItem();
+            tToolStripMenuItem = new ToolStripMenuItem();
+            cácDòngBôiĐenToolStripMenuItem = new ToolStripMenuItem();
+            bỏChọnTấtCảToolStripMenuItem = new ToolStripMenuItem();
+            copyToolStripMenuItem = new ToolStripMenuItem();
+            dòngToolStripMenuItem = new ToolStripMenuItem();
+            cácDòngBôiĐenToolStripMenuItem1 = new ToolStripMenuItem();
+            chứcNăngToolStripMenuItem = new ToolStripMenuItem();
+            lọcTheoUIDToolStripMenuItem = new ToolStripMenuItem();
+            lọcTàiKhoảnTrùngNhauToolStripMenuItem = new ToolStripMenuItem();
+            xóaTàiKhoảnTrùngNhauToolStripMenuItem = new ToolStripMenuItem();
+            profileToolStripMenuItem = new ToolStripMenuItem();
+            checkProfileToolStripMenuItem = new ToolStripMenuItem();
+            xóaProfileToolStripMenuItem = new ToolStripMenuItem();
+            dọnDẹpProfileToolStripMenuItem = new ToolStripMenuItem();
+            xóaCaToolStripMenuItem = new ToolStripMenuItem();
+            xóaToolStripMenuItem = new ToolStripMenuItem();
+            dòngToolStripMenuItem1 = new ToolStripMenuItem();
+            cácDòngĐãChọnToolStripMenuItem = new ToolStripMenuItem();
+            cậpNhậtDữLiệuToolStripMenuItem = new ToolStripMenuItem();
+            uIDToolStripMenuItem = new ToolStripMenuItem();
+            tênToolStripMenuItem = new ToolStripMenuItem();
+            passwordToolStripMenuItem = new ToolStripMenuItem();
+            emailToolStripMenuItem = new ToolStripMenuItem();
+            ghiChúToolStripMenuItem = new ToolStripMenuItem();
+            mởChromeMẫuToolStripMenuItem = new ToolStripMenuItem();
+            làmMớiToolStripMenuItem = new ToolStripMenuItem();
+            nhậpDanhSáchToolStripMenuItem = new ToolStripMenuItem();
             statusStrip1 = new StatusStrip();
+            tssSpace1 = new ToolStripStatusLabel();
+            tssTrangThai = new ToolStripStatusLabel();
+            tssSpace2 = new ToolStripStatusLabel();
+            toolStripStatusLabel1 = new ToolStripStatusLabel();
+            tssTong = new ToolStripStatusLabel();
+            tssSpace3 = new ToolStripStatusLabel();
+            tssTime = new ToolStripStatusLabel();
             lblTieuDe = new Label();
             lblUid = new Label();
             lblPass = new Label();
@@ -41,24 +88,283 @@
             lblUserAgent = new Label();
             cboUserAgent = new ComboBox();
             lblChonGiaoDien = new Label();
-            comboBox1 = new ComboBox();
+            cboGiaoDien = new ComboBox();
+            ttMain = new ToolTip(components);
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            cmsGirdRightClick.SuspendLayout();
+            statusStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // dataGridView1
             // 
-            resources.ApplyResources(dataGridView1, "dataGridView1");
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.AllowUserToResizeRows = false;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { colSTT, colChon, colUID, colPass, colTen, colEmail, colNgayTao, colGhiChu, colTuongTacCuoi, colTrangThai });
+            dataGridView1.ContextMenuStrip = cmsGirdRightClick;
+            resources.ApplyResources(dataGridView1, "dataGridView1");
             dataGridView1.Name = "dataGridView1";
+            dataGridView1.RowHeadersVisible = false;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            // 
+            // colSTT
+            // 
+            resources.ApplyResources(colSTT, "colSTT");
+            colSTT.Name = "colSTT";
+            colSTT.ReadOnly = true;
+            // 
+            // colChon
+            // 
+            resources.ApplyResources(colChon, "colChon");
+            colChon.Name = "colChon";
+            colChon.ReadOnly = true;
+            // 
+            // colUID
+            // 
+            resources.ApplyResources(colUID, "colUID");
+            colUID.Name = "colUID";
+            colUID.ReadOnly = true;
+            // 
+            // colPass
+            // 
+            resources.ApplyResources(colPass, "colPass");
+            colPass.Name = "colPass";
+            colPass.ReadOnly = true;
+            // 
+            // colTen
+            // 
+            resources.ApplyResources(colTen, "colTen");
+            colTen.Name = "colTen";
+            colTen.ReadOnly = true;
+            // 
+            // colEmail
+            // 
+            resources.ApplyResources(colEmail, "colEmail");
+            colEmail.Name = "colEmail";
+            colEmail.ReadOnly = true;
+            // 
+            // colNgayTao
+            // 
+            resources.ApplyResources(colNgayTao, "colNgayTao");
+            colNgayTao.Name = "colNgayTao";
+            colNgayTao.ReadOnly = true;
+            // 
+            // colGhiChu
+            // 
+            resources.ApplyResources(colGhiChu, "colGhiChu");
+            colGhiChu.Name = "colGhiChu";
+            colGhiChu.ReadOnly = true;
+            // 
+            // colTuongTacCuoi
+            // 
+            resources.ApplyResources(colTuongTacCuoi, "colTuongTacCuoi");
+            colTuongTacCuoi.Name = "colTuongTacCuoi";
+            colTuongTacCuoi.ReadOnly = true;
+            // 
+            // colTrangThai
+            // 
+            colTrangThai.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            resources.ApplyResources(colTrangThai, "colTrangThai");
+            colTrangThai.Name = "colTrangThai";
+            colTrangThai.ReadOnly = true;
+            // 
+            // cmsGirdRightClick
+            // 
+            cmsGirdRightClick.Items.AddRange(new ToolStripItem[] { chọnToolStripMenuItem, bỏChọnTấtCảToolStripMenuItem, copyToolStripMenuItem, chứcNăngToolStripMenuItem, profileToolStripMenuItem, xóaToolStripMenuItem, cậpNhậtDữLiệuToolStripMenuItem, mởChromeMẫuToolStripMenuItem, làmMớiToolStripMenuItem, nhậpDanhSáchToolStripMenuItem });
+            cmsGirdRightClick.Name = "cmsGirdRightClick";
+            resources.ApplyResources(cmsGirdRightClick, "cmsGirdRightClick");
+            // 
+            // chọnToolStripMenuItem
+            // 
+            chọnToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tToolStripMenuItem, cácDòngBôiĐenToolStripMenuItem });
+            chọnToolStripMenuItem.Name = "chọnToolStripMenuItem";
+            resources.ApplyResources(chọnToolStripMenuItem, "chọnToolStripMenuItem");
+            // 
+            // tToolStripMenuItem
+            // 
+            tToolStripMenuItem.Name = "tToolStripMenuItem";
+            resources.ApplyResources(tToolStripMenuItem, "tToolStripMenuItem");
+            // 
+            // cácDòngBôiĐenToolStripMenuItem
+            // 
+            cácDòngBôiĐenToolStripMenuItem.Name = "cácDòngBôiĐenToolStripMenuItem";
+            resources.ApplyResources(cácDòngBôiĐenToolStripMenuItem, "cácDòngBôiĐenToolStripMenuItem");
+            // 
+            // bỏChọnTấtCảToolStripMenuItem
+            // 
+            bỏChọnTấtCảToolStripMenuItem.Name = "bỏChọnTấtCảToolStripMenuItem";
+            resources.ApplyResources(bỏChọnTấtCảToolStripMenuItem, "bỏChọnTấtCảToolStripMenuItem");
+            // 
+            // copyToolStripMenuItem
+            // 
+            copyToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dòngToolStripMenuItem, cácDòngBôiĐenToolStripMenuItem1 });
+            copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            resources.ApplyResources(copyToolStripMenuItem, "copyToolStripMenuItem");
+            // 
+            // dòngToolStripMenuItem
+            // 
+            dòngToolStripMenuItem.Name = "dòngToolStripMenuItem";
+            resources.ApplyResources(dòngToolStripMenuItem, "dòngToolStripMenuItem");
+            // 
+            // cácDòngBôiĐenToolStripMenuItem1
+            // 
+            cácDòngBôiĐenToolStripMenuItem1.Name = "cácDòngBôiĐenToolStripMenuItem1";
+            resources.ApplyResources(cácDòngBôiĐenToolStripMenuItem1, "cácDòngBôiĐenToolStripMenuItem1");
+            // 
+            // chứcNăngToolStripMenuItem
+            // 
+            chứcNăngToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { lọcTheoUIDToolStripMenuItem, lọcTàiKhoảnTrùngNhauToolStripMenuItem, xóaTàiKhoảnTrùngNhauToolStripMenuItem });
+            chứcNăngToolStripMenuItem.Name = "chứcNăngToolStripMenuItem";
+            resources.ApplyResources(chứcNăngToolStripMenuItem, "chứcNăngToolStripMenuItem");
+            // 
+            // lọcTheoUIDToolStripMenuItem
+            // 
+            lọcTheoUIDToolStripMenuItem.Name = "lọcTheoUIDToolStripMenuItem";
+            resources.ApplyResources(lọcTheoUIDToolStripMenuItem, "lọcTheoUIDToolStripMenuItem");
+            // 
+            // lọcTàiKhoảnTrùngNhauToolStripMenuItem
+            // 
+            lọcTàiKhoảnTrùngNhauToolStripMenuItem.Name = "lọcTàiKhoảnTrùngNhauToolStripMenuItem";
+            resources.ApplyResources(lọcTàiKhoảnTrùngNhauToolStripMenuItem, "lọcTàiKhoảnTrùngNhauToolStripMenuItem");
+            // 
+            // xóaTàiKhoảnTrùngNhauToolStripMenuItem
+            // 
+            xóaTàiKhoảnTrùngNhauToolStripMenuItem.Name = "xóaTàiKhoảnTrùngNhauToolStripMenuItem";
+            resources.ApplyResources(xóaTàiKhoảnTrùngNhauToolStripMenuItem, "xóaTàiKhoảnTrùngNhauToolStripMenuItem");
+            // 
+            // profileToolStripMenuItem
+            // 
+            profileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { checkProfileToolStripMenuItem, xóaProfileToolStripMenuItem, dọnDẹpProfileToolStripMenuItem, xóaCaToolStripMenuItem });
+            profileToolStripMenuItem.Name = "profileToolStripMenuItem";
+            resources.ApplyResources(profileToolStripMenuItem, "profileToolStripMenuItem");
+            // 
+            // checkProfileToolStripMenuItem
+            // 
+            checkProfileToolStripMenuItem.Name = "checkProfileToolStripMenuItem";
+            resources.ApplyResources(checkProfileToolStripMenuItem, "checkProfileToolStripMenuItem");
+            // 
+            // xóaProfileToolStripMenuItem
+            // 
+            xóaProfileToolStripMenuItem.Name = "xóaProfileToolStripMenuItem";
+            resources.ApplyResources(xóaProfileToolStripMenuItem, "xóaProfileToolStripMenuItem");
+            // 
+            // dọnDẹpProfileToolStripMenuItem
+            // 
+            dọnDẹpProfileToolStripMenuItem.Name = "dọnDẹpProfileToolStripMenuItem";
+            resources.ApplyResources(dọnDẹpProfileToolStripMenuItem, "dọnDẹpProfileToolStripMenuItem");
+            // 
+            // xóaCaToolStripMenuItem
+            // 
+            xóaCaToolStripMenuItem.Name = "xóaCaToolStripMenuItem";
+            resources.ApplyResources(xóaCaToolStripMenuItem, "xóaCaToolStripMenuItem");
+            // 
+            // xóaToolStripMenuItem
+            // 
+            xóaToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dòngToolStripMenuItem1, cácDòngĐãChọnToolStripMenuItem });
+            xóaToolStripMenuItem.Name = "xóaToolStripMenuItem";
+            resources.ApplyResources(xóaToolStripMenuItem, "xóaToolStripMenuItem");
+            // 
+            // dòngToolStripMenuItem1
+            // 
+            dòngToolStripMenuItem1.Name = "dòngToolStripMenuItem1";
+            resources.ApplyResources(dòngToolStripMenuItem1, "dòngToolStripMenuItem1");
+            // 
+            // cácDòngĐãChọnToolStripMenuItem
+            // 
+            cácDòngĐãChọnToolStripMenuItem.Name = "cácDòngĐãChọnToolStripMenuItem";
+            resources.ApplyResources(cácDòngĐãChọnToolStripMenuItem, "cácDòngĐãChọnToolStripMenuItem");
+            // 
+            // cậpNhậtDữLiệuToolStripMenuItem
+            // 
+            cậpNhậtDữLiệuToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { uIDToolStripMenuItem, tênToolStripMenuItem, passwordToolStripMenuItem, emailToolStripMenuItem, ghiChúToolStripMenuItem });
+            cậpNhậtDữLiệuToolStripMenuItem.Name = "cậpNhậtDữLiệuToolStripMenuItem";
+            resources.ApplyResources(cậpNhậtDữLiệuToolStripMenuItem, "cậpNhậtDữLiệuToolStripMenuItem");
+            // 
+            // uIDToolStripMenuItem
+            // 
+            uIDToolStripMenuItem.Name = "uIDToolStripMenuItem";
+            resources.ApplyResources(uIDToolStripMenuItem, "uIDToolStripMenuItem");
+            // 
+            // tênToolStripMenuItem
+            // 
+            tênToolStripMenuItem.Name = "tênToolStripMenuItem";
+            resources.ApplyResources(tênToolStripMenuItem, "tênToolStripMenuItem");
+            // 
+            // passwordToolStripMenuItem
+            // 
+            passwordToolStripMenuItem.Name = "passwordToolStripMenuItem";
+            resources.ApplyResources(passwordToolStripMenuItem, "passwordToolStripMenuItem");
+            // 
+            // emailToolStripMenuItem
+            // 
+            emailToolStripMenuItem.Name = "emailToolStripMenuItem";
+            resources.ApplyResources(emailToolStripMenuItem, "emailToolStripMenuItem");
+            // 
+            // ghiChúToolStripMenuItem
+            // 
+            ghiChúToolStripMenuItem.Name = "ghiChúToolStripMenuItem";
+            resources.ApplyResources(ghiChúToolStripMenuItem, "ghiChúToolStripMenuItem");
+            // 
+            // mởChromeMẫuToolStripMenuItem
+            // 
+            mởChromeMẫuToolStripMenuItem.Name = "mởChromeMẫuToolStripMenuItem";
+            resources.ApplyResources(mởChromeMẫuToolStripMenuItem, "mởChromeMẫuToolStripMenuItem");
+            // 
+            // làmMớiToolStripMenuItem
+            // 
+            làmMớiToolStripMenuItem.Name = "làmMớiToolStripMenuItem";
+            resources.ApplyResources(làmMớiToolStripMenuItem, "làmMớiToolStripMenuItem");
+            // 
+            // nhậpDanhSáchToolStripMenuItem
+            // 
+            nhậpDanhSáchToolStripMenuItem.Name = "nhậpDanhSáchToolStripMenuItem";
+            resources.ApplyResources(nhậpDanhSáchToolStripMenuItem, "nhậpDanhSáchToolStripMenuItem");
             // 
             // statusStrip1
             // 
+            statusStrip1.Items.AddRange(new ToolStripItem[] { tssSpace1, tssTrangThai, tssSpace2, toolStripStatusLabel1, tssTong, tssSpace3, tssTime });
             resources.ApplyResources(statusStrip1, "statusStrip1");
             statusStrip1.Name = "statusStrip1";
             statusStrip1.SizingGrip = false;
+            // 
+            // tssSpace1
+            // 
+            resources.ApplyResources(tssSpace1, "tssSpace1");
+            tssSpace1.Name = "tssSpace1";
+            // 
+            // tssTrangThai
+            // 
+            resources.ApplyResources(tssTrangThai, "tssTrangThai");
+            tssTrangThai.ForeColor = Color.Blue;
+            tssTrangThai.Name = "tssTrangThai";
+            tssTrangThai.Spring = true;
+            // 
+            // tssSpace2
+            // 
+            tssSpace2.Name = "tssSpace2";
+            resources.ApplyResources(tssSpace2, "tssSpace2");
+            // 
+            // toolStripStatusLabel1
+            // 
+            resources.ApplyResources(toolStripStatusLabel1, "toolStripStatusLabel1");
+            toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            // 
+            // tssTong
+            // 
+            resources.ApplyResources(tssTong, "tssTong");
+            tssTong.ForeColor = Color.Fuchsia;
+            tssTong.Name = "tssTong";
+            // 
+            // tssSpace3
+            // 
+            resources.ApplyResources(tssSpace3, "tssSpace3");
+            tssSpace3.Name = "tssSpace3";
+            // 
+            // tssTime
+            // 
+            resources.ApplyResources(tssTime, "tssTime");
+            tssTime.ForeColor = Color.Red;
+            tssTime.Name = "tssTime";
             // 
             // lblTieuDe
             // 
@@ -81,22 +387,28 @@
             // 
             resources.ApplyResources(txtUid, "txtUid");
             txtUid.Name = "txtUid";
+            ttMain.SetToolTip(txtUid, resources.GetString("txtUid.ToolTip"));
             // 
             // txtPass
             // 
             resources.ApplyResources(txtPass, "txtPass");
             txtPass.Name = "txtPass";
+            ttMain.SetToolTip(txtPass, resources.GetString("txtPass.ToolTip"));
             // 
             // btnDangNhap
             // 
             resources.ApplyResources(btnDangNhap, "btnDangNhap");
+            btnDangNhap.ForeColor = Color.Blue;
             btnDangNhap.Name = "btnDangNhap";
+            ttMain.SetToolTip(btnDangNhap, resources.GetString("btnDangNhap.ToolTip"));
             btnDangNhap.UseVisualStyleBackColor = true;
             // 
             // btnTiepTuc
             // 
             resources.ApplyResources(btnTiepTuc, "btnTiepTuc");
+            btnTiepTuc.ForeColor = Color.FromArgb(255, 128, 128);
             btnTiepTuc.Name = "btnTiepTuc";
+            ttMain.SetToolTip(btnTiepTuc, resources.GetString("btnTiepTuc.ToolTip"));
             btnTiepTuc.UseVisualStyleBackColor = true;
             // 
             // lblUserAgent
@@ -106,29 +418,32 @@
             // 
             // cboUserAgent
             // 
-            resources.ApplyResources(cboUserAgent, "cboUserAgent");
             cboUserAgent.DropDownStyle = ComboBoxStyle.DropDownList;
             cboUserAgent.FormattingEnabled = true;
+            resources.ApplyResources(cboUserAgent, "cboUserAgent");
             cboUserAgent.Name = "cboUserAgent";
+            ttMain.SetToolTip(cboUserAgent, resources.GetString("cboUserAgent.ToolTip"));
             // 
             // lblChonGiaoDien
             // 
             resources.ApplyResources(lblChonGiaoDien, "lblChonGiaoDien");
             lblChonGiaoDien.Name = "lblChonGiaoDien";
+            ttMain.SetToolTip(lblChonGiaoDien, resources.GetString("lblChonGiaoDien.ToolTip"));
             // 
-            // comboBox1
+            // cboGiaoDien
             // 
-            resources.ApplyResources(comboBox1, "comboBox1");
-            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Items.AddRange(new object[] { resources.GetString("comboBox1.Items"), resources.GetString("comboBox1.Items1") });
-            comboBox1.Name = "comboBox1";
+            cboGiaoDien.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboGiaoDien.FormattingEnabled = true;
+            cboGiaoDien.Items.AddRange(new object[] { resources.GetString("cboGiaoDien.Items"), resources.GetString("cboGiaoDien.Items1") });
+            resources.ApplyResources(cboGiaoDien, "cboGiaoDien");
+            cboGiaoDien.Name = "cboGiaoDien";
+            ttMain.SetToolTip(cboGiaoDien, resources.GetString("cboGiaoDien.ToolTip"));
             // 
             // Form1
             // 
             resources.ApplyResources(this, "$this");
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(comboBox1);
+            Controls.Add(cboGiaoDien);
             Controls.Add(lblChonGiaoDien);
             Controls.Add(cboUserAgent);
             Controls.Add(lblUserAgent);
@@ -143,6 +458,9 @@
             Controls.Add(dataGridView1);
             Name = "Form1";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            cmsGirdRightClick.ResumeLayout(false);
+            statusStrip1.ResumeLayout(false);
+            statusStrip1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -161,6 +479,53 @@
         private Label lblUserAgent;
         private ComboBox cboUserAgent;
         private Label lblChonGiaoDien;
-        private ComboBox comboBox1;
+        private ComboBox cboGiaoDien;
+        private ContextMenuStrip cmsGirdRightClick;
+        private ToolStripMenuItem chọnToolStripMenuItem;
+        private ToolStripMenuItem tToolStripMenuItem;
+        private ToolStripMenuItem cácDòngBôiĐenToolStripMenuItem;
+        private ToolStripMenuItem bỏChọnTấtCảToolStripMenuItem;
+        private ToolStripMenuItem copyToolStripMenuItem;
+        private ToolStripMenuItem dòngToolStripMenuItem;
+        private ToolStripMenuItem cácDòngBôiĐenToolStripMenuItem1;
+        private ToolStripMenuItem chứcNăngToolStripMenuItem;
+        private ToolStripMenuItem lọcTheoUIDToolStripMenuItem;
+        private ToolStripMenuItem lọcTàiKhoảnTrùngNhauToolStripMenuItem;
+        private ToolStripMenuItem xóaTàiKhoảnTrùngNhauToolStripMenuItem;
+        private ToolStripMenuItem profileToolStripMenuItem;
+        private ToolStripMenuItem checkProfileToolStripMenuItem;
+        private ToolStripMenuItem xóaProfileToolStripMenuItem;
+        private ToolStripMenuItem dọnDẹpProfileToolStripMenuItem;
+        private ToolStripMenuItem xóaCaToolStripMenuItem;
+        private ToolStripMenuItem xóaToolStripMenuItem;
+        private ToolStripMenuItem dòngToolStripMenuItem1;
+        private ToolStripMenuItem cácDòngĐãChọnToolStripMenuItem;
+        private ToolStripMenuItem cậpNhậtDữLiệuToolStripMenuItem;
+        private ToolStripMenuItem uIDToolStripMenuItem;
+        private ToolStripMenuItem tênToolStripMenuItem;
+        private ToolStripMenuItem passwordToolStripMenuItem;
+        private ToolStripMenuItem emailToolStripMenuItem;
+        private ToolStripMenuItem ghiChúToolStripMenuItem;
+        private ToolStripMenuItem mởChromeMẫuToolStripMenuItem;
+        private ToolStripMenuItem làmMớiToolStripMenuItem;
+        private ToolTip ttMain;
+        private ToolStripStatusLabel tssSpace1;
+        private ToolStripStatusLabel tssTrangThai;
+        private ToolStripStatusLabel tssSpace2;
+        private ToolStripStatusLabel toolStripStatusLabel1;
+        private ToolStripStatusLabel tssTong;
+        private ToolStripStatusLabel tssSpace3;
+        private ToolStripStatusLabel tssTime;
+        private DataGridViewTextBoxColumn colSTT;
+        private DataGridViewTextBoxColumn colChon;
+        private DataGridViewTextBoxColumn colUID;
+        private DataGridViewTextBoxColumn colPass;
+        private DataGridViewTextBoxColumn colTen;
+        private DataGridViewTextBoxColumn colEmail;
+        private DataGridViewTextBoxColumn colNgayTao;
+        private DataGridViewTextBoxColumn colGhiChu;
+        private DataGridViewTextBoxColumn colTuongTacCuoi;
+        private DataGridViewTextBoxColumn colTrangThai;
+        private ToolStripMenuItem nhậpDanhSáchToolStripMenuItem;
     }
 }

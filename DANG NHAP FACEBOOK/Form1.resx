@@ -117,397 +117,988 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="lblTrangThai.Location" type="System.Drawing.Point, System.Drawing">
-    <value>313, 88</value>
-  </data>
-  <data name="&gt;&gt;lblTieuDe.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;lblUid.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;lblTrangThai.Name" xml:space="preserve">
-    <value>lblTrangThai</value>
-  </data>
-  <data name="lblChonGiaoDien.Text" xml:space="preserve">
-    <value>Chọn Giao Diện :</value>
+  <metadata name="colSTT.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colSTT.HeaderText" xml:space="preserve">
+    <value>STT</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="comboBox1.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+  <data name="colSTT.Width" type="System.Int32, mscorlib">
+    <value>50</value>
   </data>
-  <data name="txtPass.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
-    <value>*</value>
+  <metadata name="colChon.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colChon.HeaderText" xml:space="preserve">
+    <value>Chọn</value>
   </data>
-  <data name="&gt;&gt;statusStrip1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.StatusStrip, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="colChon.Width" type="System.Int32, mscorlib">
+    <value>50</value>
+  </data>
+  <metadata name="colUID.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colUID.HeaderText" xml:space="preserve">
+    <value>UID</value>
+  </data>
+  <data name="colUID.Width" type="System.Int32, mscorlib">
+    <value>80</value>
+  </data>
+  <metadata name="colPass.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colPass.HeaderText" xml:space="preserve">
+    <value>Mật Khẩu</value>
+  </data>
+  <metadata name="colTen.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colTen.HeaderText" xml:space="preserve">
+    <value>Tên</value>
+  </data>
+  <data name="colTen.Width" type="System.Int32, mscorlib">
+    <value>110</value>
+  </data>
+  <metadata name="colEmail.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colEmail.HeaderText" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <metadata name="colNgayTao.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colNgayTao.HeaderText" xml:space="preserve">
+    <value>Ngày Tạo</value>
+  </data>
+  <metadata name="colGhiChu.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colGhiChu.HeaderText" xml:space="preserve">
+    <value>Ghi Chú</value>
+  </data>
+  <metadata name="colTuongTacCuoi.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colTuongTacCuoi.HeaderText" xml:space="preserve">
+    <value>Tương Tác Cuối</value>
+  </data>
+  <data name="colTuongTacCuoi.Width" type="System.Int32, mscorlib">
+    <value>120</value>
+  </data>
+  <metadata name="colTrangThai.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="colTrangThai.HeaderText" xml:space="preserve">
+    <value>Trạng Thái</value>
+  </data>
+  <metadata name="cmsGirdRightClick.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>132, 17</value>
+  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="tToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>171, 22</value>
+  </data>
+  <data name="tToolStripMenuItem.Text" xml:space="preserve">
+    <value>Tất cả</value>
+  </data>
+  <data name="cácDòngBôiĐenToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>171, 22</value>
+  </data>
+  <data name="cácDòngBôiĐenToolStripMenuItem.Text" xml:space="preserve">
+    <value>Các dòng đã chọn</value>
+  </data>
+  <data name="chọnToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="chọnToolStripMenuItem.Text" xml:space="preserve">
+    <value>Chọn</value>
+  </data>
+  <data name="bỏChọnTấtCảToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="bỏChọnTấtCảToolStripMenuItem.Text" xml:space="preserve">
+    <value>Bỏ chọn tất cả</value>
+  </data>
+  <data name="dòngToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>171, 22</value>
+  </data>
+  <data name="dòngToolStripMenuItem.Text" xml:space="preserve">
+    <value>Dòng</value>
+  </data>
+  <data name="cácDòngBôiĐenToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>171, 22</value>
+  </data>
+  <data name="cácDòngBôiĐenToolStripMenuItem1.Text" xml:space="preserve">
+    <value>Các dòng đã chọn</value>
+  </data>
+  <data name="copyToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="copyToolStripMenuItem.Text" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="lọcTheoUIDToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>208, 22</value>
+  </data>
+  <data name="lọcTheoUIDToolStripMenuItem.Text" xml:space="preserve">
+    <value>Lọc theo UID</value>
+  </data>
+  <data name="lọcTàiKhoảnTrùngNhauToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>208, 22</value>
+  </data>
+  <data name="lọcTàiKhoảnTrùngNhauToolStripMenuItem.Text" xml:space="preserve">
+    <value>Lọc tài khoản trùng nhau</value>
+  </data>
+  <data name="xóaTàiKhoảnTrùngNhauToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>208, 22</value>
+  </data>
+  <data name="xóaTàiKhoảnTrùngNhauToolStripMenuItem.Text" xml:space="preserve">
+    <value>Xóa tài khoản trùng nhau</value>
+  </data>
+  <data name="chứcNăngToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="chứcNăngToolStripMenuItem.Text" xml:space="preserve">
+    <value>Chức năng</value>
+  </data>
+  <data name="checkProfileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>165, 22</value>
+  </data>
+  <data name="checkProfileToolStripMenuItem.Text" xml:space="preserve">
+    <value>Check profile</value>
+  </data>
+  <data name="xóaProfileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>165, 22</value>
+  </data>
+  <data name="xóaProfileToolStripMenuItem.Text" xml:space="preserve">
+    <value>Xóa Profile</value>
+  </data>
+  <data name="dọnDẹpProfileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>165, 22</value>
+  </data>
+  <data name="dọnDẹpProfileToolStripMenuItem.Text" xml:space="preserve">
+    <value>Dọn dẹp Profile</value>
+  </data>
+  <data name="xóaCaToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>165, 22</value>
+  </data>
+  <data name="xóaCaToolStripMenuItem.Text" xml:space="preserve">
+    <value>Xóa cache Profile</value>
+  </data>
+  <data name="profileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="profileToolStripMenuItem.Text" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="dòngToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>171, 22</value>
+  </data>
+  <data name="dòngToolStripMenuItem1.Text" xml:space="preserve">
+    <value>Dòng</value>
+  </data>
+  <data name="cácDòngĐãChọnToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>171, 22</value>
+  </data>
+  <data name="cácDòngĐãChọnToolStripMenuItem.Text" xml:space="preserve">
+    <value>Các dòng đã chọn</value>
+  </data>
+  <data name="xóaToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="xóaToolStripMenuItem.Text" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="uIDToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>124, 22</value>
+  </data>
+  <data name="uIDToolStripMenuItem.Text" xml:space="preserve">
+    <value>UID</value>
+  </data>
+  <data name="tênToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>124, 22</value>
+  </data>
+  <data name="tênToolStripMenuItem.Text" xml:space="preserve">
+    <value>Tên</value>
+  </data>
+  <data name="passwordToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>124, 22</value>
+  </data>
+  <data name="passwordToolStripMenuItem.Text" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="emailToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>124, 22</value>
+  </data>
+  <data name="emailToolStripMenuItem.Text" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="ghiChúToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>124, 22</value>
+  </data>
+  <data name="ghiChúToolStripMenuItem.Text" xml:space="preserve">
+    <value>Ghi chú</value>
+  </data>
+  <data name="cậpNhậtDữLiệuToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="cậpNhậtDữLiệuToolStripMenuItem.Text" xml:space="preserve">
+    <value>Cập nhật dữ liệu</value>
+  </data>
+  <data name="mởChromeMẫuToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="mởChromeMẫuToolStripMenuItem.Text" xml:space="preserve">
+    <value>Mở Chrome mẫu</value>
+  </data>
+  <data name="làmMớiToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="làmMớiToolStripMenuItem.Text" xml:space="preserve">
+    <value>Làm mới</value>
+  </data>
+  <data name="nhậpDanhSáchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="nhậpDanhSáchToolStripMenuItem.Text" xml:space="preserve">
+    <value>Nhập Danh sách</value>
+  </data>
+  <data name="nhậpDanhSáchToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Nhập tk|mk theo dạng UID|PASS</value>
+  </data>
+  <data name="cmsGirdRightClick.Size" type="System.Drawing.Size, System.Drawing">
+    <value>181, 246</value>
+  </data>
+  <data name="&gt;&gt;cmsGirdRightClick.Name" xml:space="preserve">
+    <value>cmsGirdRightClick</value>
+  </data>
+  <data name="&gt;&gt;cmsGirdRightClick.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="dataGridView1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 147</value>
   </data>
   <data name="dataGridView1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>776, 279</value>
+    <value>985, 354</value>
   </data>
-  <data name="&gt;&gt;lblUid.ZOrder" xml:space="preserve">
-    <value>9</value>
+  <data name="dataGridView1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
   </data>
-  <data name="&gt;&gt;btnTiepTuc.ZOrder" xml:space="preserve">
-    <value>4</value>
+  <data name="&gt;&gt;dataGridView1.Name" xml:space="preserve">
+    <value>dataGridView1</value>
   </data>
-  <data name="comboBox1.Items" xml:space="preserve">
-    <value>Facebook.com/meta</value>
+  <data name="&gt;&gt;dataGridView1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="comboBox1.Items1" xml:space="preserve">
-    <value>Facebook.com</value>
-  </data>
-  <data name="lblTieuDe.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 15.75pt, style=Bold</value>
-  </data>
-  <data name="&gt;&gt;lblPass.Parent" xml:space="preserve">
+  <data name="&gt;&gt;dataGridView1.Parent" xml:space="preserve">
     <value>$this</value>
+  </data>
+  <data name="&gt;&gt;dataGridView1.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="tssSpace1.AutoSize" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="tssSpace1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>20, 17</value>
+  </data>
+  <data name="tssTrangThai.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 9pt, style=Bold</value>
+  </data>
+  <data name="tssTrangThai.Size" type="System.Drawing.Size, System.Drawing">
+    <value>664, 17</value>
+  </data>
+  <data name="tssTrangThai.Text" xml:space="preserve">
+    <value>Trạng Thái</value>
+  </data>
+  <data name="tssTrangThai.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="tssSpace2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>0, 17</value>
+  </data>
+  <data name="toolStripStatusLabel1.AutoSize" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="toolStripStatusLabel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 17</value>
+  </data>
+  <data name="tssTong.AutoSize" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="tssTong.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 9pt, style=Bold</value>
+  </data>
+  <data name="tssTong.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 17</value>
+  </data>
+  <data name="tssTong.Text" xml:space="preserve">
+    <value>Tổng</value>
+  </data>
+  <data name="tssTong.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="tssSpace3.AutoSize" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="tssSpace3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 17</value>
+  </data>
+  <data name="tssTime.AutoSize" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="tssTime.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 9pt, style=Bold</value>
+  </data>
+  <data name="tssTime.Size" type="System.Drawing.Size, System.Drawing">
+    <value>150, 17</value>
+  </data>
+  <data name="tssTime.Text" xml:space="preserve">
+    <value>Times</value>
+  </data>
+  <data name="tssTime.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="statusStrip1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 504</value>
+  </data>
+  <data name="statusStrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1009, 22</value>
+  </data>
+  <data name="statusStrip1.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="statusStrip1.Text" xml:space="preserve">
+    <value>statusStrip1</value>
   </data>
   <data name="&gt;&gt;statusStrip1.Name" xml:space="preserve">
     <value>statusStrip1</value>
   </data>
-  <data name="btnDangNhap.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
+  <data name="&gt;&gt;statusStrip1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.StatusStrip, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;statusStrip1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;statusStrip1.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="lblTieuDe.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblTieuDe.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 15.75pt, style=Bold</value>
+  </data>
+  <data name="lblTieuDe.Location" type="System.Drawing.Point, System.Drawing">
+    <value>272, 9</value>
+  </data>
+  <data name="lblTieuDe.Size" type="System.Drawing.Size, System.Drawing">
+    <value>256, 30</value>
+  </data>
+  <data name="lblTieuDe.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="lblTieuDe.Text" xml:space="preserve">
+    <value>ĐĂNG NHẬP FACEBOOK</value>
+  </data>
+  <data name="&gt;&gt;lblTieuDe.Name" xml:space="preserve">
+    <value>lblTieuDe</value>
+  </data>
+  <data name="&gt;&gt;lblTieuDe.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblTieuDe.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblTieuDe.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="lblUid.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblUid.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 51</value>
+  </data>
+  <data name="lblUid.Size" type="System.Drawing.Size, System.Drawing">
+    <value>64, 15</value>
+  </data>
+  <data name="lblUid.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="lblUid.Text" xml:space="preserve">
+    <value>Nhập UID :</value>
+  </data>
+  <data name="&gt;&gt;lblUid.Name" xml:space="preserve">
+    <value>lblUid</value>
+  </data>
+  <data name="&gt;&gt;lblUid.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblUid.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblUid.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="lblPass.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblPass.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 88</value>
+  </data>
+  <data name="lblPass.Size" type="System.Drawing.Size, System.Drawing">
+    <value>95, 15</value>
+  </data>
+  <data name="lblPass.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="lblPass.Text" xml:space="preserve">
+    <value>Nhập mật khẩu :</value>
+  </data>
+  <data name="&gt;&gt;lblPass.Name" xml:space="preserve">
+    <value>lblPass</value>
+  </data>
+  <data name="&gt;&gt;lblPass.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblPass.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblPass.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="txtUid.Location" type="System.Drawing.Point, System.Drawing">
+    <value>121, 43</value>
+  </data>
+  <data name="txtUid.PlaceholderText" xml:space="preserve">
+    <value>Nhập UID...</value>
+  </data>
+  <data name="txtUid.Size" type="System.Drawing.Size, System.Drawing">
+    <value>124, 23</value>
+  </data>
+  <data name="txtUid.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <metadata name="ttMain.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>284, 17</value>
+  </metadata>
+  <data name="txtUid.ToolTip" xml:space="preserve">
+    <value>Nhập UID</value>
+  </data>
+  <data name="&gt;&gt;txtUid.Name" xml:space="preserve">
+    <value>txtUid</value>
+  </data>
+  <data name="&gt;&gt;txtUid.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtUid.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;txtUid.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="txtPass.Location" type="System.Drawing.Point, System.Drawing">
+    <value>121, 80</value>
+  </data>
+  <data name="txtPass.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value>*</value>
+  </data>
+  <data name="txtPass.PlaceholderText" xml:space="preserve">
+    <value>Nhập Password...</value>
   </data>
   <data name="txtPass.Size" type="System.Drawing.Size, System.Drawing">
     <value>124, 23</value>
   </data>
-  <data name="txtUid.Location" type="System.Drawing.Point, System.Drawing">
-    <value>111, 43</value>
+  <data name="txtPass.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
   </data>
-  <data name="&gt;&gt;btnTiepTuc.Type" xml:space="preserve">
+  <data name="txtPass.ToolTip" xml:space="preserve">
+    <value>Nhập Mật Khẩu</value>
+  </data>
+  <data name="&gt;&gt;txtPass.Name" xml:space="preserve">
+    <value>txtPass</value>
+  </data>
+  <data name="&gt;&gt;txtPass.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtPass.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;txtPass.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="btnDangNhap.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 9pt, style=Bold</value>
+  </data>
+  <data name="btnDangNhap.Location" type="System.Drawing.Point, System.Drawing">
+    <value>794, 68</value>
+  </data>
+  <data name="btnDangNhap.Size" type="System.Drawing.Size, System.Drawing">
+    <value>90, 35</value>
+  </data>
+  <data name="btnDangNhap.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="btnDangNhap.Text" xml:space="preserve">
+    <value>Đăng Nhập</value>
+  </data>
+  <data name="btnDangNhap.ToolTip" xml:space="preserve">
+    <value>Đăng nhập thủ công</value>
+  </data>
+  <data name="&gt;&gt;btnDangNhap.Name" xml:space="preserve">
+    <value>btnDangNhap</value>
+  </data>
+  <data name="&gt;&gt;btnDangNhap.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnDangNhap.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnDangNhap.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="btnTiepTuc.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 9pt, style=Bold</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="btnTiepTuc.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="lblTrangThai.Text" xml:space="preserve">
-    <value>Sẵn Sàng</value>
-  </data>
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>800, 450</value>
-  </data>
-  <data name="&gt;&gt;cboUserAgent.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;lblTieuDe.Name" xml:space="preserve">
-    <value>lblTieuDe</value>
-  </data>
-  <data name="lblTieuDe.Text" xml:space="preserve">
-    <value>ĐĂNG NHẬP FACEBOOK</value>
-  </data>
-  <data name="lblChonGiaoDien.Size" type="System.Drawing.Size, System.Drawing">
-    <value>96, 15</value>
-  </data>
-  <data name="&gt;&gt;comboBox1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>Form1</value>
-  </data>
-  <data name="&gt;&gt;lblTrangThai.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblChonGiaoDien.Name" xml:space="preserve">
-    <value>lblChonGiaoDien</value>
-  </data>
-  <data name="lblUserAgent.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 110</value>
-  </data>
-  <data name="statusStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>800, 22</value>
-  </data>
-  <data name="&gt;&gt;btnDangNhap.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="lblTieuDe.Size" type="System.Drawing.Size, System.Drawing">
-    <value>256, 30</value>
-  </data>
-  <data name="lblPass.Size" type="System.Drawing.Size, System.Drawing">
-    <value>95, 15</value>
-  </data>
-  <data name="&gt;&gt;lblUid.Name" xml:space="preserve">
-    <value>lblUid</value>
-  </data>
-  <data name="&gt;&gt;lblUserAgent.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="lblTrangThai.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 9pt, style=Bold</value>
-  </data>
-  <data name="txtPass.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="lblPass.Text" xml:space="preserve">
-    <value>Nhập mật khẩu :</value>
-  </data>
-  <data name="lblPass.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 88</value>
-  </data>
-  <data name="statusStrip1.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;cboUserAgent.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;cboUserAgent.Name" xml:space="preserve">
-    <value>cboUserAgent</value>
-  </data>
-  <data name="&gt;&gt;dataGridView1.ZOrder" xml:space="preserve">
-    <value>12</value>
-  </data>
-  <data name="&gt;&gt;btnDangNhap.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="lblUid.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;comboBox1.Name" xml:space="preserve">
-    <value>comboBox1</value>
-  </data>
-  <data name="dataGridView1.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;lblPass.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="lblTrangThai.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="lblUid.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="&gt;&gt;dataGridView1.Name" xml:space="preserve">
-    <value>dataGridView1</value>
-  </data>
-  <data name="lblUserAgent.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="btnDangNhap.Size" type="System.Drawing.Size, System.Drawing">
-    <value>90, 35</value>
+  <data name="btnTiepTuc.Location" type="System.Drawing.Point, System.Drawing">
+    <value>907, 68</value>
   </data>
   <data name="btnTiepTuc.Size" type="System.Drawing.Size, System.Drawing">
     <value>90, 35</value>
   </data>
-  <data name="cboUserAgent.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;comboBox1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;lblChonGiaoDien.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="txtUid.PlaceholderText" xml:space="preserve">
-    <value>Nhập UID...</value>
-  </data>
-  <data name="lblUid.Text" xml:space="preserve">
-    <value>Nhập UID :</value>
-  </data>
-  <data name="&gt;&gt;lblPass.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="lblTrangThai.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="comboBox1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>450, 81</value>
-  </data>
-  <data name="dataGridView1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 146</value>
-  </data>
-  <data name="&gt;&gt;txtPass.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="lblTieuDe.Location" type="System.Drawing.Point, System.Drawing">
-    <value>272, 9</value>
-  </data>
-  <data name="lblPass.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="txtUid.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="comboBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>121, 23</value>
-  </data>
-  <data name="lblUid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>64, 15</value>
-  </data>
-  <data name="cboUserAgent.Location" type="System.Drawing.Point, System.Drawing">
-    <value>112, 110</value>
-  </data>
-  <data name="&gt;&gt;btnTiepTuc.Name" xml:space="preserve">
-    <value>btnTiepTuc</value>
-  </data>
-  <data name="btnDangNhap.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 9pt, style=Bold</value>
-  </data>
-  <data name="lblChonGiaoDien.Location" type="System.Drawing.Point, System.Drawing">
-    <value>336, 89</value>
-  </data>
-  <data name="lblChonGiaoDien.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="btnTiepTuc.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
   </data>
   <data name="btnTiepTuc.Text" xml:space="preserve">
     <value>NEXT</value>
   </data>
-  <data name="&gt;&gt;txtUid.ZOrder" xml:space="preserve">
-    <value>7</value>
+  <data name="btnTiepTuc.ToolTip" xml:space="preserve">
+    <value>đi tiếp tài khoản khác</value>
   </data>
-  <data name="lblChonGiaoDien.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
+  <data name="&gt;&gt;btnTiepTuc.Name" xml:space="preserve">
+    <value>btnTiepTuc</value>
   </data>
-  <data name="&gt;&gt;btnDangNhap.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="lblUserAgent.Size" type="System.Drawing.Size, System.Drawing">
-    <value>94, 15</value>
-  </data>
-  <data name="&gt;&gt;txtPass.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="lblUserAgent.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="cboUserAgent.Size" type="System.Drawing.Size, System.Drawing">
-    <value>676, 23</value>
-  </data>
-  <data name="&gt;&gt;lblTrangThai.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;btnTiepTuc.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btnTiepTuc.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;lblChonGiaoDien.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtUid.Name" xml:space="preserve">
-    <value>txtUid</value>
-  </data>
-  <data name="btnTiepTuc.TabIndex" type="System.Int32, mscorlib">
+  <data name="&gt;&gt;btnTiepTuc.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
-  <data name="&gt;&gt;lblTieuDe.ZOrder" xml:space="preserve">
-    <value>10</value>
+  <data name="lblUserAgent.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>7, 15</value>
+  <data name="lblUserAgent.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 118</value>
   </data>
-  <data name="btnTiepTuc.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Segoe UI, 9pt, style=Bold</value>
+  <data name="lblUserAgent.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 15</value>
   </data>
-  <data name="&gt;&gt;lblUserAgent.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="lblUserAgent.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="lblUserAgent.Text" xml:space="preserve">
+    <value>Chọn UserAgent :</value>
   </data>
   <data name="&gt;&gt;lblUserAgent.Name" xml:space="preserve">
     <value>lblUserAgent</value>
   </data>
-  <data name="&gt;&gt;txtPass.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;txtUid.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="txtPass.Location" type="System.Drawing.Point, System.Drawing">
-    <value>112, 80</value>
-  </data>
-  <data name="btnTiepTuc.Location" type="System.Drawing.Point, System.Drawing">
-    <value>698, 68</value>
-  </data>
-  <data name="lblTieuDe.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
   <data name="&gt;&gt;lblUserAgent.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;txtUid.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;statusStrip1.Parent" xml:space="preserve">
+  <data name="&gt;&gt;lblUserAgent.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;btnDangNhap.Name" xml:space="preserve">
-    <value>btnDangNhap</value>
+  <data name="&gt;&gt;lblUserAgent.ZOrder" xml:space="preserve">
+    <value>4</value>
   </data>
-  <data name="&gt;&gt;txtPass.Name" xml:space="preserve">
-    <value>txtPass</value>
+  <data name="cboUserAgent.Location" type="System.Drawing.Point, System.Drawing">
+    <value>121, 110</value>
   </data>
-  <data name="&gt;&gt;dataGridView1.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="cboUserAgent.Size" type="System.Drawing.Size, System.Drawing">
+    <value>564, 23</value>
   </data>
-  <data name="&gt;&gt;dataGridView1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="cboUserAgent.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
   </data>
-  <data name="lblUid.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 51</value>
+  <data name="cboUserAgent.ToolTip" xml:space="preserve">
+    <value>Chọn UserAgent cho Chrome</value>
   </data>
-  <data name="txtUid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 23</value>
-  </data>
-  <data name="lblUserAgent.Text" xml:space="preserve">
-    <value>Chọn UserAgent</value>
-  </data>
-  <data name="&gt;&gt;statusStrip1.ZOrder" xml:space="preserve">
-    <value>11</value>
+  <data name="&gt;&gt;cboUserAgent.Name" xml:space="preserve">
+    <value>cboUserAgent</value>
   </data>
   <data name="&gt;&gt;cboUserAgent.Type" xml:space="preserve">
     <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="lblPass.AutoSize" type="System.Boolean, mscorlib">
+  <data name="&gt;&gt;cboUserAgent.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;cboUserAgent.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="lblChonGiaoDien.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="&gt;&gt;lblPass.Name" xml:space="preserve">
-    <value>lblPass</value>
+  <data name="lblChonGiaoDien.Location" type="System.Drawing.Point, System.Drawing">
+    <value>692, 118</value>
   </data>
-  <data name="&gt;&gt;comboBox1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="lblChonGiaoDien.Size" type="System.Drawing.Size, System.Drawing">
+    <value>96, 15</value>
   </data>
-  <data name="&gt;&gt;lblTrangThai.ZOrder" xml:space="preserve">
-    <value>2</value>
+  <data name="lblChonGiaoDien.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
   </data>
-  <data name="&gt;&gt;lblUid.Type" xml:space="preserve">
+  <data name="lblChonGiaoDien.Text" xml:space="preserve">
+    <value>Chọn Giao Diện :</value>
+  </data>
+  <data name="lblChonGiaoDien.ToolTip" xml:space="preserve">
+    <value>Chọn Giao Diện để đăng nhập</value>
+  </data>
+  <data name="&gt;&gt;lblChonGiaoDien.Name" xml:space="preserve">
+    <value>lblChonGiaoDien</value>
+  </data>
+  <data name="&gt;&gt;lblChonGiaoDien.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>ĐIỆN TỬ QUANG THƯ</value>
-  </data>
-  <data name="&gt;&gt;lblTieuDe.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="statusStrip1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 428</value>
-  </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Form, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="btnDangNhap.Text" xml:space="preserve">
-    <value>Đăng Nhập</value>
-  </data>
-  <data name="statusStrip1.Text" xml:space="preserve">
-    <value>statusStrip1</value>
-  </data>
-  <data name="lblTieuDe.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="txtPass.PlaceholderText" xml:space="preserve">
-    <value>Nhập Password...</value>
-  </data>
-  <data name="lblTrangThai.Size" type="System.Drawing.Size, System.Drawing">
-    <value>57, 15</value>
-  </data>
-  <data name="btnDangNhap.Location" type="System.Drawing.Point, System.Drawing">
-    <value>586, 68</value>
   </data>
   <data name="&gt;&gt;lblChonGiaoDien.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
+  <data name="&gt;&gt;lblChonGiaoDien.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="cboGiaoDien.Items" xml:space="preserve">
+    <value>Facebook.com/meta</value>
+  </data>
+  <data name="cboGiaoDien.Items1" xml:space="preserve">
+    <value>Facebook.com</value>
+  </data>
+  <data name="cboGiaoDien.Location" type="System.Drawing.Point, System.Drawing">
+    <value>794, 110</value>
+  </data>
+  <data name="cboGiaoDien.Size" type="System.Drawing.Size, System.Drawing">
+    <value>203, 23</value>
+  </data>
+  <data name="cboGiaoDien.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="cboGiaoDien.ToolTip" xml:space="preserve">
+    <value>fb/meta hay fb.com</value>
+  </data>
+  <data name="&gt;&gt;cboGiaoDien.Name" xml:space="preserve">
+    <value>cboGiaoDien</value>
+  </data>
+  <data name="&gt;&gt;cboGiaoDien.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cboGiaoDien.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;cboGiaoDien.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>7, 15</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>1009, 526</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>ĐIỆN TỬ QUANG THƯ</value>
+  </data>
+  <data name="&gt;&gt;colSTT.Name" xml:space="preserve">
+    <value>colSTT</value>
+  </data>
+  <data name="&gt;&gt;colSTT.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colChon.Name" xml:space="preserve">
+    <value>colChon</value>
+  </data>
+  <data name="&gt;&gt;colChon.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colUID.Name" xml:space="preserve">
+    <value>colUID</value>
+  </data>
+  <data name="&gt;&gt;colUID.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colPass.Name" xml:space="preserve">
+    <value>colPass</value>
+  </data>
+  <data name="&gt;&gt;colPass.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colTen.Name" xml:space="preserve">
+    <value>colTen</value>
+  </data>
+  <data name="&gt;&gt;colTen.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colEmail.Name" xml:space="preserve">
+    <value>colEmail</value>
+  </data>
+  <data name="&gt;&gt;colEmail.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colNgayTao.Name" xml:space="preserve">
+    <value>colNgayTao</value>
+  </data>
+  <data name="&gt;&gt;colNgayTao.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colGhiChu.Name" xml:space="preserve">
+    <value>colGhiChu</value>
+  </data>
+  <data name="&gt;&gt;colGhiChu.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colTuongTacCuoi.Name" xml:space="preserve">
+    <value>colTuongTacCuoi</value>
+  </data>
+  <data name="&gt;&gt;colTuongTacCuoi.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;colTrangThai.Name" xml:space="preserve">
+    <value>colTrangThai</value>
+  </data>
+  <data name="&gt;&gt;colTrangThai.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chọnToolStripMenuItem.Name" xml:space="preserve">
+    <value>chọnToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;chọnToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tToolStripMenuItem.Name" xml:space="preserve">
+    <value>tToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;tToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cácDòngBôiĐenToolStripMenuItem.Name" xml:space="preserve">
+    <value>cácDòngBôiĐenToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;cácDòngBôiĐenToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;bỏChọnTấtCảToolStripMenuItem.Name" xml:space="preserve">
+    <value>bỏChọnTấtCảToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;bỏChọnTấtCảToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;copyToolStripMenuItem.Name" xml:space="preserve">
+    <value>copyToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;copyToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;dòngToolStripMenuItem.Name" xml:space="preserve">
+    <value>dòngToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;dòngToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cácDòngBôiĐenToolStripMenuItem1.Name" xml:space="preserve">
+    <value>cácDòngBôiĐenToolStripMenuItem1</value>
+  </data>
+  <data name="&gt;&gt;cácDòngBôiĐenToolStripMenuItem1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chứcNăngToolStripMenuItem.Name" xml:space="preserve">
+    <value>chứcNăngToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;chứcNăngToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lọcTheoUIDToolStripMenuItem.Name" xml:space="preserve">
+    <value>lọcTheoUIDToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;lọcTheoUIDToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lọcTàiKhoảnTrùngNhauToolStripMenuItem.Name" xml:space="preserve">
+    <value>lọcTàiKhoảnTrùngNhauToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;lọcTàiKhoảnTrùngNhauToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;xóaTàiKhoảnTrùngNhauToolStripMenuItem.Name" xml:space="preserve">
+    <value>xóaTàiKhoảnTrùngNhauToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;xóaTàiKhoảnTrùngNhauToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;profileToolStripMenuItem.Name" xml:space="preserve">
+    <value>profileToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;profileToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkProfileToolStripMenuItem.Name" xml:space="preserve">
+    <value>checkProfileToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;checkProfileToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;xóaProfileToolStripMenuItem.Name" xml:space="preserve">
+    <value>xóaProfileToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;xóaProfileToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;dọnDẹpProfileToolStripMenuItem.Name" xml:space="preserve">
+    <value>dọnDẹpProfileToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;dọnDẹpProfileToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;xóaCaToolStripMenuItem.Name" xml:space="preserve">
+    <value>xóaCaToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;xóaCaToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;xóaToolStripMenuItem.Name" xml:space="preserve">
+    <value>xóaToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;xóaToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;dòngToolStripMenuItem1.Name" xml:space="preserve">
+    <value>dòngToolStripMenuItem1</value>
+  </data>
+  <data name="&gt;&gt;dòngToolStripMenuItem1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cácDòngĐãChọnToolStripMenuItem.Name" xml:space="preserve">
+    <value>cácDòngĐãChọnToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;cácDòngĐãChọnToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cậpNhậtDữLiệuToolStripMenuItem.Name" xml:space="preserve">
+    <value>cậpNhậtDữLiệuToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;cậpNhậtDữLiệuToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;uIDToolStripMenuItem.Name" xml:space="preserve">
+    <value>uIDToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;uIDToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tênToolStripMenuItem.Name" xml:space="preserve">
+    <value>tênToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;tênToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;passwordToolStripMenuItem.Name" xml:space="preserve">
+    <value>passwordToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;passwordToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;emailToolStripMenuItem.Name" xml:space="preserve">
+    <value>emailToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;emailToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ghiChúToolStripMenuItem.Name" xml:space="preserve">
+    <value>ghiChúToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;ghiChúToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mởChromeMẫuToolStripMenuItem.Name" xml:space="preserve">
+    <value>mởChromeMẫuToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;mởChromeMẫuToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;làmMớiToolStripMenuItem.Name" xml:space="preserve">
+    <value>làmMớiToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;làmMớiToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;nhậpDanhSáchToolStripMenuItem.Name" xml:space="preserve">
+    <value>nhậpDanhSáchToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;nhậpDanhSáchToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tssSpace1.Name" xml:space="preserve">
+    <value>tssSpace1</value>
+  </data>
+  <data name="&gt;&gt;tssSpace1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripStatusLabel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tssTrangThai.Name" xml:space="preserve">
+    <value>tssTrangThai</value>
+  </data>
+  <data name="&gt;&gt;tssTrangThai.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripStatusLabel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tssSpace2.Name" xml:space="preserve">
+    <value>tssSpace2</value>
+  </data>
+  <data name="&gt;&gt;tssSpace2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripStatusLabel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripStatusLabel1.Name" xml:space="preserve">
+    <value>toolStripStatusLabel1</value>
+  </data>
+  <data name="&gt;&gt;toolStripStatusLabel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripStatusLabel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tssTong.Name" xml:space="preserve">
+    <value>tssTong</value>
+  </data>
+  <data name="&gt;&gt;tssTong.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripStatusLabel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tssSpace3.Name" xml:space="preserve">
+    <value>tssSpace3</value>
+  </data>
+  <data name="&gt;&gt;tssSpace3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripStatusLabel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tssTime.Name" xml:space="preserve">
+    <value>tssTime</value>
+  </data>
+  <data name="&gt;&gt;tssTime.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripStatusLabel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ttMain.Name" xml:space="preserve">
+    <value>ttMain</value>
+  </data>
+  <data name="&gt;&gt;ttMain.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>Form1</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>
