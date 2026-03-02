@@ -14,6 +14,10 @@ namespace DANG_NHAP_FACEBOOK
             profileRanhPath = Path.Combine(AppContext.BaseDirectory, "profile_ranh");         // Đường dẫn đầy đủ tới thư mục profile rảnh
             LoadDuLieuLenGridKhiMoApp();                                                       // Khi app vừa mở thì nạp lại các profile cũ lên grid để giữ đúng trạng thái hiện có                                                                                              // Dòng này là "chìa khóa" nè bạn
             dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            if (cboUrl.Items.Count > 0 && cboUrl.SelectedIndex < 0)
+            {
+                cboUrl.SelectedIndex = 0;                                                     // Mặc định chọn giao diện đầu tiên để khi bấm Mở dòng không bị thiếu URL
+            }
         }
 
         //
@@ -207,7 +211,9 @@ namespace DANG_NHAP_FACEBOOK
             Directory.Move(duongDanProfileSuDung, duongDanProfileTheoUid);                    // Đổi tên thư mục profile đang dùng sang đúng UID của tài khoản mới
             ThemDongMoiLenGrid(uid, password, uid);                                           // Sau khi đã có profile đúng tên, thêm ngay dòng mới lên grid
         }
-
+        //
+        //   HÀM MỞ CHROME MẪU
+        //
         private void MoChromeMau()
         {
             Directory.CreateDirectory(profileMauPath);                                         // Nếu chưa có profile_mau thì tạo mới để luôn có nơi chuẩn bị profile gốc
@@ -228,7 +234,9 @@ namespace DANG_NHAP_FACEBOOK
 
             System.Diagnostics.Process.Start(psi);                                             // Mở Chrome mẫu để người dùng cấu hình các thành phần cần thiết
         }
-
+        //
+        //  HÀM MỞ CHROM THEO DÒNG
+        //
         private void MoProfileTheoDongDangChon()
         {
             if (dataGridView1.SelectedRows.Count != 1)                                         // Chỉ cho phép mở khi đang chọn đúng 1 dòng trên grid
@@ -260,14 +268,30 @@ namespace DANG_NHAP_FACEBOOK
                 return;                                                                        // Không mở tiếp nếu máy chưa tìm thấy Chrome
             }
 
+            string urlCanMo = LayUrlFacebookDaChon();                                          // Lấy đúng URL Facebook theo giao diện đang chọn trên combobox
+
             var psi = new System.Diagnostics.ProcessStartInfo
             {
                 FileName = chromeExe,
-                Arguments = $"--user-data-dir=\"{duongDanProfile}\"",                          // Mở Chrome bằng đúng thư mục profile của UID đang chọn
+                Arguments = $"--user-data-dir=\"{duongDanProfile}\" {urlCanMo}",               // Mở Chrome bằng đúng profile của UID đang chọn và đi tới giao diện Facebook đã chọn
                 UseShellExecute = true
             };
 
             System.Diagnostics.Process.Start(psi);                                             // Mở lại profile cũ đúng với dòng đang chọn trên grid
+        }
+        //
+        //  HÀM LẤY URL FACEBOOK ĐANG CHỌN
+        //
+        private string LayUrlFacebookDaChon()
+        {
+            string luaChon = cboUrl.SelectedItem?.ToString()?.Trim() ?? string.Empty;         // Lấy nội dung người dùng đang chọn trong combobox giao diện
+
+            if (luaChon.Contains("meta", StringComparison.OrdinalIgnoreCase))
+            {
+                return "https://facebook.com/meta";                                            // Nếu chọn giao diện meta thì mở đúng URL meta
+            }
+
+            return "https://facebook.com/";                                                    // Mặc định còn lại sẽ mở giao diện Facebook thông thường
         }
         //
         //   HÀM LOAD DỮ LIỆU KHI MỞ APP

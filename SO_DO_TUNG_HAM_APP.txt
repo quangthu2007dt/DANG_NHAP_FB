@@ -281,3 +281,10 @@ Các bước:
   Ghi chu
 
 - Neu sau nay sua logic cua ham, can sua lai file nay de giu dung luong thiet ke.
+
+
+12. CAP NHAT MOPROFILETHEODONGDANGCHON
+-------------------------------------
+- Ham nay da duoc bo sung buoc doc gia tri dang chon trong cboUrl.
+- Neu giao dien dang chon co chu "meta" thi mo https://facebook.com/meta
+- Cac truong hop con lai tam thoi mo https://facebook.com/
