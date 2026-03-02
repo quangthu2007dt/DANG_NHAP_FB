@@ -248,6 +248,7 @@ namespace DANG_NHAP_FACEBOOK
             if (string.Equals(duongDanProfileSuDung, duongDanProfileTheoUid, StringComparison.OrdinalIgnoreCase)) // Nếu profile hiện tại đã mang đúng tên UID thì không cần đổi tên
             {
                 ThemDongMoiLenGrid(uid, password, uid);
+                MoChromeTheoProfile(duongDanProfileTheoUid, uid);                              // Sau khi đã có dòng mới thì mở luôn Chrome theo profile vừa tạo để hoàn chỉnh luồng Next
                 return;
             }
 
@@ -259,6 +260,7 @@ namespace DANG_NHAP_FACEBOOK
 
             Directory.Move(duongDanProfileSuDung, duongDanProfileTheoUid);                    // Đổi tên thư mục profile đang dùng sang đúng UID của tài khoản mới
             ThemDongMoiLenGrid(uid, password, uid);                                           // Sau khi đã có profile đúng tên, thêm ngay dòng mới lên grid
+            MoChromeTheoProfile(duongDanProfileTheoUid, uid);                                  // Mở ngay profile mới theo giao diện đã chọn để người dùng tiếp tục thao tác
         }
         //
         //   HÀM MỞ CHROME MẪU
@@ -311,6 +313,13 @@ namespace DANG_NHAP_FACEBOOK
                 return;                                                                        // Thoát nếu profile tương ứng đã bị thiếu hoặc chưa được tạo
             }
 
+            MoChromeTheoProfile(duongDanProfile, uid);                                         // Dùng chung một hàm mở Chrome để đồng bộ logic URL và User-Agent với nút Next
+        }
+        //
+        //  HÀM MỞ CHROME THEO PROFILE
+        //
+        private void MoChromeTheoProfile(string duongDanProfile, string tenProfile)
+        {
             string chromeExe = TimChromeExe();                                                 // Tìm đường dẫn chrome.exe để mở profile bằng Chrome thật
             if (string.IsNullOrWhiteSpace(chromeExe))
             {
@@ -328,7 +337,14 @@ namespace DANG_NHAP_FACEBOOK
                 UseShellExecute = true
             };
 
-            System.Diagnostics.Process.Start(psi);                                             // Mở lại profile cũ đúng với dòng đang chọn trên grid
+            try
+            {
+                System.Diagnostics.Process.Start(psi);                                         // Mở Chrome theo đúng profile, dùng chung cho cả Mở dòng và Next
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể mở Chrome cho profile {tenProfile}.{Environment.NewLine}{ex.Message}");
+            }
         }
         //
         //  HÀM LẤY URL FACEBOOK ĐANG CHỌN

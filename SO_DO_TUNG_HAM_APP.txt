@@ -121,13 +121,39 @@ Các bước:
 3. Đổi tên profile đó thành đúng UID.
 4. Gọi ThemDongMoiLenGrid để thêm dòng mới lên grid.
 5. Tự chọn dòng mới đó.
-6. Mở Facebook theo cấu hình đã chọn.
-7. Điền sẵn UID và Password một lần.
+6. Gọi hàm mở Chrome theo profile vừa tạo.
+7. Mở Facebook theo cấu hình đã chọn.
+8. Điền sẵn UID và Password một lần.
 
 Ghi chu:
 - Day la ham dieu phoi, khong nen viet qua nhieu logic con ben trong.
 - Nen goi cac ham nho da tach san tu truoc.
 - Day la ham chinh cua nut Next.
+
+
+4.1 TEN HAM: MoChromeTheoProfile
+--------------------------------
+
+Muc dich:
+- Dung chung cho nut Next va nut Mo dong.
+- Mo Chrome theo dung profile, URL va User-Agent dang chon.
+
+Du lieu vao:
+- duongDanProfile
+- tenProfile
+
+Du lieu ra:
+- Khong tra du lieu ra ngoai.
+- Mo Chrome theo profile da chi dinh.
+
+Các bước:
+1. Tìm chrome.exe.
+2. Lấy URL theo combobox giao diện.
+3. Nếu là m.facebook.com thì ghép User-Agent mobile cố định.
+4. Mở Chrome với --user-data-dir đúng profile.
+
+Ghi chu:
+- Ham nay giup Next va Mo dong dung chung mot luong mo Chrome.
 
 
 5. TEN SU KIEN: btnTiepTuc_Click
