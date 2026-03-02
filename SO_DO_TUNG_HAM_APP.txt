@@ -287,4 +287,5 @@ Các bước:
 -------------------------------------
 - Ham nay da duoc bo sung buoc doc gia tri dang chon trong cboUrl.
 - Neu giao dien dang chon co chu "meta" thi mo https://facebook.com/meta
+- Neu giao dien dang chon co chu "m.facebook" thi mo https://m.facebook.com/
 - Cac truong hop con lai tam thoi mo https://facebook.com/

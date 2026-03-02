@@ -14,6 +14,12 @@ namespace DANG_NHAP_FACEBOOK
             profileRanhPath = Path.Combine(AppContext.BaseDirectory, "profile_ranh");         // Đường dẫn đầy đủ tới thư mục profile rảnh
             LoadDuLieuLenGridKhiMoApp();                                                       // Khi app vừa mở thì nạp lại các profile cũ lên grid để giữ đúng trạng thái hiện có                                                                                              // Dòng này là "chìa khóa" nè bạn
             dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+            if (!cboUrl.Items.Contains("m.facebook.com"))
+            {
+                cboUrl.Items.Add("m.facebook.com");                                            // Bổ sung thêm lựa chọn mobile để app không bị giới hạn chỉ 2 giao diện
+            }
+
             if (cboUrl.Items.Count > 0 && cboUrl.SelectedIndex < 0)
             {
                 cboUrl.SelectedIndex = 0;                                                     // Mặc định chọn giao diện đầu tiên để khi bấm Mở dòng không bị thiếu URL
@@ -285,6 +291,11 @@ namespace DANG_NHAP_FACEBOOK
         private string LayUrlFacebookDaChon()
         {
             string luaChon = cboUrl.SelectedItem?.ToString()?.Trim() ?? string.Empty;         // Lấy nội dung người dùng đang chọn trong combobox giao diện
+
+            if (luaChon.Contains("m.facebook", StringComparison.OrdinalIgnoreCase))
+            {
+                return "https://m.facebook.com/";                                              // Nếu chọn giao diện mobile thì mở đúng URL mobile
+            }
 
             if (luaChon.Contains("meta", StringComparison.OrdinalIgnoreCase))
             {
