@@ -150,7 +150,9 @@ Các bước:
 1. Tìm chrome.exe.
 2. Lấy URL theo combobox giao diện.
 3. Nếu là m.facebook.com thì ghép User-Agent mobile cố định.
-4. Mở Chrome với --user-data-dir đúng profile.
+4. Gán remote-debugging-port để app có thể kết nối vào tab Chrome vừa mở.
+5. Mở Chrome với --user-data-dir đúng profile.
+6. Sau khi tab Facebook tải lên, app tự điền lại UID và Password.
 
 Ghi chu:
 - Ham nay giup Next va Mo dong dung chung mot luong mo Chrome.

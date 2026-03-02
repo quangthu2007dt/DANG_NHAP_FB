@@ -1,3 +1,6 @@
+using System.Text;
+using System.Text.Json;
+
 namespace DANG_NHAP_FACEBOOK
 {
     public partial class Form1 : Form
@@ -248,7 +251,7 @@ namespace DANG_NHAP_FACEBOOK
             if (string.Equals(duongDanProfileSuDung, duongDanProfileTheoUid, StringComparison.OrdinalIgnoreCase)) // Nếu profile hiện tại đã mang đúng tên UID thì không cần đổi tên
             {
                 ThemDongMoiLenGrid(uid, password, uid);
-                MoChromeTheoProfile(duongDanProfileTheoUid, uid);                              // Sau khi đã có dòng mới thì mở luôn Chrome theo profile vừa tạo để hoàn chỉnh luồng Next
+                MoChromeTheoProfile(duongDanProfileTheoUid, uid, password);                    // Sau khi đã có dòng mới thì mở luôn Chrome theo profile vừa tạo để hoàn chỉnh luồng Next
                 return;
             }
 
@@ -260,7 +263,7 @@ namespace DANG_NHAP_FACEBOOK
 
             Directory.Move(duongDanProfileSuDung, duongDanProfileTheoUid);                    // Đổi tên thư mục profile đang dùng sang đúng UID của tài khoản mới
             ThemDongMoiLenGrid(uid, password, uid);                                           // Sau khi đã có profile đúng tên, thêm ngay dòng mới lên grid
-            MoChromeTheoProfile(duongDanProfileTheoUid, uid);                                  // Mở ngay profile mới theo giao diện đã chọn để người dùng tiếp tục thao tác
+            MoChromeTheoProfile(duongDanProfileTheoUid, uid, password);                        // Mở ngay profile mới theo giao diện đã chọn để người dùng tiếp tục thao tác
         }
         //
         //   HÀM MỞ CHROME MẪU
@@ -299,6 +302,7 @@ namespace DANG_NHAP_FACEBOOK
 
             DataGridViewRow row = dsDongDaTick[0];                                             // Lấy đúng dòng đang được tick để xác định profile cần mở
             string uid = row.Cells["colUID"].Value?.ToString()?.Trim() ?? string.Empty;        // UID của dòng đang chọn cũng chính là tên thư mục profile
+            string password = row.Cells["colPass"].Value?.ToString()?.Trim() ?? string.Empty;  // Lấy lại mật khẩu trên grid để khi mở profile cũ vẫn tự điền lại đúng tài khoản
 
             if (string.IsNullOrWhiteSpace(uid))
             {
@@ -313,12 +317,12 @@ namespace DANG_NHAP_FACEBOOK
                 return;                                                                        // Thoát nếu profile tương ứng đã bị thiếu hoặc chưa được tạo
             }
 
-            MoChromeTheoProfile(duongDanProfile, uid);                                         // Dùng chung một hàm mở Chrome để đồng bộ logic URL và User-Agent với nút Next
+            MoChromeTheoProfile(duongDanProfile, uid, password);                               // Dùng chung một hàm mở Chrome để đồng bộ logic URL, User-Agent và tự điền với nút Next
         }
         //
         //  HÀM MỞ CHROME THEO PROFILE
         //
-        private void MoChromeTheoProfile(string duongDanProfile, string tenProfile)
+        private void MoChromeTheoProfile(string duongDanProfile, string tenProfile, string password)
         {
             string chromeExe = TimChromeExe();                                                 // Tìm đường dẫn chrome.exe để mở profile bằng Chrome thật
             if (string.IsNullOrWhiteSpace(chromeExe))
@@ -329,17 +333,19 @@ namespace DANG_NHAP_FACEBOOK
 
             string urlCanMo = LayUrlFacebookDaChon();                                          // Lấy đúng URL Facebook theo giao diện đang chọn trên combobox
             string thamSoUserAgent = LayThamSoUserAgentTheoGiaoDien(urlCanMo);                 // Nếu là giao diện mobile thì ghép thêm User-Agent mobile cố định
+            int congDebugChrome = LayCongDebugChromeTrong();                                   // Mỗi lần mở Chrome cấp một cổng debug riêng để app có thể tự điền UID và Password chính xác
 
             var psi = new System.Diagnostics.ProcessStartInfo
             {
                 FileName = chromeExe,
-                Arguments = $"--user-data-dir=\"{duongDanProfile}\" {thamSoUserAgent} {urlCanMo}".Trim(), // Mở Chrome bằng đúng profile của UID đang chọn, kèm User-Agent nếu cần và đi tới URL đã chọn
+                Arguments = $"--remote-debugging-port={congDebugChrome} --user-data-dir=\"{duongDanProfile}\" {thamSoUserAgent} {urlCanMo}".Trim(), // Mở Chrome bằng đúng profile, kèm cổng debug để app tự điền tài khoản sau khi trang tải xong
                 UseShellExecute = true
             };
 
             try
             {
                 System.Diagnostics.Process.Start(psi);                                         // Mở Chrome theo đúng profile, dùng chung cho cả Mở dòng và Next
+                _ = TuDongDienThongTinDangNhapAsync(congDebugChrome, tenProfile, password);    // Chạy nền bước tự điền để người dùng đỡ phải nhập tay lại UID và Password
             }
             catch (Exception ex)
             {
@@ -376,6 +382,217 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             return string.Empty;                                                               // Các giao diện còn lại tạm thời chưa cần ép User-Agent
+        }
+        //
+        //  HÀM LẤY CỔNG DEBUG CHROME TRỐNG
+        //
+        private int LayCongDebugChromeTrong()
+        {
+            using var listener = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, 0);
+            listener.Start();                                                                  // Mượn tạm một cổng trống của hệ điều hành để dùng cho remote debugging của Chrome
+            int congTrong = ((System.Net.IPEndPoint)listener.LocalEndpoint).Port;
+            listener.Stop();
+            return congTrong;
+        }
+        //
+        //  HÀM TỰ ĐIỀN THÔNG TIN ĐĂNG NHẬP
+        //
+        private async Task TuDongDienThongTinDangNhapAsync(int congDebugChrome, string uid, string password)
+        {
+            if (string.IsNullOrWhiteSpace(uid) || string.IsNullOrWhiteSpace(password))
+            {
+                return;                                                                        // Nếu thiếu UID hoặc Password thì không tự điền được, tránh đổ nhầm dữ liệu rỗng lên form đăng nhập
+            }
+
+            string script = TaoScriptTuDongDienDangNhap(uid, password);                        // Tạo script JavaScript để tìm ô email/password và đổ giá trị vào đúng cách của trình duyệt
+
+            for (int i = 0; i < 25; i++)
+            {
+                try
+                {
+                    string? webSocketDebuggerUrl = await LayWebSocketDebuggerUrlFacebookAsync(congDebugChrome); // Tìm tab Facebook mà Chrome vừa mở để kết nối vào CDP
+                    if (string.IsNullOrWhiteSpace(webSocketDebuggerUrl))
+                    {
+                        await Task.Delay(1000);
+                        continue;
+                    }
+
+                    bool daDienThanhCong = await ThuChayScriptTuDongDienAsync(webSocketDebuggerUrl, script); // Chạy script bằng CDP, nếu ô đã hiện thì điền ngay UID và Password
+                    if (daDienThanhCong)
+                    {
+                        return;
+                    }
+                }
+                catch
+                {
+                }
+
+                await Task.Delay(1000);                                                        // Chờ trang tải thêm rồi thử lại vì Facebook có thể render form chậm
+            }
+        }
+        //
+        //  HÀM LẤY WEBSOCKET DEBUGGER URL CỦA TAB FACEBOOK
+        //
+        private async Task<string?> LayWebSocketDebuggerUrlFacebookAsync(int congDebugChrome)
+        {
+            using var httpClient = new HttpClient();
+            httpClient.Timeout = TimeSpan.FromSeconds(3);
+
+            string json = await httpClient.GetStringAsync($"http://127.0.0.1:{congDebugChrome}/json"); // Đọc danh sách tab debug mà Chrome đang mở trên cổng remote-debugging-port
+            using JsonDocument document = JsonDocument.Parse(json);
+
+            foreach (JsonElement tab in document.RootElement.EnumerateArray())
+            {
+                string type = tab.TryGetProperty("type", out JsonElement typeElement) ? typeElement.GetString() ?? string.Empty : string.Empty;
+                string url = tab.TryGetProperty("url", out JsonElement urlElement) ? urlElement.GetString() ?? string.Empty : string.Empty;
+                string webSocketDebuggerUrl = tab.TryGetProperty("webSocketDebuggerUrl", out JsonElement wsElement) ? wsElement.GetString() ?? string.Empty : string.Empty;
+
+                if (!string.Equals(type, "page", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                if (!url.Contains("facebook.com", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                if (!string.IsNullOrWhiteSpace(webSocketDebuggerUrl))
+                {
+                    return webSocketDebuggerUrl;                                               // Trả lại đúng websocket của tab Facebook để app gửi lệnh JavaScript vào trang
+                }
+            }
+
+            return null;
+        }
+        //
+        //  HÀM THỬ CHẠY SCRIPT TỰ ĐIỀN
+        //
+        private async Task<bool> ThuChayScriptTuDongDienAsync(string webSocketDebuggerUrl, string script)
+        {
+            using var webSocket = new System.Net.WebSockets.ClientWebSocket();
+            await webSocket.ConnectAsync(new Uri(webSocketDebuggerUrl), CancellationToken.None); // Kết nối thẳng vào tab Facebook bằng giao thức DevTools Protocol
+
+            using JsonDocument ketQua = await GuiLenhCdpAsync(webSocket, "Runtime.evaluate", new
+            {
+                expression = script,
+                returnByValue = true
+            });
+
+            if (!ketQua.RootElement.TryGetProperty("result", out JsonElement resultElement))
+            {
+                return false;
+            }
+
+            if (!resultElement.TryGetProperty("result", out JsonElement evaluateResult))
+            {
+                return false;
+            }
+
+            if (!evaluateResult.TryGetProperty("value", out JsonElement valueElement))
+            {
+                return false;
+            }
+
+            string trangThai = valueElement.GetString() ?? string.Empty;                       // Script trả về 'ok' khi đã tìm thấy đủ ô và điền xong, còn lại là 'wait'
+            return string.Equals(trangThai, "ok", StringComparison.OrdinalIgnoreCase);
+        }
+        //
+        //  HÀM GỬI LỆNH CDP
+        //
+        private async Task<JsonDocument> GuiLenhCdpAsync(System.Net.WebSockets.ClientWebSocket webSocket, string method, object thamSo)
+        {
+            string jsonRequest = JsonSerializer.Serialize(new
+            {
+                id = 1,
+                method,
+                @params = thamSo
+            });
+
+            byte[] requestBytes = Encoding.UTF8.GetBytes(jsonRequest);
+            await webSocket.SendAsync(new ArraySegment<byte>(requestBytes), System.Net.WebSockets.WebSocketMessageType.Text, true, CancellationToken.None);
+
+            byte[] buffer = new byte[32768];
+            using var memoryStream = new MemoryStream();
+
+            while (true)
+            {
+                System.Net.WebSockets.WebSocketReceiveResult ketQuaNhan = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                memoryStream.Write(buffer, 0, ketQuaNhan.Count);
+
+                if (ketQuaNhan.EndOfMessage)
+                {
+                    break;
+                }
+            }
+
+            memoryStream.Position = 0;
+            return await JsonDocument.ParseAsync(memoryStream);                                 // Trả lại JSON gốc để đọc kết quả evaluate từ tab Chrome
+        }
+        //
+        //  HÀM TẠO SCRIPT TỰ ĐIỀN ĐĂNG NHẬP
+        //
+        private string TaoScriptTuDongDienDangNhap(string uid, string password)
+        {
+            string uidJson = JsonSerializer.Serialize(uid);
+            string passwordJson = JsonSerializer.Serialize(password);
+
+            return $$"""
+(() => {
+  const uid = {{uidJson}};
+  const password = {{passwordJson}};
+
+  const isVisible = (el) => !!(el && (el.offsetWidth || el.offsetHeight || el.getClientRects().length));
+  const firstVisible = (selectors) => {
+    for (const selector of selectors) {
+      const element = document.querySelector(selector);
+      if (isVisible(element)) return element;
+    }
+    return null;
+  };
+
+  const setNativeValue = (element, value) => {
+    const prototype = Object.getPrototypeOf(element);
+    const descriptor = Object.getOwnPropertyDescriptor(prototype, 'value') || Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+    descriptor.set.call(element, value);
+    element.dispatchEvent(new Event('input', { bubbles: true }));
+    element.dispatchEvent(new Event('change', { bubbles: true }));
+  };
+
+  const emailInput = firstVisible([
+    'input[name="email"]',
+    'input[id="email"]',
+    'input[autocomplete="username"]',
+    'input[type="email"]',
+    'input[inputmode="email"]',
+    'input[placeholder*="Email"]',
+    'input[placeholder*="email"]',
+    'input[aria-label*="Email"]',
+    'input[aria-label*="email"]'
+  ]) || Array.from(document.querySelectorAll('input')).find((input) => {
+    const type = (input.getAttribute('type') || 'text').toLowerCase();
+    return isVisible(input) && type !== 'password' && type !== 'hidden';
+  });
+
+  const passwordInput = firstVisible([
+    'input[name="pass"]',
+    'input[type="password"]',
+    'input[autocomplete="current-password"]',
+    'input[aria-label*="Password"]',
+    'input[aria-label*="password"]',
+    'input[placeholder*="Password"]',
+    'input[placeholder*="password"]'
+  ]);
+
+  if (!emailInput || !passwordInput) {
+    return 'wait';
+  }
+
+  setNativeValue(emailInput, uid);
+  setNativeValue(passwordInput, password);
+  return 'ok';
+})();
+""";
         }
         //
         //  HÀM ĐẢO TRẠNG THÁI TICK CỦA DÒNG
