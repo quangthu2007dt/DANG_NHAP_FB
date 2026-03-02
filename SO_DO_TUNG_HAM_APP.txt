@@ -1,0 +1,62 @@
+SO DO TUNG HAM APP DANG NHAP FACEBOOK
+====================================
+
+1. TEN HAM: TryLayTaiKhoanMoiTuDs
+--------------------------------
+
+Muc dich:
+- Lay 1 tai khoan moi hop le tu ds.txt de dung cho nut Next.
+
+Du lieu vao:
+- ds.txt nam canh file exe.
+- Grid hien tai cua app de kiem tra UID da ton tai hay chua.
+
+Du lieu ra:
+- uid
+- password
+- true neu lay duoc tai khoan moi
+- false neu khong lay duoc
+
+Các bước:
+1. Kiểm tra có ds.txt không.
+2. Đọc toàn bộ file vào mảng lines.
+3. Nếu file rỗng thì báo và mở Notepad.
+4. Bỏ qua dòng trống.
+5. Báo "Dòng x lỗi" nếu sai định dạng.
+6. Tách uid|password.
+7. Bỏ qua UID đã có trên grid.
+8. Trả ra uid/password mới đầu tiên.
+
+Ghi chu:
+- Dinh dang hop le cua 1 dong la:
+  uid|password
+- Dung 1 dau | duy nhat.
+- Hai ben uid va password deu phai co gia tri.
+- Ham nay chi doc va loc du lieu.
+- Chua mo Chrome.
+- Chua them dong len grid.
+- Chua dong vao nut Next.
+
+
+2. CAC HAM DU KIEN SE CO SAU NAY
+--------------------------------
+- ThemDongMoiLenGrid
+- MoProfileTheoDongDangChon
+- NextLayTaiKhoanMoi
+- ResetProfileVeProfileRanh
+- XoaDongVaXoaTrongDs
+- TimProfileRanhHoacTaoMoi
+
+
+3. CACH SU DUNG FILE NAY
+------------------------
+- Moi khi sap viet 1 ham moi, can ghi ham do vao day truoc.
+- Ghi theo dung thu tu:
+  Ten ham
+  Muc dich
+  Du lieu vao
+  Du lieu ra
+  Cac buoc
+  Ghi chu
+
+- Neu sau nay sua logic cua ham, can sua lai file nay de giu dung luong thiet ke.
