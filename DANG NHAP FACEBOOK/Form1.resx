@@ -125,7 +125,7 @@
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="colSTT.Width" type="System.Int32, mscorlib">
-    <value>50</value>
+    <value>40</value>
   </data>
   <metadata name="colChon.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -134,7 +134,7 @@
     <value>Chọn</value>
   </data>
   <data name="colChon.Width" type="System.Int32, mscorlib">
-    <value>50</value>
+    <value>40</value>
   </data>
   <metadata name="colUID.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -142,14 +142,14 @@
   <data name="colUID.HeaderText" xml:space="preserve">
     <value>UID</value>
   </data>
-  <data name="colUID.Width" type="System.Int32, mscorlib">
-    <value>80</value>
-  </data>
   <metadata name="colPass.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <data name="colPass.HeaderText" xml:space="preserve">
     <value>Mật Khẩu</value>
+  </data>
+  <data name="colPass.Width" type="System.Int32, mscorlib">
+    <value>90</value>
   </data>
   <metadata name="colTen.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -843,34 +843,34 @@
   <data name="&gt;&gt;lblChonGiaoDien.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="cboGiaoDien.Items" xml:space="preserve">
+  <data name="cboUrl.Items" xml:space="preserve">
     <value>Facebook.com/meta</value>
   </data>
-  <data name="cboGiaoDien.Items1" xml:space="preserve">
+  <data name="cboUrl.Items1" xml:space="preserve">
     <value>Facebook.com</value>
   </data>
-  <data name="cboGiaoDien.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="cboUrl.Location" type="System.Drawing.Point, System.Drawing">
     <value>879, 109</value>
   </data>
-  <data name="cboGiaoDien.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="cboUrl.Size" type="System.Drawing.Size, System.Drawing">
     <value>203, 23</value>
   </data>
-  <data name="cboGiaoDien.TabIndex" type="System.Int32, mscorlib">
+  <data name="cboUrl.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
   </data>
-  <data name="cboGiaoDien.ToolTip" xml:space="preserve">
-    <value>fb/meta hay fb.com</value>
+  <data name="cboUrl.ToolTip" xml:space="preserve">
+    <value>Chọn URL fb/meta hay fb.com</value>
   </data>
-  <data name="&gt;&gt;cboGiaoDien.Name" xml:space="preserve">
-    <value>cboGiaoDien</value>
+  <data name="&gt;&gt;cboUrl.Name" xml:space="preserve">
+    <value>cboUrl</value>
   </data>
-  <data name="&gt;&gt;cboGiaoDien.Type" xml:space="preserve">
+  <data name="&gt;&gt;cboUrl.Type" xml:space="preserve">
     <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;cboGiaoDien.Parent" xml:space="preserve">
+  <data name="&gt;&gt;cboUrl.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;cboGiaoDien.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;cboUrl.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -898,7 +898,7 @@
     <value>colChon</value>
   </data>
   <data name="&gt;&gt;colChon.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.DataGridViewCheckBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;colUID.Name" xml:space="preserve">
     <value>colUID</value>
@@ -1176,6 +1176,12 @@
   <data name="&gt;&gt;checkÌnorToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;mởToolStripMenuItem.Name" xml:space="preserve">
+    <value>mởToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;mởToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;tssSpace1.Name" xml:space="preserve">
     <value>tssSpace1</value>
   </data>
@@ -1223,12 +1229,6 @@
   </data>
   <data name="&gt;&gt;ttMain.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;mởToolStripMenuItem.Name" xml:space="preserve">
-    <value>mởToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;mởToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>Form1</value>
