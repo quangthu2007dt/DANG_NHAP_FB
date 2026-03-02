@@ -413,8 +413,12 @@ namespace DANG_NHAP_FACEBOOK
                 return;
             }
 
+            if (!XuLyProfileKhiXoaMotDong(uid))                                                // Chỉ tiếp tục xóa dữ liệu khi profile đã được xử lý xong an toàn
+            {
+                return;
+            }
+
             XoaUidKhoiDsTxt(uid);                                                              // Xóa UID tương ứng ra khỏi ds.txt để dữ liệu file và grid luôn đồng bộ
-            XuLyProfileKhiXoaMotDong(uid);                                                     // Xóa profile theo UID và giữ lại tối đa 1 profile_ranh sạch để dùng cho lần sau
             dataGridView1.Rows.Remove(row);                                                    // Bỏ dòng đã xóa ra khỏi grid
             CapNhatLaiSTT();                                                                   // Đánh lại số thứ tự để bảng không bị lệch sau khi xóa
         }
@@ -430,6 +434,8 @@ namespace DANG_NHAP_FACEBOOK
                 return;
             }
 
+            List<string> dsUidCanXoa = new();                                                  // Tách riêng UID cần xóa để xử lý profile trước, rồi mới đồng bộ file và grid
+
             foreach (DataGridViewRow row in dsDongDaTick)
             {
                 string uid = row.Cells["colUID"].Value?.ToString()?.Trim() ?? string.Empty;    // Lấy UID từng dòng để xóa khỏi ds.txt và xóa profile tương ứng
@@ -439,8 +445,17 @@ namespace DANG_NHAP_FACEBOOK
                     continue;
                 }
 
-                XoaUidKhoiDsTxt(uid);                                                          // Xóa toàn bộ UID đang tick ra khỏi file nguồn
-                XoaProfileTheoUid(uid);                                                        // Xóa hẳn profile của các dòng bị xóa hàng loạt để tránh phình số lượng profile
+                dsUidCanXoa.Add(uid);                                                          // Gom UID hợp lệ để xóa profile và dữ liệu đồng bộ theo cùng một danh sách
+            }
+
+            if (!XoaToanBoProfileKhiXoaNhieuDong(dsUidCanXoa))                                 // Xóa nhiều dòng phải xóa sạch luôn cả profile_ranh sau khi đóng phiên Chrome liên quan
+            {
+                return;
+            }
+
+            foreach (string uid in dsUidCanXoa)
+            {
+                XoaUidKhoiDsTxt(uid);                                                          // Chỉ xóa ds.txt sau khi phần profile đã được xóa an toàn
             }
 
             for (int i = dsDongDaTick.Count - 1; i >= 0; i--)
@@ -487,41 +502,187 @@ namespace DANG_NHAP_FACEBOOK
         //
         //  HÀM XỬ LÝ PROFILE KHI XÓA MỘT DÒNG
         //
-        private void XuLyProfileKhiXoaMotDong(string uid)
+        private bool XuLyProfileKhiXoaMotDong(string uid)
         {
             string duongDanProfileTheoUid = Path.Combine(AppContext.BaseDirectory, uid);       // Xác định đúng thư mục profile theo UID của dòng bị xóa
             if (!Directory.Exists(duongDanProfileTheoUid))
             {
-                return;                                                                        // Nếu không còn profile thì chỉ cần xóa dữ liệu grid và ds.txt
+                return true;                                                                   // Nếu không còn profile thì chỉ cần xóa dữ liệu grid và ds.txt
             }
 
             if (Directory.Exists(profileRanhPath))
             {
-                Directory.Delete(duongDanProfileTheoUid, true);                                // Nếu đã có sẵn profile_ranh thì chỉ xóa profile theo UID để giữ đúng một profile rảnh duy nhất
-                return;
+                return ThuXoaThuMucProfile(duongDanProfileTheoUid, uid);                       // Nếu đã có sẵn profile_ranh thì chỉ xóa profile theo UID để giữ đúng một profile rảnh duy nhất
             }
 
             if (Directory.Exists(profileMauPath))
             {
-                Directory.Delete(duongDanProfileTheoUid, true);                                // Xóa profile cũ của UID để tránh giữ lại dữ liệu phiên cũ
+                if (!ThuXoaThuMucProfile(duongDanProfileTheoUid, uid))                         // Xóa profile cũ của UID sau khi đã đóng phiên Chrome đang giữ profile đó
+                {
+                    return false;
+                }
+
                 CopyDirectory(profileMauPath, profileRanhPath);                                // Tạo lại profile_ranh sạch từ profile_mau để dùng cho lần Next sau
-                return;
+                return true;
             }
 
-            Directory.Move(duongDanProfileTheoUid, profileRanhPath);                           // Nếu thiếu profile_mau thì giữ lại tối thiểu một profile_ranh bằng cách đổi tên profile vừa xóa
+            return ThuDoiTenThuMucProfile(duongDanProfileTheoUid, profileRanhPath, uid);      // Nếu thiếu profile_mau thì giữ lại tối thiểu một profile_ranh bằng cách đổi tên profile vừa xóa
         }
         //
         //  HÀM XÓA HẲN PROFILE THEO UID
         //
-        private void XoaProfileTheoUid(string uid)
+        private bool XoaProfileTheoUid(string uid)
         {
             string duongDanProfileTheoUid = Path.Combine(AppContext.BaseDirectory, uid);       // Xác định thư mục profile cần xóa hẳn khỏi ổ đĩa
-            if (!Directory.Exists(duongDanProfileTheoUid))
+            return ThuXoaThuMucProfile(duongDanProfileTheoUid, uid);                           // Xóa sạch profile của các dòng bị loại khỏi app sau khi đã đóng phiên Chrome tương ứng
+        }
+        //
+        //  HÀM XÓA TOÀN BỘ PROFILE KHI XÓA NHIỀU DÒNG
+        //
+        private bool XoaToanBoProfileKhiXoaNhieuDong(List<string> dsUidCanXoa)
+        {
+            foreach (string uid in dsUidCanXoa)
             {
-                return;                                                                        // Nếu profile không tồn tại thì bỏ qua để không làm phát sinh lỗi
+                if (!XoaProfileTheoUid(uid))
+                {
+                    return false;                                                              // Dừng ngay nếu có profile nào chưa xóa được để tránh lệch dữ liệu
+                }
             }
 
-            Directory.Delete(duongDanProfileTheoUid, true);                                    // Xóa sạch profile của các dòng bị loại khỏi app
+            return ThuXoaThuMucProfile(profileRanhPath, "profile_ranh");                       // Xóa nhiều dòng thì xóa luôn cả profile_ranh như logic đã chốt
+        }
+        //
+        //  HÀM ĐÓNG CHROME THEO PROFILE
+        //
+        private bool ThuDongChromeTheoProfile(string duongDanProfile)
+        {
+            if (!Directory.Exists(duongDanProfile))
+            {
+                return true;                                                                   // Nếu thư mục profile không còn thì không cần tìm và đóng Chrome
+            }
+
+            string duongDanDayDu = Path.GetFullPath(duongDanProfile).TrimEnd(Path.DirectorySeparatorChar); // Chuẩn hóa đường dẫn profile để so với command line của Chrome
+            HashSet<int> dsPidCanDong = new();                                                 // Gom đúng các PID chrome đang dùng profile này để tắt gọn và không lặp
+
+            try
+            {
+                using var searcher = new System.Management.ManagementObjectSearcher("SELECT ProcessId, CommandLine FROM Win32_Process WHERE Name = 'chrome.exe'");
+                using var ketQua = searcher.Get();
+
+                foreach (System.Management.ManagementObject processInfo in ketQua)
+                {
+                    string commandLine = processInfo["CommandLine"]?.ToString() ?? string.Empty; // Lấy toàn bộ command line để nhận diện phiên Chrome theo user-data-dir
+                    if (!commandLine.Contains(duongDanDayDu, StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    if (int.TryParse(processInfo["ProcessId"]?.ToString(), out int pid))
+                    {
+                        dsPidCanDong.Add(pid);                                                 // Chỉ giữ lại đúng các PID đang dùng profile cần xóa
+                    }
+                }
+
+                foreach (int pid in dsPidCanDong)
+                {
+                    try
+                    {
+                        using System.Diagnostics.Process process = System.Diagnostics.Process.GetProcessById(pid);
+                        if (process.HasExited)
+                        {
+                            continue;
+                        }
+
+                        process.CloseMainWindow();                                             // Ưu tiên đóng nhẹ nhàng trước để Chrome tự nhả file
+                        if (!process.WaitForExit(1500))
+                        {
+                            process.Kill(true);                                                // Nếu Chrome không tự đóng thì cưỡng bức đóng cả cây tiến trình của profile đó
+                            process.WaitForExit(5000);
+                        }
+                    }
+                    catch (ArgumentException)
+                    {
+                        continue;                                                              // PID có thể đã tự thoát trước khi app kịp xử lý, khi đó chỉ cần bỏ qua
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể đóng Chrome của profile {Path.GetFileName(duongDanProfile)}.{Environment.NewLine}{ex.Message}");
+                return false;
+            }
+        }
+        //
+        //  HÀM THỬ XÓA THƯ MỤC PROFILE
+        //
+        private bool ThuXoaThuMucProfile(string duongDanProfile, string tenProfile)
+        {
+            if (!Directory.Exists(duongDanProfile))
+            {
+                return true;                                                                   // Nếu thư mục không còn thì coi như đã xóa xong
+            }
+
+            if (!ThuDongChromeTheoProfile(duongDanProfile))
+            {
+                return false;                                                                  // Không xóa tiếp nếu chưa đóng được Chrome đang giữ profile
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                try
+                {
+                    Directory.Delete(duongDanProfile, true);                                   // Thử xóa toàn bộ thư mục profile sau khi đã đóng phiên Chrome tương ứng
+                    return true;
+                }
+                catch (IOException)
+                {
+                    System.Threading.Thread.Sleep(300);                                        // Chờ ngắn để hệ thống nhả file rồi thử lại
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    System.Threading.Thread.Sleep(300);                                        // Chờ ngắn để xử lý nốt các file còn đang khóa rồi thử lại
+                }
+            }
+
+            MessageBox.Show($"Không thể xóa profile {tenProfile}. Vui lòng thử lại.");
+            return false;
+        }
+        //
+        //  HÀM THỬ ĐỔI TÊN THƯ MỤC PROFILE
+        //
+        private bool ThuDoiTenThuMucProfile(string duongDanNguon, string duongDanDich, string tenProfile)
+        {
+            if (!Directory.Exists(duongDanNguon))
+            {
+                return true;                                                                   // Nếu thư mục nguồn không còn thì không cần đổi tên nữa
+            }
+
+            if (!ThuDongChromeTheoProfile(duongDanNguon))
+            {
+                return false;                                                                  // Không đổi tên tiếp nếu phiên Chrome của profile này chưa đóng được
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                try
+                {
+                    Directory.Move(duongDanNguon, duongDanDich);                               // Đổi tên profile sau khi chắc chắn Chrome đã nhả thư mục
+                    return true;
+                }
+                catch (IOException)
+                {
+                    System.Threading.Thread.Sleep(300);                                        // Chờ hệ thống nhả file rồi thử lại
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    System.Threading.Thread.Sleep(300);                                        // Chờ quyền truy cập được giải phóng rồi thử lại
+                }
+            }
+
+            MessageBox.Show($"Không thể đổi tên profile {tenProfile}. Vui lòng thử lại.");
+            return false;
         }
         //
         //  HÀM CẬP NHẬT LẠI STT

@@ -300,10 +300,13 @@ Các bước:
 - Double click vao dong cung se dao trang thai tick cua dong.
 - Nut Chay / Mo dong se doc danh sach dong da tick, khong doc SelectedRows nua.
 - Xoa 1 dong se:
+  dong phien Chrome cua profile do neu dang mo
   xoa UID khoi ds.txt
   xu ly profile cua UID do
   xoa dong tren grid
 - Xoa nhieu dong se:
+  dong cac phien Chrome cua profile dang bi xoa
   xoa cac UID khoi ds.txt
   xoa han cac profile theo UID
+  xoa luon profile_ranh
   xoa cac dong tren grid
