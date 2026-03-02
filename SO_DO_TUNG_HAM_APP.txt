@@ -288,4 +288,5 @@ Các bước:
 - Ham nay da duoc bo sung buoc doc gia tri dang chon trong cboUrl.
 - Neu giao dien dang chon co chu "meta" thi mo https://facebook.com/meta
 - Neu giao dien dang chon co chu "m.facebook" thi mo https://m.facebook.com/
+- Neu mo m.facebook.com thi ep them 1 User-Agent mobile co dinh.
 - Cac truong hop con lai tam thoi mo https://facebook.com/

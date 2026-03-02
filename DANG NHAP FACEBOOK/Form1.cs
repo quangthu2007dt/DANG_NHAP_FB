@@ -5,6 +5,7 @@ namespace DANG_NHAP_FACEBOOK
         private readonly string dsFilePath;
         private readonly string profileMauPath;
         private readonly string profileRanhPath;
+        private const string mobileUserAgentMacDinh = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36";
 
         public Form1()
         {
@@ -275,11 +276,12 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             string urlCanMo = LayUrlFacebookDaChon();                                          // Lấy đúng URL Facebook theo giao diện đang chọn trên combobox
+            string thamSoUserAgent = LayThamSoUserAgentTheoGiaoDien(urlCanMo);                 // Nếu là giao diện mobile thì ghép thêm User-Agent mobile cố định
 
             var psi = new System.Diagnostics.ProcessStartInfo
             {
                 FileName = chromeExe,
-                Arguments = $"--user-data-dir=\"{duongDanProfile}\" {urlCanMo}",               // Mở Chrome bằng đúng profile của UID đang chọn và đi tới giao diện Facebook đã chọn
+                Arguments = $"--user-data-dir=\"{duongDanProfile}\" {thamSoUserAgent} {urlCanMo}".Trim(), // Mở Chrome bằng đúng profile của UID đang chọn, kèm User-Agent nếu cần và đi tới URL đã chọn
                 UseShellExecute = true
             };
 
@@ -303,6 +305,18 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             return "https://facebook.com/";                                                    // Mặc định còn lại sẽ mở giao diện Facebook thông thường
+        }
+        //
+        //  HÀM LẤY THAM SỐ USER-AGENT THEO GIAO DIỆN
+        //
+        private string LayThamSoUserAgentTheoGiaoDien(string urlCanMo)
+        {
+            if (urlCanMo.Contains("m.facebook.com", StringComparison.OrdinalIgnoreCase))
+            {
+                return $"--user-agent=\"{mobileUserAgentMacDinh}\"";                           // Nếu mở giao diện mobile thì ép luôn User-Agent mobile mặc định
+            }
+
+            return string.Empty;                                                               // Các giao diện còn lại tạm thời chưa cần ép User-Agent
         }
         //
         //   HÀM LOAD DỮ LIỆU KHI MỞ APP
