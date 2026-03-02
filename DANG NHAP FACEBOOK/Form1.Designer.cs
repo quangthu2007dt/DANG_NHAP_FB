@@ -80,6 +80,7 @@
             kiểmTraTàiKhoảnToolStripMenuItem = new ToolStripMenuItem();
             checkWallToolStripMenuItem = new ToolStripMenuItem();
             checkÌnorToolStripMenuItem = new ToolStripMenuItem();
+            mởToolStripMenuItem = new ToolStripMenuItem();
             statusStrip1 = new StatusStrip();
             tssSpace1 = new ToolStripStatusLabel();
             tssTrangThai = new ToolStripStatusLabel();
@@ -98,9 +99,8 @@
             lblUserAgent = new Label();
             cboUserAgent = new ComboBox();
             lblChonGiaoDien = new Label();
-            cboGiaoDien = new ComboBox();
+            cboUrl = new ComboBox();
             ttMain = new ToolTip(components);
-            mởToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             cmsGirdRightClick.SuspendLayout();
             statusStrip1.SuspendLayout();
@@ -383,6 +383,11 @@
             checkÌnorToolStripMenuItem.Name = "checkÌnorToolStripMenuItem";
             resources.ApplyResources(checkÌnorToolStripMenuItem, "checkÌnorToolStripMenuItem");
             // 
+            // mởToolStripMenuItem
+            // 
+            mởToolStripMenuItem.Name = "mởToolStripMenuItem";
+            resources.ApplyResources(mởToolStripMenuItem, "mởToolStripMenuItem");
+            // 
             // statusStrip1
             // 
             statusStrip1.Items.AddRange(new ToolStripItem[] { tssSpace1, tssTrangThai, tssSpace2, toolStripStatusLabel1, tssTong, tssSpace3, tssTime });
@@ -472,6 +477,7 @@
             btnTiepTuc.Name = "btnTiepTuc";
             ttMain.SetToolTip(btnTiepTuc, resources.GetString("btnTiepTuc.ToolTip"));
             btnTiepTuc.UseVisualStyleBackColor = true;
+            btnTiepTuc.Click += btnTiepTuc_Click;
             // 
             // lblUserAgent
             // 
@@ -492,25 +498,20 @@
             lblChonGiaoDien.Name = "lblChonGiaoDien";
             ttMain.SetToolTip(lblChonGiaoDien, resources.GetString("lblChonGiaoDien.ToolTip"));
             // 
-            // cboGiaoDien
+            // cboUrl
             // 
-            cboGiaoDien.DropDownStyle = ComboBoxStyle.DropDownList;
-            cboGiaoDien.FormattingEnabled = true;
-            cboGiaoDien.Items.AddRange(new object[] { resources.GetString("cboGiaoDien.Items"), resources.GetString("cboGiaoDien.Items1") });
-            resources.ApplyResources(cboGiaoDien, "cboGiaoDien");
-            cboGiaoDien.Name = "cboGiaoDien";
-            ttMain.SetToolTip(cboGiaoDien, resources.GetString("cboGiaoDien.ToolTip"));
-            // 
-            // mởToolStripMenuItem
-            // 
-            mởToolStripMenuItem.Name = "mởToolStripMenuItem";
-            resources.ApplyResources(mởToolStripMenuItem, "mởToolStripMenuItem");
+            cboUrl.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboUrl.FormattingEnabled = true;
+            cboUrl.Items.AddRange(new object[] { resources.GetString("cboUrl.Items"), resources.GetString("cboUrl.Items1") });
+            resources.ApplyResources(cboUrl, "cboUrl");
+            cboUrl.Name = "cboUrl";
+            ttMain.SetToolTip(cboUrl, resources.GetString("cboUrl.ToolTip"));
             // 
             // Form1
             // 
             resources.ApplyResources(this, "$this");
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(cboGiaoDien);
+            Controls.Add(cboUrl);
             Controls.Add(lblChonGiaoDien);
             Controls.Add(cboUserAgent);
             Controls.Add(lblUserAgent);
@@ -546,7 +547,7 @@
         private Label lblUserAgent;
         private ComboBox cboUserAgent;
         private Label lblChonGiaoDien;
-        private ComboBox cboGiaoDien;
+        private ComboBox cboUrl;
         private ContextMenuStrip cmsGirdRightClick;
         private ToolStripMenuItem chọnToolStripMenuItem;
         private ToolStripMenuItem tToolStripMenuItem;
