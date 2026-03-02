@@ -142,6 +142,16 @@ namespace DANG_NHAP_FACEBOOK
         {
             MoChromeMau();                                                                     // Menu "Mở Chrome mẫu" chỉ gọi đúng hàm mở profile_mau
         }
+
+        private void btnDangNhap_Click(object sender, EventArgs e)
+        {
+            MoProfileTheoDongDangChon();                                                       // Nút Đăng Nhập hiện tại đóng vai trò mở lại profile của dòng đang chọn
+        }
+
+        private void mởToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MoProfileTheoDongDangChon();                                                       // Menu Mở cũng dùng chung luồng mở profile của dòng đang chọn
+        }
         // 
         //  HÀM TẠO PRORILE RẢNH NẾU CHƯA CÓ KHI NÚT CHỌN DC GỌI
         //
@@ -217,6 +227,47 @@ namespace DANG_NHAP_FACEBOOK
             };
 
             System.Diagnostics.Process.Start(psi);                                             // Mở Chrome mẫu để người dùng cấu hình các thành phần cần thiết
+        }
+
+        private void MoProfileTheoDongDangChon()
+        {
+            if (dataGridView1.SelectedRows.Count != 1)                                         // Chỉ cho phép mở khi đang chọn đúng 1 dòng trên grid
+            {
+                MessageBox.Show("Vui lòng chọn đúng 1 dòng để mở profile.");
+                return;
+            }
+
+            DataGridViewRow row = dataGridView1.SelectedRows[0];                               // Lấy dòng đang được chọn để xác định profile cần mở
+            string uid = row.Cells["colUID"].Value?.ToString()?.Trim() ?? string.Empty;        // UID của dòng đang chọn cũng chính là tên thư mục profile
+
+            if (string.IsNullOrWhiteSpace(uid))
+            {
+                MessageBox.Show("Dòng đang chọn không có UID hợp lệ.");
+                return;                                                                        // Không thể mở profile nếu dòng chưa có UID
+            }
+
+            string duongDanProfile = Path.Combine(AppContext.BaseDirectory, uid);              // Tạo đường dẫn đầy đủ tới profile mang tên UID
+            if (!Directory.Exists(duongDanProfile))
+            {
+                MessageBox.Show($"Không tìm thấy profile {uid}.");
+                return;                                                                        // Thoát nếu profile tương ứng đã bị thiếu hoặc chưa được tạo
+            }
+
+            string chromeExe = TimChromeExe();                                                 // Tìm đường dẫn chrome.exe để mở profile bằng Chrome thật
+            if (string.IsNullOrWhiteSpace(chromeExe))
+            {
+                MessageBox.Show("Không tìm thấy chrome.exe.");
+                return;                                                                        // Không mở tiếp nếu máy chưa tìm thấy Chrome
+            }
+
+            var psi = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = chromeExe,
+                Arguments = $"--user-data-dir=\"{duongDanProfile}\"",                          // Mở Chrome bằng đúng thư mục profile của UID đang chọn
+                UseShellExecute = true
+            };
+
+            System.Diagnostics.Process.Start(psi);                                             // Mở lại profile cũ đúng với dòng đang chọn trên grid
         }
         //
         //   HÀM LOAD DỮ LIỆU KHI MỞ APP

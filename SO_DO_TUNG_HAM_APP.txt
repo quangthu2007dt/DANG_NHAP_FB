@@ -212,7 +212,37 @@ Ghi chu:
 - Moi profile moi sau nay deu sinh ra tu profile_mau.
 
 
-8. TEN SU KIEN: mởChromeMẫuToolStripMenuItem_Click
+8. TEN HAM: MoProfileTheoDongDangChon
+-------------------------------------
+
+Muc dich:
+- Mo lai dung profile cua dong dang chon tren grid.
+- Day la luong cua nut Chay va menu Mo dong.
+
+Du lieu vao:
+- Dong dang duoc chon tren grid.
+- Gia tri UID cua dong do.
+
+Du lieu ra:
+- Khong tra du lieu ra ngoai.
+- Mo Chrome theo dung profile da ton tai.
+
+Các bước:
+1. Kiểm tra có đúng 1 dòng đang được chọn không.
+2. Lấy UID từ dòng đang chọn.
+3. Tạo đường dẫn profile theo UID.
+4. Kiểm tra thư mục profile đó có tồn tại không.
+5. Tìm đường dẫn chrome.exe.
+6. Nếu không tìm thấy chrome.exe thì báo lỗi.
+7. Nếu tìm thấy thì mở Chrome với --user-data-dir đúng profile UID đó.
+
+Ghi chu:
+- Ham nay khong lay tai khoan moi tu ds.txt.
+- Ham nay khong them dong moi len grid.
+- Ham nay chi mo lai profile da co san.
+
+
+9. TEN SU KIEN: mởChromeMẫuToolStripMenuItem_Click
 -------------------------------------------------
 
 Muc dich:
@@ -232,14 +262,14 @@ Các bước:
 3. Bên trong chỉ gọi MoChromeMau().
 
 
-9. CAC HAM DU KIEN SE CO SAU NAY
---------------------------------
+10. CAC HAM DU KIEN SE CO SAU NAY
+---------------------------------
 - MoProfileTheoDongDangChon
 - ResetProfileVeProfileRanh
 - XoaDongVaXoaTrongDs
 
 
-10. CACH SU DUNG FILE NAY
+11. CACH SU DUNG FILE NAY
 -------------------------
 - Moi khi sap viet 1 ham moi, can ghi ham do vao day truoc.
 - Ghi theo dung thu tu:

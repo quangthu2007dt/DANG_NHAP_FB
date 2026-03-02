@@ -325,6 +325,7 @@
             // 
             mởToolStripMenuItem.Name = "mởToolStripMenuItem";
             resources.ApplyResources(mởToolStripMenuItem, "mởToolStripMenuItem");
+            mởToolStripMenuItem.Click += mởToolStripMenuItem_Click;
             // 
             // statusStrip1
             // 
@@ -407,6 +408,7 @@
             btnDangNhap.Name = "btnDangNhap";
             ttMain.SetToolTip(btnDangNhap, resources.GetString("btnDangNhap.ToolTip"));
             btnDangNhap.UseVisualStyleBackColor = true;
+            btnDangNhap.Click += btnDangNhap_Click;
             // 
             // btnTiepTuc
             // 
