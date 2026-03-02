@@ -190,6 +190,10 @@ namespace DANG_NHAP_FACEBOOK
             ThemDongMoiLenGrid(uid, password, uid);                                           // Sau khi đã có profile đúng tên, thêm ngay dòng mới lên grid
         }
 
+        private void LoadDuLieuLenGridKhiMoApp()
+        {
+        }
+
         private void CopyDirectory(string sourcePath, string destinationPath)
         {
             Directory.CreateDirectory(destinationPath);                                        // Tạo thư mục đích nếu chưa có để sẵn sàng nhận dữ liệu được sao chép
