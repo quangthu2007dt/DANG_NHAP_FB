@@ -630,6 +630,7 @@ namespace DANG_NHAP_FACEBOOK
             {
                 try
                 {
+                    BoThuocTinhThuMucVeBinhThuong(duongDanProfile);                            // Gỡ ReadOnly và các attribute đặc biệt trước khi xóa để tránh Access Denied trên Windows
                     Directory.Delete(duongDanProfile, true);                                   // Thử xóa toàn bộ thư mục profile sau khi đã đóng phiên Chrome tương ứng
                     return true;
                 }
@@ -645,6 +646,28 @@ namespace DANG_NHAP_FACEBOOK
 
             MessageBox.Show($"Không thể xóa profile {tenProfile}. Vui lòng thử lại.");
             return false;
+        }
+        //
+        //  HÀM ĐƯA THUỘC TÍNH THƯ MỤC VỀ BÌNH THƯỜNG
+        //
+        private void BoThuocTinhThuMucVeBinhThuong(string duongDanProfile)
+        {
+            if (!Directory.Exists(duongDanProfile))
+            {
+                return;                                                                        // Nếu thư mục không còn thì không cần xử lý attribute nữa
+            }
+
+            foreach (string filePath in Directory.GetFiles(duongDanProfile, "*", SearchOption.AllDirectories))
+            {
+                File.SetAttributes(filePath, FileAttributes.Normal);                           // Xóa cờ ReadOnly/Hidden/System của file để cho phép xóa dứt điểm
+            }
+
+            foreach (string dirPath in Directory.GetDirectories(duongDanProfile, "*", SearchOption.AllDirectories))
+            {
+                File.SetAttributes(dirPath, FileAttributes.Normal);                            // Xóa cờ ReadOnly/Hidden/System của thư mục con để tránh lỗi Access Denied
+            }
+
+            File.SetAttributes(duongDanProfile, FileAttributes.Normal);                        // Đưa cả thư mục gốc của profile về trạng thái bình thường trước khi xóa
         }
         //
         //  HÀM THỬ ĐỔI TÊN THƯ MỤC PROFILE

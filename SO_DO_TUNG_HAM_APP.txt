@@ -302,11 +302,13 @@ Các bước:
 - Khi mo app, chi nap cac thu muc ten UID hop le len grid, khong nap runtimes hay thu muc he thong.
 - Xoa 1 dong se:
   dong toan bo Chrome truoc
+  bo ReadOnly/attribute dac biet trong profile
   xoa UID khoi ds.txt
   xu ly profile cua UID do
   xoa dong tren grid
 - Xoa nhieu dong se:
   dong toan bo Chrome truoc
+  bo ReadOnly/attribute dac biet trong cac profile
   xoa cac UID khoi ds.txt
   xoa han cac profile theo UID
   xoa luon profile_ranh
