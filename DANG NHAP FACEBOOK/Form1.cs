@@ -13,7 +13,9 @@ namespace DANG_NHAP_FACEBOOK
             profileMauPath = Path.Combine(AppContext.BaseDirectory, "profile_mau");           // Đường dẫn đầy đủ tới thư mục profile mẫu
             profileRanhPath = Path.Combine(AppContext.BaseDirectory, "profile_ranh");         // Đường dẫn đầy đủ tới thư mục profile rảnh
         }
-
+        //
+        //  HÀM LÁY DÒNG TÀI KHOẢN TỪ DS.TXT
+        //
         private bool TryLayTaiKhoanMoiTuDs(out string uid, out string password)
         {
             uid = string.Empty;                                                               // Giá trị UID trả ra ngoài nếu tìm thấy dòng hợp lệ
@@ -96,7 +98,9 @@ namespace DANG_NHAP_FACEBOOK
             MessageBox.Show("Không còn tài khoản mới hợp lệ trong ds.txt.");
             return false;                                                                     // Duyệt hết file nhưng không còn dòng nào dùng được
         }
-
+        //
+        //  HÀM THÊM DÒNG MỚI TRONG BẢNG (GIRD)
+        //
         private void ThemDongMoiLenGrid(string uid, string password, string profileName)
         {
             int rowIndex = dataGridView1.Rows.Add();                                          // Tạo một dòng mới và lấy ra vị trí của dòng vừa thêm
@@ -122,6 +126,15 @@ namespace DANG_NHAP_FACEBOOK
             dataGridView1.ClearSelection();                                                   // Bỏ toàn bộ lựa chọn cũ để chỉ giữ đúng dòng mới
             row.Selected = true;                                                              // Tự chọn ngay dòng vừa được thêm
             dataGridView1.CurrentCell = row.Cells["colUID"];                                  // Đưa con trỏ hiện tại về cột UID của dòng mới
+        }
+
+        private void btnTiepTuc_Click(object sender, EventArgs e)
+        {
+            XuLyNutNext();                                                                     // Nút btnTiepTuc hiện tại đang đóng vai trò Next
+        }
+
+        private void XuLyNutNext()
+        {
         }
     }
 }

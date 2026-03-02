@@ -130,14 +130,38 @@ Ghi chu:
 - Day la ham chinh cua nut Next.
 
 
-5. CAC HAM DU KIEN SE CO SAU NAY
+5. TEN SU KIEN: btnTiepTuc_Click
+--------------------------------
+
+Muc dich:
+- Day la su kien click cua nut dang dong vai tro Next tren giao dien hien tai.
+
+Du lieu vao:
+- sender
+- e
+
+Du lieu ra:
+- Khong tra du lieu ra ngoai.
+- Goi ham dieu phoi XuLyNutNext.
+
+Các bước:
+1. Người dùng bấm nút btnTiepTuc.
+2. Sự kiện btnTiepTuc_Click được gọi.
+3. Bên trong chỉ gọi XuLyNutNext().
+
+Ghi chu:
+- Hien tai giu nguyen ten control la btnTiepTuc de tranh sua Designer khong can thiet.
+- Ve nghiep vu, nut nay chinh la nut Next.
+
+
+6. CAC HAM DU KIEN SE CO SAU NAY
 --------------------------------
 - MoProfileTheoDongDangChon
 - ResetProfileVeProfileRanh
 - XoaDongVaXoaTrongDs
 
 
-6. CACH SU DUNG FILE NAY
+7. CACH SU DUNG FILE NAY
 ------------------------
 - Moi khi sap viet 1 ham moi, can ghi ham do vao day truoc.
 - Ghi theo dung thu tu:
