@@ -96,5 +96,32 @@ namespace DANG_NHAP_FACEBOOK
             MessageBox.Show("Không còn tài khoản mới hợp lệ trong ds.txt.");
             return false;                                                                     // Duyệt hết file nhưng không còn dòng nào dùng được
         }
+
+        private void ThemDongMoiLenGrid(string uid, string password, string profileName)
+        {
+            int rowIndex = dataGridView1.Rows.Add();                                          // Tạo một dòng mới và lấy ra vị trí của dòng vừa thêm
+            DataGridViewRow row = dataGridView1.Rows[rowIndex];                               // Lấy đối tượng dòng để đổ dữ liệu vào các cột
+
+            row.Cells["colSTT"].Value = rowIndex + 1;                                         // Đổ số thứ tự theo vị trí hiện tại trên grid
+            row.Cells["colChon"].Value = string.Empty;                                        // Cột chọn hiện tại để trống vì chưa xử lý tick ở bước này
+            row.Cells["colUID"].Value = uid;                                                  // Đổ UID vừa lấy được từ ds.txt
+            row.Cells["colPass"].Value = password;                                            // Đổ mật khẩu tương ứng với UID
+            row.Cells["colNgayTao"].Value = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");     // Đổ thời gian tạo dòng theo thời điểm hiện tại
+            row.Cells["colTen"].Value = string.Empty;                                         // Tên để trống, sau này người dùng hoặc code sẽ cập nhật
+            row.Cells["colEmail"].Value = string.Empty;                                       // Email để trống ở bước hiện tại
+            row.Cells["colGhiChu"].Value = string.Empty;                                      // Ghi chú để trống ở bước hiện tại
+            row.Cells["colTuongTacCuoi"].Value = string.Empty;                                // Tương tác cuối để trống ở bước hiện tại
+            row.Cells["colTrangThai"].Value = string.Empty;                                   // Trạng thái để trống, ưu tiên hiện ở label phía dưới
+            row.Cells["colCookie"].Value = string.Empty;                                      // Cookie để trống, sau này mới tính tới
+
+            if (dataGridView1.Columns.Contains("colProfileName"))                             // Nếu sau này có cột profile riêng thì đổ thêm ProfileName vào đó
+            {
+                row.Cells["colProfileName"].Value = profileName;
+            }
+
+            dataGridView1.ClearSelection();                                                   // Bỏ toàn bộ lựa chọn cũ để chỉ giữ đúng dòng mới
+            row.Selected = true;                                                              // Tự chọn ngay dòng vừa được thêm
+            dataGridView1.CurrentCell = row.Cells["colUID"];                                  // Đưa con trỏ hiện tại về cột UID của dòng mới
+        }
     }
 }
