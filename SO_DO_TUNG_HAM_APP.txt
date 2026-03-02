@@ -299,6 +299,7 @@ Các bước:
 - Click vao o checkbox se dao trang thai tick cua dong.
 - Double click vao dong cung se dao trang thai tick cua dong.
 - Nut Chay / Mo dong se doc danh sach dong da tick, khong doc SelectedRows nua.
+- Khi mo app, chi nap cac thu muc ten UID hop le len grid, khong nap runtimes hay thu muc he thong.
 - Xoa 1 dong se:
   dong phien Chrome cua profile do neu dang mo
   xoa UID khoi ds.txt

@@ -413,6 +413,12 @@ namespace DANG_NHAP_FACEBOOK
                 return;
             }
 
+            if (!LaTenProfileUidHopLe(uid))
+            {
+                MessageBox.Show("Dòng đang tick không phải profile UID hợp lệ.");
+                return;                                                                        // Chặn xóa nhầm các thư mục hệ thống như runtimes nếu chúng từng bị nạp sai lên grid
+            }
+
             if (!XuLyProfileKhiXoaMotDong(uid))                                                // Chỉ tiếp tục xóa dữ liệu khi profile đã được xử lý xong an toàn
             {
                 return;
@@ -443,6 +449,12 @@ namespace DANG_NHAP_FACEBOOK
                 if (string.IsNullOrWhiteSpace(uid))
                 {
                     continue;
+                }
+
+                if (!LaTenProfileUidHopLe(uid))
+                {
+                    MessageBox.Show("Có dòng được tick không phải profile UID hợp lệ. Vui lòng mở lại app rồi thử lại.");
+                    return;                                                                    // Dừng lại để không đụng nhầm thư mục hệ thống hoặc thư mục phụ của app
                 }
 
                 dsUidCanXoa.Add(uid);                                                          // Gom UID hợp lệ để xóa profile và dữ liệu đồng bộ theo cùng một danh sách
@@ -562,6 +574,7 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             string duongDanDayDu = Path.GetFullPath(duongDanProfile).TrimEnd(Path.DirectorySeparatorChar); // Chuẩn hóa đường dẫn profile để so với command line của Chrome
+            string tenThuMucProfile = Path.GetFileName(duongDanDayDu);                         // Lấy tên thư mục profile để dùng làm điều kiện nhận diện dự phòng
             HashSet<int> dsPidCanDong = new();                                                 // Gom đúng các PID chrome đang dùng profile này để tắt gọn và không lặp
 
             try
@@ -572,7 +585,11 @@ namespace DANG_NHAP_FACEBOOK
                 foreach (System.Management.ManagementObject processInfo in ketQua)
                 {
                     string commandLine = processInfo["CommandLine"]?.ToString() ?? string.Empty; // Lấy toàn bộ command line để nhận diện phiên Chrome theo user-data-dir
-                    if (!commandLine.Contains(duongDanDayDu, StringComparison.OrdinalIgnoreCase))
+                    bool trungTheoDuongDanDayDu = commandLine.Contains(duongDanDayDu, StringComparison.OrdinalIgnoreCase); // Ưu tiên so theo đường dẫn đầy đủ của profile
+                    bool trungTheoTenThuMuc = commandLine.Contains("--user-data-dir", StringComparison.OrdinalIgnoreCase) &&
+                                              commandLine.Contains(tenThuMucProfile, StringComparison.OrdinalIgnoreCase); // Dự phòng trường hợp command line hiển thị khác dạng đường dẫn đầy đủ
+
+                    if (!trungTheoDuongDanDayDu && !trungTheoTenThuMuc)
                     {
                         continue;
                     }
@@ -604,6 +621,11 @@ namespace DANG_NHAP_FACEBOOK
                     {
                         continue;                                                              // PID có thể đã tự thoát trước khi app kịp xử lý, khi đó chỉ cần bỏ qua
                     }
+                }
+
+                if (dsPidCanDong.Count > 0)
+                {
+                    System.Threading.Thread.Sleep(800);                                        // Chờ thêm một nhịp để Chrome nhả hẳn file sau khi cây tiến trình đã bị đóng
                 }
 
                 return true;
@@ -695,6 +717,13 @@ namespace DANG_NHAP_FACEBOOK
             }
         }
         //
+        //  HÀM KIỂM TRA TÊN PROFILE UID HỢP LỆ
+        //
+        private bool LaTenProfileUidHopLe(string tenThuMuc)
+        {
+            return !string.IsNullOrWhiteSpace(tenThuMuc) && tenThuMuc.All(char.IsDigit);      // App hiện tại chỉ coi tên thư mục toàn số là profile UID hợp lệ để tránh nạp nhầm runtimes hay thư mục hệ thống
+        }
+        //
         //   HÀM LOAD DỮ LIỆU KHI MỞ APP
         //
         private void LoadDuLieuLenGridKhiMoApp()
@@ -749,6 +778,11 @@ namespace DANG_NHAP_FACEBOOK
                 if (string.Equals(tenThuMuc, "profile_ranh", StringComparison.OrdinalIgnoreCase)) // Bỏ qua thư mục profile rảnh vì đây là profile chờ tái sử dụng
                 {
                     continue;
+                }
+
+                if (!LaTenProfileUidHopLe(tenThuMuc))
+                {
+                    continue;                                                                   // Chỉ nạp các thư mục tên UID hợp lệ, bỏ qua runtimes và các thư mục hệ thống khác
                 }
 
                 int rowIndex = dataGridView1.Rows.Add();                                       // Tạo dòng mới trên grid để đổ dữ liệu profile cũ lên
