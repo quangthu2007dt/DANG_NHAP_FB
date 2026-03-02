@@ -133,8 +133,48 @@ namespace DANG_NHAP_FACEBOOK
             XuLyNutNext();                                                                     // Nút btnTiepTuc hiện tại đang đóng vai trò Next
         }
 
+        private bool TimProfileRanhHoacTaoMoi(out string duongDanProfileSuDung)
+        {
+            duongDanProfileSuDung = string.Empty;                                              // Đường dẫn profile sẽ trả ra ngoài nếu tìm hoặc tạo được
+
+            if (Directory.Exists(profileRanhPath))                                             // Nếu đã có sẵn profile_ranh thì dùng luôn profile này
+            {
+                duongDanProfileSuDung = profileRanhPath;
+                return true;                                                                   // Báo đã lấy được profile sẵn sàng để dùng
+            }
+
+            if (!Directory.Exists(profileMauPath))                                             // Nếu không có profile_mau thì không thể tạo profile mới
+            {
+                MessageBox.Show("Không tìm thấy thư mục profile_mau.");
+                return false;                                                                  // Thoát hàm vì thiếu profile gốc để sao chép
+            }
+
+            CopyDirectory(profileMauPath, profileRanhPath);                                    // Sao chép toàn bộ dữ liệu từ profile_mau sang profile_ranh
+            duongDanProfileSuDung = profileRanhPath;                                           // Sau khi sao chép xong thì profile_ranh chính là profile dùng được
+            return true;                                                                       // Báo đã tạo thành công profile để dùng cho bước tiếp theo
+        }
+
         private void XuLyNutNext()
         {
+        }
+
+        private void CopyDirectory(string sourcePath, string destinationPath)
+        {
+            Directory.CreateDirectory(destinationPath);                                        // Tạo thư mục đích nếu chưa có để sẵn sàng nhận dữ liệu được sao chép
+
+            foreach (string filePath in Directory.GetFiles(sourcePath))                        // Duyệt toàn bộ file trực tiếp trong thư mục nguồn
+            {
+                string fileName = Path.GetFileName(filePath);                                  // Lấy riêng tên file để ghép sang thư mục đích
+                string destinationFilePath = Path.Combine(destinationPath, fileName);          // Tạo đường dẫn đầy đủ cho file đích tương ứng
+                File.Copy(filePath, destinationFilePath, true);                                // Sao chép file và cho phép ghi đè nếu file đích đã tồn tại
+            }
+
+            foreach (string directoryPath in Directory.GetDirectories(sourcePath))             // Duyệt toàn bộ thư mục con trong thư mục nguồn
+            {
+                string directoryName = Path.GetFileName(directoryPath);                        // Lấy tên thư mục con để tái tạo bên thư mục đích
+                string destinationDirectoryPath = Path.Combine(destinationPath, directoryName);// Tạo đường dẫn đầy đủ cho thư mục con đích
+                CopyDirectory(directoryPath, destinationDirectoryPath);                         // Gọi đệ quy để sao chép tiếp toàn bộ nội dung thư mục con
+            }
         }
     }
 }
