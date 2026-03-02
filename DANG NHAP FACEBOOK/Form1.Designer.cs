@@ -35,6 +35,17 @@
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             dataGridView1 = new DataGridView();
+            colSTT = new DataGridViewTextBoxColumn();
+            colChon = new DataGridViewCheckBoxColumn();
+            colUID = new DataGridViewTextBoxColumn();
+            colPass = new DataGridViewTextBoxColumn();
+            colTen = new DataGridViewTextBoxColumn();
+            colEmail = new DataGridViewTextBoxColumn();
+            colNgayTao = new DataGridViewTextBoxColumn();
+            colGhiChu = new DataGridViewTextBoxColumn();
+            colTuongTacCuoi = new DataGridViewTextBoxColumn();
+            colTrangThai = new DataGridViewTextBoxColumn();
+            colCookie = new DataGridViewTextBoxColumn();
             cmsGirdRightClick = new ContextMenuStrip(components);
             chọnToolStripMenuItem = new ToolStripMenuItem();
             tToolStripMenuItem = new ToolStripMenuItem();
@@ -94,17 +105,6 @@
             lblChonGiaoDien = new Label();
             cboUrl = new ComboBox();
             ttMain = new ToolTip(components);
-            colSTT = new DataGridViewTextBoxColumn();
-            colChon = new DataGridViewCheckBoxColumn();
-            colUID = new DataGridViewTextBoxColumn();
-            colPass = new DataGridViewTextBoxColumn();
-            colTen = new DataGridViewTextBoxColumn();
-            colEmail = new DataGridViewTextBoxColumn();
-            colNgayTao = new DataGridViewTextBoxColumn();
-            colGhiChu = new DataGridViewTextBoxColumn();
-            colTuongTacCuoi = new DataGridViewTextBoxColumn();
-            colTrangThai = new DataGridViewTextBoxColumn();
-            colCookie = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             cmsGirdRightClick.SuspendLayout();
             statusStrip1.SuspendLayout();
@@ -121,6 +121,95 @@
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView1.CellClick += dataGridView1_CellClick;
+            dataGridView1.CellDoubleClick += dataGridView1_CellDoubleClick;
+            // 
+            // colSTT
+            // 
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colSTT.DefaultCellStyle = dataGridViewCellStyle1;
+            resources.ApplyResources(colSTT, "colSTT");
+            colSTT.Name = "colSTT";
+            colSTT.ReadOnly = true;
+            colSTT.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colChon
+            // 
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.ForeColor = Color.Blue;
+            dataGridViewCellStyle2.NullValue = false;
+            colChon.DefaultCellStyle = dataGridViewCellStyle2;
+            resources.ApplyResources(colChon, "colChon");
+            colChon.Name = "colChon";
+            colChon.ReadOnly = true;
+            // 
+            // colUID
+            // 
+            resources.ApplyResources(colUID, "colUID");
+            colUID.Name = "colUID";
+            colUID.ReadOnly = true;
+            colUID.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colPass
+            // 
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colPass.DefaultCellStyle = dataGridViewCellStyle3;
+            resources.ApplyResources(colPass, "colPass");
+            colPass.Name = "colPass";
+            colPass.ReadOnly = true;
+            colPass.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colTen
+            // 
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colTen.DefaultCellStyle = dataGridViewCellStyle4;
+            resources.ApplyResources(colTen, "colTen");
+            colTen.Name = "colTen";
+            colTen.ReadOnly = true;
+            colTen.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colEmail
+            // 
+            resources.ApplyResources(colEmail, "colEmail");
+            colEmail.Name = "colEmail";
+            colEmail.ReadOnly = true;
+            colEmail.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colNgayTao
+            // 
+            resources.ApplyResources(colNgayTao, "colNgayTao");
+            colNgayTao.Name = "colNgayTao";
+            colNgayTao.ReadOnly = true;
+            colNgayTao.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colGhiChu
+            // 
+            resources.ApplyResources(colGhiChu, "colGhiChu");
+            colGhiChu.Name = "colGhiChu";
+            colGhiChu.ReadOnly = true;
+            colGhiChu.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colTuongTacCuoi
+            // 
+            resources.ApplyResources(colTuongTacCuoi, "colTuongTacCuoi");
+            colTuongTacCuoi.Name = "colTuongTacCuoi";
+            colTuongTacCuoi.ReadOnly = true;
+            colTuongTacCuoi.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colTrangThai
+            // 
+            colTrangThai.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            resources.ApplyResources(colTrangThai, "colTrangThai");
+            colTrangThai.Name = "colTrangThai";
+            colTrangThai.ReadOnly = true;
+            colTrangThai.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colCookie
+            // 
+            resources.ApplyResources(colCookie, "colCookie");
+            colCookie.Name = "colCookie";
+            colCookie.ReadOnly = true;
+            colCookie.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // cmsGirdRightClick
             // 
@@ -252,11 +341,13 @@
             // 
             dòngToolStripMenuItem1.Name = "dòngToolStripMenuItem1";
             resources.ApplyResources(dòngToolStripMenuItem1, "dòngToolStripMenuItem1");
+            dòngToolStripMenuItem1.Click += dòngToolStripMenuItem1_Click;
             // 
             // cácDòngĐãChọnToolStripMenuItem
             // 
             cácDòngĐãChọnToolStripMenuItem.Name = "cácDòngĐãChọnToolStripMenuItem";
             resources.ApplyResources(cácDòngĐãChọnToolStripMenuItem, "cácDòngĐãChọnToolStripMenuItem");
+            cácDòngĐãChọnToolStripMenuItem.Click += cácDòngĐãChọnToolStripMenuItem_Click;
             // 
             // cậpNhậtDữLiệuToolStripMenuItem
             // 
@@ -446,93 +537,6 @@
             resources.ApplyResources(cboUrl, "cboUrl");
             cboUrl.Name = "cboUrl";
             ttMain.SetToolTip(cboUrl, resources.GetString("cboUrl.ToolTip"));
-            // 
-            // colSTT
-            // 
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colSTT.DefaultCellStyle = dataGridViewCellStyle1;
-            resources.ApplyResources(colSTT, "colSTT");
-            colSTT.Name = "colSTT";
-            colSTT.ReadOnly = true;
-            colSTT.SortMode = DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colChon
-            // 
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.ForeColor = Color.Blue;
-            dataGridViewCellStyle2.NullValue = false;
-            colChon.DefaultCellStyle = dataGridViewCellStyle2;
-            resources.ApplyResources(colChon, "colChon");
-            colChon.Name = "colChon";
-            colChon.ReadOnly = true;
-            // 
-            // colUID
-            // 
-            resources.ApplyResources(colUID, "colUID");
-            colUID.Name = "colUID";
-            colUID.ReadOnly = true;
-            colUID.SortMode = DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colPass
-            // 
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colPass.DefaultCellStyle = dataGridViewCellStyle3;
-            resources.ApplyResources(colPass, "colPass");
-            colPass.Name = "colPass";
-            colPass.ReadOnly = true;
-            colPass.SortMode = DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colTen
-            // 
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colTen.DefaultCellStyle = dataGridViewCellStyle4;
-            resources.ApplyResources(colTen, "colTen");
-            colTen.Name = "colTen";
-            colTen.ReadOnly = true;
-            colTen.SortMode = DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colEmail
-            // 
-            resources.ApplyResources(colEmail, "colEmail");
-            colEmail.Name = "colEmail";
-            colEmail.ReadOnly = true;
-            colEmail.SortMode = DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colNgayTao
-            // 
-            resources.ApplyResources(colNgayTao, "colNgayTao");
-            colNgayTao.Name = "colNgayTao";
-            colNgayTao.ReadOnly = true;
-            colNgayTao.SortMode = DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colGhiChu
-            // 
-            resources.ApplyResources(colGhiChu, "colGhiChu");
-            colGhiChu.Name = "colGhiChu";
-            colGhiChu.ReadOnly = true;
-            colGhiChu.SortMode = DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colTuongTacCuoi
-            // 
-            resources.ApplyResources(colTuongTacCuoi, "colTuongTacCuoi");
-            colTuongTacCuoi.Name = "colTuongTacCuoi";
-            colTuongTacCuoi.ReadOnly = true;
-            colTuongTacCuoi.SortMode = DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colTrangThai
-            // 
-            colTrangThai.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            resources.ApplyResources(colTrangThai, "colTrangThai");
-            colTrangThai.Name = "colTrangThai";
-            colTrangThai.ReadOnly = true;
-            colTrangThai.SortMode = DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colCookie
-            // 
-            resources.ApplyResources(colCookie, "colCookie");
-            colCookie.Name = "colCookie";
-            colCookie.ReadOnly = true;
-            colCookie.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // Form1
             // 

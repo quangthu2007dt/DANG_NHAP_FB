@@ -159,9 +159,51 @@ namespace DANG_NHAP_FACEBOOK
             MoProfileTheoDongDangChon();                                                       // Nút Đăng Nhập hiện tại đóng vai trò mở lại profile của dòng đang chọn
         }
 
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)                                                                // Bỏ qua khi người dùng bấm vào phần tiêu đề hoặc vùng không phải dữ liệu
+            {
+                return;
+            }
+
+            DataGridViewColumn? cotChon = dataGridView1.Columns["colChon"];                   // Lấy cột checkbox Chọn để so đúng vị trí cột cần xử lý
+            if (cotChon == null || e.ColumnIndex != cotChon.Index)                            // Chỉ xử lý khi người dùng bấm đúng vào cột checkbox Chọn
+            {
+                return;
+            }
+
+            DaoTrangThaiChonCuaDong(dataGridView1.Rows[e.RowIndex]);                           // Click vào checkbox sẽ được coi là thao tác chọn thật của app
+        }
+
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)                                                                // Bỏ qua khi double click không rơi vào một dòng dữ liệu hợp lệ
+            {
+                return;
+            }
+
+            DataGridViewColumn? cotChon = dataGridView1.Columns["colChon"];                   // Lấy cột checkbox Chọn để tránh double click bị xử lý đè lên click thường
+            if (cotChon != null && e.ColumnIndex == cotChon.Index)                            // Nếu double click ngay trên checkbox thì giữ cho CellClick tự xử lý, tránh đổi trạng thái hai lần
+            {
+                return;
+            }
+
+            DaoTrangThaiChonCuaDong(dataGridView1.Rows[e.RowIndex]);                           // Double click vào dòng cũng được coi là thao tác chọn thật
+        }
+
         private void mởToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MoProfileTheoDongDangChon();                                                       // Menu Mở cũng dùng chung luồng mở profile của dòng đang chọn
+        }
+
+        private void dòngToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            XoaMotDongDaTick();                                                                // Menu xóa dòng chỉ xử lý khi có đúng 1 dòng đang được tick thật
+        }
+
+        private void cácDòngĐãChọnToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            XoaNhieuDongDaTick();                                                              // Menu xóa nhiều dòng dùng danh sách checkbox đang được tick
         }
         // 
         //  HÀM TẠO PRORILE RẢNH NẾU CHƯA CÓ KHI NÚT CHỌN DC GỌI
@@ -246,13 +288,14 @@ namespace DANG_NHAP_FACEBOOK
         //
         private void MoProfileTheoDongDangChon()
         {
-            if (dataGridView1.SelectedRows.Count != 1)                                         // Chỉ cho phép mở khi đang chọn đúng 1 dòng trên grid
+            List<DataGridViewRow> dsDongDaTick = LayDanhSachDongDaTick();                      // Lấy danh sách dòng được chọn thật theo checkbox, không dùng bôi đen
+            if (dsDongDaTick.Count != 1)                                                       // Chỉ cho phép mở khi đang tick đúng 1 dòng
             {
-                MessageBox.Show("Vui lòng chọn đúng 1 dòng để mở profile.");
+                MessageBox.Show("Vui lòng tick đúng 1 dòng để mở profile.");
                 return;
             }
 
-            DataGridViewRow row = dataGridView1.SelectedRows[0];                               // Lấy dòng đang được chọn để xác định profile cần mở
+            DataGridViewRow row = dsDongDaTick[0];                                             // Lấy đúng dòng đang được tick để xác định profile cần mở
             string uid = row.Cells["colUID"].Value?.ToString()?.Trim() ?? string.Empty;        // UID của dòng đang chọn cũng chính là tên thư mục profile
 
             if (string.IsNullOrWhiteSpace(uid))
@@ -317,6 +360,178 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             return string.Empty;                                                               // Các giao diện còn lại tạm thời chưa cần ép User-Agent
+        }
+        //
+        //  HÀM ĐẢO TRẠNG THÁI TICK CỦA DÒNG
+        //
+        private void DaoTrangThaiChonCuaDong(DataGridViewRow row)
+        {
+            bool dangDuocTick = row.Cells["colChon"].Value is bool giaTriTick && giaTriTick;   // Đọc trạng thái hiện tại của checkbox để biết dòng đang được chọn thật hay chưa
+            row.Cells["colChon"].Value = !dangDuocTick;                                        // Đảo lại trạng thái tick khi người dùng click hoặc double click
+            dataGridView1.ClearSelection();                                                    // Bỏ bôi đen để app chỉ coi checkbox là trạng thái chọn thật
+        }
+        //
+        //  HÀM LẤY DANH SÁCH DÒNG ĐÃ TICK
+        //
+        private List<DataGridViewRow> LayDanhSachDongDaTick()
+        {
+            List<DataGridViewRow> ketQua = new();                                              // Gom các dòng đang được tick thật để dùng chung cho Mở dòng và Xóa dòng
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (row.IsNewRow)
+                {
+                    continue;
+                }
+
+                if (row.Cells["colChon"].Value is bool daTick && daTick)
+                {
+                    ketQua.Add(row);                                                           // Chỉ thêm các dòng có checkbox đang bật
+                }
+            }
+
+            return ketQua;                                                                     // Trả lại toàn bộ danh sách dòng đã chọn thật theo cột Chọn
+        }
+        //
+        //  HÀM XÓA MỘT DÒNG ĐÃ TICK
+        //
+        private void XoaMotDongDaTick()
+        {
+            List<DataGridViewRow> dsDongDaTick = LayDanhSachDongDaTick();                      // Lấy danh sách tick thật để bảo đảm xóa đúng nghiệp vụ đã chốt
+            if (dsDongDaTick.Count != 1)
+            {
+                MessageBox.Show("Vui lòng tick đúng 1 dòng để xóa.");                          // Xóa một dòng chỉ chấp nhận đúng 1 checkbox đang bật
+                return;
+            }
+
+            DataGridViewRow row = dsDongDaTick[0];                                             // Lấy dòng duy nhất đang được tick để xử lý xóa
+            string uid = row.Cells["colUID"].Value?.ToString()?.Trim() ?? string.Empty;        // UID dùng để xóa khỏi ds.txt và xử lý profile tương ứng
+
+            if (string.IsNullOrWhiteSpace(uid))
+            {
+                MessageBox.Show("Dòng đang tick không có UID hợp lệ.");
+                return;
+            }
+
+            XoaUidKhoiDsTxt(uid);                                                              // Xóa UID tương ứng ra khỏi ds.txt để dữ liệu file và grid luôn đồng bộ
+            XuLyProfileKhiXoaMotDong(uid);                                                     // Xóa profile theo UID và giữ lại tối đa 1 profile_ranh sạch để dùng cho lần sau
+            dataGridView1.Rows.Remove(row);                                                    // Bỏ dòng đã xóa ra khỏi grid
+            CapNhatLaiSTT();                                                                   // Đánh lại số thứ tự để bảng không bị lệch sau khi xóa
+        }
+        //
+        //  HÀM XÓA NHIỀU DÒNG ĐÃ TICK
+        //
+        private void XoaNhieuDongDaTick()
+        {
+            List<DataGridViewRow> dsDongDaTick = LayDanhSachDongDaTick();                      // Lấy toàn bộ dòng đang được tick thật để xử lý xóa hàng loạt
+            if (dsDongDaTick.Count < 2)
+            {
+                MessageBox.Show("Vui lòng tick từ 2 dòng trở lên để xóa nhiều.");             // Nhánh này chỉ dành cho xóa nhiều dòng cùng lúc
+                return;
+            }
+
+            foreach (DataGridViewRow row in dsDongDaTick)
+            {
+                string uid = row.Cells["colUID"].Value?.ToString()?.Trim() ?? string.Empty;    // Lấy UID từng dòng để xóa khỏi ds.txt và xóa profile tương ứng
+
+                if (string.IsNullOrWhiteSpace(uid))
+                {
+                    continue;
+                }
+
+                XoaUidKhoiDsTxt(uid);                                                          // Xóa toàn bộ UID đang tick ra khỏi file nguồn
+                XoaProfileTheoUid(uid);                                                        // Xóa hẳn profile của các dòng bị xóa hàng loạt để tránh phình số lượng profile
+            }
+
+            for (int i = dsDongDaTick.Count - 1; i >= 0; i--)
+            {
+                dataGridView1.Rows.Remove(dsDongDaTick[i]);                                    // Xóa từ cuối về đầu để tránh lệch chỉ số khi bỏ nhiều dòng
+            }
+
+            CapNhatLaiSTT();                                                                   // Đánh lại STT sau khi xóa hàng loạt
+        }
+        //
+        //  HÀM XÓA UID KHỎI DS.TXT
+        //
+        private void XoaUidKhoiDsTxt(string uidCanXoa)
+        {
+            if (!File.Exists(dsFilePath))
+            {
+                return;                                                                        // Nếu chưa có ds.txt thì không có gì để đồng bộ xóa
+            }
+
+            string[] lines = File.ReadAllLines(dsFilePath);                                    // Đọc lại toàn bộ file để lọc bỏ đúng UID cần xóa
+            List<string> dsConLai = new();                                                     // Giữ lại các dòng không thuộc UID bị xóa để ghi đè lại file
+
+            foreach (string line in lines)
+            {
+                string lineDaCat = line.Trim();                                                // Chuẩn hóa từng dòng trước khi kiểm tra định dạng UID|Password
+
+                if (string.IsNullOrWhiteSpace(lineDaCat))
+                {
+                    continue;
+                }
+
+                string[] parts = lineDaCat.Split('|');                                         // Tách UID và Password để so đúng UID cần xóa
+
+                if (parts.Length == 2 && string.Equals(parts[0].Trim(), uidCanXoa, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;                                                                   // Bỏ qua đúng dòng thuộc UID cần xóa để nó không còn trong ds.txt
+                }
+
+                dsConLai.Add(line);                                                            // Giữ nguyên các dòng còn lại để không làm mất dữ liệu khác
+            }
+
+            File.WriteAllLines(dsFilePath, dsConLai);                                          // Ghi lại file sau khi đã bỏ các dòng thuộc UID bị xóa
+        }
+        //
+        //  HÀM XỬ LÝ PROFILE KHI XÓA MỘT DÒNG
+        //
+        private void XuLyProfileKhiXoaMotDong(string uid)
+        {
+            string duongDanProfileTheoUid = Path.Combine(AppContext.BaseDirectory, uid);       // Xác định đúng thư mục profile theo UID của dòng bị xóa
+            if (!Directory.Exists(duongDanProfileTheoUid))
+            {
+                return;                                                                        // Nếu không còn profile thì chỉ cần xóa dữ liệu grid và ds.txt
+            }
+
+            if (Directory.Exists(profileRanhPath))
+            {
+                Directory.Delete(duongDanProfileTheoUid, true);                                // Nếu đã có sẵn profile_ranh thì chỉ xóa profile theo UID để giữ đúng một profile rảnh duy nhất
+                return;
+            }
+
+            if (Directory.Exists(profileMauPath))
+            {
+                Directory.Delete(duongDanProfileTheoUid, true);                                // Xóa profile cũ của UID để tránh giữ lại dữ liệu phiên cũ
+                CopyDirectory(profileMauPath, profileRanhPath);                                // Tạo lại profile_ranh sạch từ profile_mau để dùng cho lần Next sau
+                return;
+            }
+
+            Directory.Move(duongDanProfileTheoUid, profileRanhPath);                           // Nếu thiếu profile_mau thì giữ lại tối thiểu một profile_ranh bằng cách đổi tên profile vừa xóa
+        }
+        //
+        //  HÀM XÓA HẲN PROFILE THEO UID
+        //
+        private void XoaProfileTheoUid(string uid)
+        {
+            string duongDanProfileTheoUid = Path.Combine(AppContext.BaseDirectory, uid);       // Xác định thư mục profile cần xóa hẳn khỏi ổ đĩa
+            if (!Directory.Exists(duongDanProfileTheoUid))
+            {
+                return;                                                                        // Nếu profile không tồn tại thì bỏ qua để không làm phát sinh lỗi
+            }
+
+            Directory.Delete(duongDanProfileTheoUid, true);                                    // Xóa sạch profile của các dòng bị loại khỏi app
+        }
+        //
+        //  HÀM CẬP NHẬT LẠI STT
+        //
+        private void CapNhatLaiSTT()
+        {
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                dataGridView1.Rows[i].Cells["colSTT"].Value = i + 1;                           // Sau khi xóa dòng thì đánh lại STT để bảng luôn liên tục và dễ nhìn
+            }
         }
         //
         //   HÀM LOAD DỮ LIỆU KHI MỞ APP

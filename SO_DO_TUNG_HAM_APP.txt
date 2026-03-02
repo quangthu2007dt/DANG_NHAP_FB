@@ -290,3 +290,20 @@ Các bước:
 - Neu giao dien dang chon co chu "m.facebook" thi mo https://m.facebook.com/
 - Neu mo m.facebook.com thi ep them 1 User-Agent mobile co dinh.
 - Cac truong hop con lai tam thoi mo https://facebook.com/
+
+
+13. CAP NHAT CHON THEO COLCHON VA XOA DONG
+------------------------------------------
+- Tu buoc nay, app chi coi tick o cot Chon la trang thai chon that.
+- Boi den dong tren grid khong con duoc dung lam can cu nghiep vu.
+- Click vao o checkbox se dao trang thai tick cua dong.
+- Double click vao dong cung se dao trang thai tick cua dong.
+- Nut Chay / Mo dong se doc danh sach dong da tick, khong doc SelectedRows nua.
+- Xoa 1 dong se:
+  xoa UID khoi ds.txt
+  xu ly profile cua UID do
+  xoa dong tren grid
+- Xoa nhieu dong se:
+  xoa cac UID khoi ds.txt
+  xoa han cac profile theo UID
+  xoa cac dong tren grid
