@@ -354,7 +354,7 @@ namespace DANG_NHAP_FACEBOOK
             try
             {
                 System.Diagnostics.Process.Start(psi);                                         // Mở Chrome theo đúng profile, dùng chung cho cả Mở dòng và Next
-                _ = TuDongDienThongTinDangNhapAsync(congDebugChrome, tenProfile, password);    // Chạy nền bước tự điền để người dùng đỡ phải nhập tay lại UID và Password
+                _ = TuDongDienThongTinDangNhapAsync(congDebugChrome, urlCanMo, tenProfile, password); // Chạy nền bước tự điền để người dùng đỡ phải nhập tay lại UID và Password
             }
             catch (Exception ex)
             {
@@ -406,7 +406,7 @@ namespace DANG_NHAP_FACEBOOK
         //
         //  HÀM TỰ ĐIỀN THÔNG TIN ĐĂNG NHẬP
         //
-        private async Task TuDongDienThongTinDangNhapAsync(int congDebugChrome, string uid, string password)
+        private async Task TuDongDienThongTinDangNhapAsync(int congDebugChrome, string urlCanMo, string uid, string password)
         {
             if (string.IsNullOrWhiteSpace(uid) || string.IsNullOrWhiteSpace(password))
             {
@@ -414,12 +414,13 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             string script = TaoScriptTuDongDienDangNhap(uid, password);                        // Tạo script JavaScript để tìm ô email/password và đổ giá trị vào đúng cách của trình duyệt
+            int soLanThuToiDa = urlCanMo.Contains("meta", StringComparison.OrdinalIgnoreCase) ? 40 : 25; // Giao diện meta thường render chậm hơn nên cho phép thử nhiều lần hơn
 
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < soLanThuToiDa; i++)
             {
                 try
                 {
-                    string? webSocketDebuggerUrl = await LayWebSocketDebuggerUrlFacebookAsync(congDebugChrome); // Tìm tab Facebook mà Chrome vừa mở để kết nối vào CDP
+                    string? webSocketDebuggerUrl = await LayWebSocketDebuggerUrlFacebookAsync(congDebugChrome, urlCanMo); // Tìm đúng tab Facebook theo giao diện đang mở để kết nối vào CDP
                     if (string.IsNullOrWhiteSpace(webSocketDebuggerUrl))
                     {
                         await Task.Delay(1000);
@@ -442,13 +443,14 @@ namespace DANG_NHAP_FACEBOOK
         //
         //  HÀM LẤY WEBSOCKET DEBUGGER URL CỦA TAB FACEBOOK
         //
-        private async Task<string?> LayWebSocketDebuggerUrlFacebookAsync(int congDebugChrome)
+        private async Task<string?> LayWebSocketDebuggerUrlFacebookAsync(int congDebugChrome, string urlCanMo)
         {
             using var httpClient = new HttpClient();
             httpClient.Timeout = TimeSpan.FromSeconds(3);
 
             string json = await httpClient.GetStringAsync($"http://127.0.0.1:{congDebugChrome}/json"); // Đọc danh sách tab debug mà Chrome đang mở trên cổng remote-debugging-port
             using JsonDocument document = JsonDocument.Parse(json);
+            string? webSocketDebuggerUrlPhuHopNhat = null;                                     // Lưu tạm một tab Facebook hợp lệ nếu chưa bắt được đúng URL cần mở
 
             foreach (JsonElement tab in document.RootElement.EnumerateArray())
             {
@@ -466,13 +468,18 @@ namespace DANG_NHAP_FACEBOOK
                     continue;
                 }
 
+                if (url.Contains(urlCanMo, StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(webSocketDebuggerUrl))
+                {
+                    return webSocketDebuggerUrl;                                               // Ưu tiên đúng tab của giao diện đang chọn, đặc biệt quan trọng với facebook.com/meta
+                }
+
                 if (!string.IsNullOrWhiteSpace(webSocketDebuggerUrl))
                 {
-                    return webSocketDebuggerUrl;                                               // Trả lại đúng websocket của tab Facebook để app gửi lệnh JavaScript vào trang
+                    webSocketDebuggerUrlPhuHopNhat ??= webSocketDebuggerUrl;                   // Nếu chưa gặp đúng URL thì tạm giữ lại một tab Facebook hợp lệ làm phương án dự phòng
                 }
             }
 
-            return null;
+            return webSocketDebuggerUrlPhuHopNhat;
         }
         //
         //  HÀM THỬ CHẠY SCRIPT TỰ ĐIỀN
@@ -563,35 +570,105 @@ namespace DANG_NHAP_FACEBOOK
   const setNativeValue = (element, value) => {
     const prototype = Object.getPrototypeOf(element);
     const descriptor = Object.getOwnPropertyDescriptor(prototype, 'value') || Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+    const oldValue = element.value;
+    element.focus();
+    element.click();
     descriptor.set.call(element, value);
+    if (element._valueTracker) {
+      element._valueTracker.setValue(oldValue);
+    }
     element.dispatchEvent(new Event('input', { bubbles: true }));
     element.dispatchEvent(new Event('change', { bubbles: true }));
+    element.dispatchEvent(new Event('blur', { bubbles: true }));
   };
 
-  const emailInput = firstVisible([
-    'input[name="email"]',
-    'input[id="email"]',
-    'input[autocomplete="username"]',
-    'input[type="email"]',
-    'input[inputmode="email"]',
-    'input[placeholder*="Email"]',
-    'input[placeholder*="email"]',
-    'input[aria-label*="Email"]',
-    'input[aria-label*="email"]'
-  ]) || Array.from(document.querySelectorAll('input')).find((input) => {
-    const type = (input.getAttribute('type') || 'text').toLowerCase();
-    return isVisible(input) && type !== 'password' && type !== 'hidden';
-  });
+  const contexts = [document, ...Array.from(document.querySelectorAll('iframe')).map((frame) => {
+    try {
+      return frame.contentDocument;
+    } catch {
+      return null;
+    }
+  }).filter(Boolean)];
 
-  const passwordInput = firstVisible([
-    'input[name="pass"]',
-    'input[type="password"]',
-    'input[autocomplete="current-password"]',
-    'input[aria-label*="Password"]',
-    'input[aria-label*="password"]',
-    'input[placeholder*="Password"]',
-    'input[placeholder*="password"]'
-  ]);
+  const findInputsInContext = (root) => {
+    const queryVisible = (selectors) => {
+      for (const selector of selectors) {
+        const element = root.querySelector(selector);
+        if (isVisible(element)) return element;
+      }
+      return null;
+    };
+
+    const emailInput = queryVisible([
+      'input[name="email"]',
+      'input[id="email"]',
+      'input[name="username"]',
+      'input[name="login"]',
+      'input[autocomplete="username"]',
+      'input[type="email"]',
+      'input[inputmode="email"]',
+      'input[placeholder*="Email"]',
+      'input[placeholder*="email"]',
+      'input[placeholder*="Số điện thoại"]',
+      'input[placeholder*="điện thoại"]',
+      'input[placeholder*="phone"]',
+      'input[aria-label*="Email"]',
+      'input[aria-label*="email"]',
+      'input[aria-label*="username"]'
+    ]) || Array.from(root.querySelectorAll('input')).find((input) => {
+      const type = (input.getAttribute('type') || 'text').toLowerCase();
+      const name = (input.getAttribute('name') || '').toLowerCase();
+      const id = (input.getAttribute('id') || '').toLowerCase();
+      const placeholder = (input.getAttribute('placeholder') || '').toLowerCase();
+      const ariaLabel = (input.getAttribute('aria-label') || '').toLowerCase();
+      return isVisible(input) &&
+        type !== 'password' &&
+        type !== 'hidden' &&
+        (
+          type === 'text' ||
+          type === 'email' ||
+          name.includes('email') ||
+          name.includes('user') ||
+          name.includes('login') ||
+          id.includes('email') ||
+          id.includes('user') ||
+          placeholder.includes('email') ||
+          placeholder.includes('điện thoại') ||
+          placeholder.includes('phone') ||
+          ariaLabel.includes('email') ||
+          ariaLabel.includes('user')
+        );
+    });
+
+    const passwordInput = queryVisible([
+      'input[name="pass"]',
+      'input[name="password"]',
+      'input[id="pass"]',
+      'input[id="password"]',
+      'input[type="password"]',
+      'input[autocomplete="current-password"]',
+      'input[aria-label*="Password"]',
+      'input[aria-label*="password"]',
+      'input[placeholder*="Password"]',
+      'input[placeholder*="password"]',
+      'input[placeholder*="Mật khẩu"]',
+      'input[placeholder*="mật khẩu"]'
+    ]);
+
+    return { emailInput, passwordInput };
+  };
+
+  let emailInput = null;
+  let passwordInput = null;
+
+  for (const root of contexts) {
+    const found = findInputsInContext(root);
+    if (found.emailInput && found.passwordInput) {
+      emailInput = found.emailInput;
+      passwordInput = found.passwordInput;
+      break;
+    }
+  }
 
   if (!emailInput || !passwordInput) {
     return 'wait';
