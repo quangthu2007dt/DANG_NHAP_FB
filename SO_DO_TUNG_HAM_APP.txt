@@ -38,9 +38,39 @@ Ghi chu:
 - Chua dong vao nut Next.
 
 
-2. CAC HAM DU KIEN SE CO SAU NAY
+2. TEN HAM: ThemDongMoiLenGrid
+------------------------------
+
+Muc dich:
+- Them 1 dong moi vao grid sau khi da lay duoc tai khoan moi tu ds.txt.
+
+Du lieu vao:
+- uid
+- password
+- profileName
+
+Du lieu ra:
+- Khong tra du lieu ra ngoai.
+- Tac dong truc tiep len grid.
+
+Các bước:
+1. Tạo một dòng mới trên grid.
+2. Đổ UID vào cột UID.
+3. Đổ Password vào cột Password.
+4. Đổ ProfileName vào cột ProfileName.
+5. Đổ Ngày tạo = thời gian hiện tại.
+6. Để trống các cột còn lại.
+7. Thêm dòng vào grid.
+8. Tự chọn ngay dòng vừa thêm.
+
+Ghi chu:
+- Ham nay thao tac theo colName, khong phu thuoc thu tu cot.
+- Cac cot chua can du lieu thi de trong.
+- Trang thai tam thoi uu tien hien o label/status, chua can ghi vao cot Trang thai.
+
+
+3. CAC HAM DU KIEN SE CO SAU NAY
 --------------------------------
-- ThemDongMoiLenGrid
 - MoProfileTheoDongDangChon
 - NextLayTaiKhoanMoi
 - ResetProfileVeProfileRanh
@@ -48,7 +78,7 @@ Ghi chu:
 - TimProfileRanhHoacTaoMoi
 
 
-3. CACH SU DUNG FILE NAY
+4. CACH SU DUNG FILE NAY
 ------------------------
 - Moi khi sap viet 1 ham moi, can ghi ham do vao day truoc.
 - Ghi theo dung thu tu:
