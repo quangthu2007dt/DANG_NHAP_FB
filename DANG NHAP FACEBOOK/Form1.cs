@@ -108,7 +108,7 @@ namespace DANG_NHAP_FACEBOOK
             DataGridViewRow row = dataGridView1.Rows[rowIndex];                               // Lấy đối tượng dòng để đổ dữ liệu vào các cột
 
             row.Cells["colSTT"].Value = rowIndex + 1;                                         // Đổ số thứ tự theo vị trí hiện tại trên grid
-            row.Cells["colChon"].Value = string.Empty;                                        // Cột chọn hiện tại để trống vì chưa xử lý tick ở bước này
+            row.Cells["colChon"].Value = false;                                               // Cột chọn là checkbox nên phải gán giá trị bool để tránh lỗi kiểu dữ liệu
             row.Cells["colUID"].Value = uid;                                                  // Đổ UID vừa lấy được từ ds.txt
             row.Cells["colPass"].Value = password;                                            // Đổ mật khẩu tương ứng với UID
             row.Cells["colNgayTao"].Value = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");     // Đổ thời gian tạo dòng theo thời điểm hiện tại
@@ -215,7 +215,7 @@ namespace DANG_NHAP_FACEBOOK
                 DataGridViewRow row = dataGridView1.Rows[rowIndex];                            // Lấy đối tượng dòng vừa tạo để gán dữ liệu theo từng cột
 
                 row.Cells["colSTT"].Value = rowIndex + 1;                                      // Đánh số thứ tự theo vị trí hiện tại trên grid
-                row.Cells["colChon"].Value = string.Empty;                                     // Cột chọn để trống, chưa xử lý tick ở bước này
+                row.Cells["colChon"].Value = false;                                            // Cột chọn là checkbox nên phải gán giá trị bool để tránh lỗi kiểu dữ liệu
                 row.Cells["colUID"].Value = tenThuMuc;                                         // Tên thư mục hiện tại chính là UID và cũng là profileName của tài khoản
                 row.Cells["colPass"].Value = string.Empty;                                     // Mật khẩu chưa biết nên để trống
                 row.Cells["colTen"].Value = string.Empty;                                      // Tên để trống, sau này có thể cập nhật tay hoặc bằng code
