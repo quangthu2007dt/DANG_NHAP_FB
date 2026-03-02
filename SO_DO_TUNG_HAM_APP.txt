@@ -69,16 +69,75 @@ Ghi chu:
 - Trang thai tam thoi uu tien hien o label/status, chua can ghi vao cot Trang thai.
 
 
-3. CAC HAM DU KIEN SE CO SAU NAY
+3. TEN HAM: TimProfileRanhHoacTaoMoi
+-----------------------------------
+
+Muc dich:
+- Tim 1 profile co the dung ngay cho tai khoan moi.
+- Neu da co `profile_ranh` thi dung lai profile do.
+- Neu khong co `profile_ranh` thi tao moi tu `profile_mau`.
+
+Du lieu vao:
+- profileMauPath
+- profileRanhPath
+
+Du lieu ra:
+- duongDanProfileSuDung
+- true neu tim hoac tao duoc profile de dung
+- false neu khong tao/khong tim duoc
+
+Các bước:
+1. Kiểm tra có thư mục profile_ranh không.
+2. Nếu có thì dùng luôn profile_ranh.
+3. Nếu không có thì kiểm tra profile_mau.
+4. Nếu profile_mau không có thì báo lỗi.
+5. Nếu profile_mau có thì copy ra một profile mới.
+6. Trả ra đường dẫn profile vừa lấy được để dùng cho bước tiếp theo.
+
+Ghi chu:
+- O giai doan dau, co the tam thoi tra ra duong dan profile_ranh hoac duong dan profile moi.
+- Viec doi ten profile thanh UID se de ham dieu phoi XuLyNutNext lam.
+- Ham nay chua mo Chrome.
+- Ham nay chua dong vao grid.
+
+
+4. TEN HAM: XuLyNutNext
+-----------------------
+
+Muc dich:
+- Dieu phoi toan bo luong xu ly khi nguoi dung bam nut Next.
+
+Du lieu vao:
+- Khong nhan du lieu truc tiep tu ben ngoai.
+- Su dung cac bien, grid va cac ham da co san trong Form1.
+
+Du lieu ra:
+- Khong tra du lieu ra ngoai.
+- Tac dong len app theo luong cua nut Next.
+
+Các bước:
+1. Gọi TryLayTaiKhoanMoiTuDs để lấy UID và Password mới.
+2. Gọi TimProfileRanhHoacTaoMoi để lấy profile có thể dùng.
+3. Đổi tên profile đó thành đúng UID.
+4. Gọi ThemDongMoiLenGrid để thêm dòng mới lên grid.
+5. Tự chọn dòng mới đó.
+6. Mở Facebook theo cấu hình đã chọn.
+7. Điền sẵn UID và Password một lần.
+
+Ghi chu:
+- Day la ham dieu phoi, khong nen viet qua nhieu logic con ben trong.
+- Nen goi cac ham nho da tach san tu truoc.
+- Day la ham chinh cua nut Next.
+
+
+5. CAC HAM DU KIEN SE CO SAU NAY
 --------------------------------
 - MoProfileTheoDongDangChon
-- NextLayTaiKhoanMoi
 - ResetProfileVeProfileRanh
 - XoaDongVaXoaTrongDs
-- TimProfileRanhHoacTaoMoi
 
 
-4. CACH SU DUNG FILE NAY
+6. CACH SU DUNG FILE NAY
 ------------------------
 - Moi khi sap viet 1 ham moi, can ghi ham do vao day truoc.
 - Ghi theo dung thu tu:
