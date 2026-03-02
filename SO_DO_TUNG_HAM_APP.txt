@@ -187,15 +187,60 @@ Ghi chu:
 - Du lieu tren grid phai duoc dong bo voi ds.txt o nhung cot hien da co du lieu nguon.
 
 
-7. CAC HAM DU KIEN SE CO SAU NAY
+7. TEN HAM: MoChromeMau
+-----------------------
+
+Muc dich:
+- Mo Chrome bang thu muc `profile_mau` de nguoi dung cai extension va chuan bi moi truong goc.
+
+Du lieu vao:
+- profileMauPath
+
+Du lieu ra:
+- Khong tra du lieu ra ngoai.
+- Mo Chrome voi user-data-dir la profile_mau.
+
+Các bước:
+1. Kiểm tra profile_mau đã có chưa.
+2. Nếu chưa có thì tạo mới thư mục profile_mau.
+3. Tìm đường dẫn chrome.exe.
+4. Nếu không tìm thấy chrome.exe thì báo lỗi.
+5. Nếu tìm thấy thì mở Chrome với --user-data-dir=profile_mau.
+
+Ghi chu:
+- Day la buoc quan trong de chuan bi profile goc cho toan bo app.
+- Moi profile moi sau nay deu sinh ra tu profile_mau.
+
+
+8. TEN SU KIEN: mởChromeMẫuToolStripMenuItem_Click
+-------------------------------------------------
+
+Muc dich:
+- Day la su kien cua menu chuot phai "Mở Chrome mẫu".
+
+Du lieu vao:
+- sender
+- e
+
+Du lieu ra:
+- Khong tra du lieu ra ngoai.
+- Goi ham MoChromeMau().
+
+Các bước:
+1. Người dùng bấm menu "Mở Chrome mẫu".
+2. Sự kiện click được gọi.
+3. Bên trong chỉ gọi MoChromeMau().
+
+
+9. CAC HAM DU KIEN SE CO SAU NAY
 --------------------------------
 - MoProfileTheoDongDangChon
 - ResetProfileVeProfileRanh
 - XoaDongVaXoaTrongDs
 
 
-8. CACH SU DUNG FILE NAY
-------------------------
+10. CACH SU DUNG FILE NAY
+-------------------------
 - Moi khi sap viet 1 ham moi, can ghi ham do vao day truoc.
 - Ghi theo dung thu tu:
   Ten ham

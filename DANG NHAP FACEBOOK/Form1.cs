@@ -12,8 +12,10 @@ namespace DANG_NHAP_FACEBOOK
             dsFilePath = Path.Combine(AppContext.BaseDirectory, "ds.txt");                    // Đường dẫn đầy đủ tới file ds.txt nằm cạnh file chạy app
             profileMauPath = Path.Combine(AppContext.BaseDirectory, "profile_mau");           // Đường dẫn đầy đủ tới thư mục profile mẫu
             profileRanhPath = Path.Combine(AppContext.BaseDirectory, "profile_ranh");         // Đường dẫn đầy đủ tới thư mục profile rảnh
-            LoadDuLieuLenGridKhiMoApp();                                                       // Khi app vừa mở thì nạp lại các profile cũ lên grid để giữ đúng trạng thái hiện có
+            LoadDuLieuLenGridKhiMoApp();                                                       // Khi app vừa mở thì nạp lại các profile cũ lên grid để giữ đúng trạng thái hiện có                                                                                              // Dòng này là "chìa khóa" nè bạn
+            dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
         }
+
         //
         //  HÀM LÁY DÒNG TÀI KHOẢN TỪ DS.TXT
         //
@@ -135,6 +137,11 @@ namespace DANG_NHAP_FACEBOOK
         {
             XuLyNutNext();                                                                     // Nút btnTiepTuc hiện tại đang đóng vai trò Next
         }
+
+        private void mởChromeMẫuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MoChromeMau();                                                                     // Menu "Mở Chrome mẫu" chỉ gọi đúng hàm mở profile_mau
+        }
         // 
         //  HÀM TẠO PRORILE RẢNH NẾU CHƯA CÓ KHI NÚT CHỌN DC GỌI
         //
@@ -189,6 +196,27 @@ namespace DANG_NHAP_FACEBOOK
 
             Directory.Move(duongDanProfileSuDung, duongDanProfileTheoUid);                    // Đổi tên thư mục profile đang dùng sang đúng UID của tài khoản mới
             ThemDongMoiLenGrid(uid, password, uid);                                           // Sau khi đã có profile đúng tên, thêm ngay dòng mới lên grid
+        }
+
+        private void MoChromeMau()
+        {
+            Directory.CreateDirectory(profileMauPath);                                         // Nếu chưa có profile_mau thì tạo mới để luôn có nơi chuẩn bị profile gốc
+
+            string chromeExe = TimChromeExe();                                                 // Tìm đường dẫn chrome.exe từ các vị trí cài đặt thông dụng
+            if (string.IsNullOrWhiteSpace(chromeExe))
+            {
+                MessageBox.Show("Không tìm thấy chrome.exe.");
+                return;                                                                        // Không mở tiếp nếu máy chưa tìm thấy Chrome
+            }
+
+            var psi = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = chromeExe,
+                Arguments = $"--user-data-dir=\"{profileMauPath}\"",                          // Mở Chrome bằng đúng thư mục profile_mau để người dùng cài extension và chuẩn bị môi trường gốc
+                UseShellExecute = true
+            };
+
+            System.Diagnostics.Process.Start(psi);                                             // Mở Chrome mẫu để người dùng cấu hình các thành phần cần thiết
         }
         //
         //   HÀM LOAD DỮ LIỆU KHI MỞ APP
@@ -283,6 +311,17 @@ namespace DANG_NHAP_FACEBOOK
                 string destinationDirectoryPath = Path.Combine(destinationPath, directoryName);// Tạo đường dẫn đầy đủ cho thư mục con đích
                 CopyDirectory(directoryPath, destinationDirectoryPath);                         // Gọi đệ quy để sao chép tiếp toàn bộ nội dung thư mục con
             }
+        }
+
+        private string TimChromeExe()
+        {
+            string chrome1 = @"C:\Program Files\Google\Chrome\Application\chrome.exe";        // Vị trí cài đặt Chrome phổ biến trên Windows 64-bit
+            string chrome2 = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe";  // Vị trí cài đặt Chrome phổ biến trên một số máy khác
+
+            if (File.Exists(chrome1)) return chrome1;
+            if (File.Exists(chrome2)) return chrome2;
+
+            return string.Empty;                                                                // Trả rỗng nếu chưa tìm thấy chrome.exe ở các vị trí đang hỗ trợ
         }
 
     }

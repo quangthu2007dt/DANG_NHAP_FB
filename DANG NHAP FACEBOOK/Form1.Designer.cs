@@ -29,19 +29,12 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             dataGridView1 = new DataGridView();
-            colSTT = new DataGridViewTextBoxColumn();
-            colChon = new DataGridViewTextBoxColumn();
-            colUID = new DataGridViewTextBoxColumn();
-            colPass = new DataGridViewTextBoxColumn();
-            colTen = new DataGridViewTextBoxColumn();
-            colEmail = new DataGridViewTextBoxColumn();
-            colNgayTao = new DataGridViewTextBoxColumn();
-            colGhiChu = new DataGridViewTextBoxColumn();
-            colTuongTacCuoi = new DataGridViewTextBoxColumn();
-            colTrangThai = new DataGridViewTextBoxColumn();
-            colCookie = new DataGridViewTextBoxColumn();
             cmsGirdRightClick = new ContextMenuStrip(components);
             chọnToolStripMenuItem = new ToolStripMenuItem();
             tToolStripMenuItem = new ToolStripMenuItem();
@@ -101,6 +94,17 @@
             lblChonGiaoDien = new Label();
             cboUrl = new ComboBox();
             ttMain = new ToolTip(components);
+            colSTT = new DataGridViewTextBoxColumn();
+            colChon = new DataGridViewCheckBoxColumn();
+            colUID = new DataGridViewTextBoxColumn();
+            colPass = new DataGridViewTextBoxColumn();
+            colTen = new DataGridViewTextBoxColumn();
+            colEmail = new DataGridViewTextBoxColumn();
+            colNgayTao = new DataGridViewTextBoxColumn();
+            colGhiChu = new DataGridViewTextBoxColumn();
+            colTuongTacCuoi = new DataGridViewTextBoxColumn();
+            colTrangThai = new DataGridViewTextBoxColumn();
+            colCookie = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             cmsGirdRightClick.SuspendLayout();
             statusStrip1.SuspendLayout();
@@ -117,73 +121,6 @@
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            // 
-            // colSTT
-            // 
-            resources.ApplyResources(colSTT, "colSTT");
-            colSTT.Name = "colSTT";
-            colSTT.ReadOnly = true;
-            // 
-            // colChon
-            // 
-            resources.ApplyResources(colChon, "colChon");
-            colChon.Name = "colChon";
-            colChon.ReadOnly = true;
-            // 
-            // colUID
-            // 
-            resources.ApplyResources(colUID, "colUID");
-            colUID.Name = "colUID";
-            colUID.ReadOnly = true;
-            // 
-            // colPass
-            // 
-            resources.ApplyResources(colPass, "colPass");
-            colPass.Name = "colPass";
-            colPass.ReadOnly = true;
-            // 
-            // colTen
-            // 
-            resources.ApplyResources(colTen, "colTen");
-            colTen.Name = "colTen";
-            colTen.ReadOnly = true;
-            // 
-            // colEmail
-            // 
-            resources.ApplyResources(colEmail, "colEmail");
-            colEmail.Name = "colEmail";
-            colEmail.ReadOnly = true;
-            // 
-            // colNgayTao
-            // 
-            resources.ApplyResources(colNgayTao, "colNgayTao");
-            colNgayTao.Name = "colNgayTao";
-            colNgayTao.ReadOnly = true;
-            // 
-            // colGhiChu
-            // 
-            resources.ApplyResources(colGhiChu, "colGhiChu");
-            colGhiChu.Name = "colGhiChu";
-            colGhiChu.ReadOnly = true;
-            // 
-            // colTuongTacCuoi
-            // 
-            resources.ApplyResources(colTuongTacCuoi, "colTuongTacCuoi");
-            colTuongTacCuoi.Name = "colTuongTacCuoi";
-            colTuongTacCuoi.ReadOnly = true;
-            // 
-            // colTrangThai
-            // 
-            colTrangThai.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            resources.ApplyResources(colTrangThai, "colTrangThai");
-            colTrangThai.Name = "colTrangThai";
-            colTrangThai.ReadOnly = true;
-            // 
-            // colCookie
-            // 
-            resources.ApplyResources(colCookie, "colCookie");
-            colCookie.Name = "colCookie";
-            colCookie.ReadOnly = true;
             // 
             // cmsGirdRightClick
             // 
@@ -356,6 +293,7 @@
             // 
             mởChromeMẫuToolStripMenuItem.Name = "mởChromeMẫuToolStripMenuItem";
             resources.ApplyResources(mởChromeMẫuToolStripMenuItem, "mởChromeMẫuToolStripMenuItem");
+            mởChromeMẫuToolStripMenuItem.Click += mởChromeMẫuToolStripMenuItem_Click;
             // 
             // làmMớiToolStripMenuItem
             // 
@@ -507,6 +445,93 @@
             cboUrl.Name = "cboUrl";
             ttMain.SetToolTip(cboUrl, resources.GetString("cboUrl.ToolTip"));
             // 
+            // colSTT
+            // 
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colSTT.DefaultCellStyle = dataGridViewCellStyle1;
+            resources.ApplyResources(colSTT, "colSTT");
+            colSTT.Name = "colSTT";
+            colSTT.ReadOnly = true;
+            colSTT.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colChon
+            // 
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.ForeColor = Color.Blue;
+            dataGridViewCellStyle2.NullValue = false;
+            colChon.DefaultCellStyle = dataGridViewCellStyle2;
+            resources.ApplyResources(colChon, "colChon");
+            colChon.Name = "colChon";
+            colChon.ReadOnly = true;
+            // 
+            // colUID
+            // 
+            resources.ApplyResources(colUID, "colUID");
+            colUID.Name = "colUID";
+            colUID.ReadOnly = true;
+            colUID.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colPass
+            // 
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colPass.DefaultCellStyle = dataGridViewCellStyle3;
+            resources.ApplyResources(colPass, "colPass");
+            colPass.Name = "colPass";
+            colPass.ReadOnly = true;
+            colPass.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colTen
+            // 
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colTen.DefaultCellStyle = dataGridViewCellStyle4;
+            resources.ApplyResources(colTen, "colTen");
+            colTen.Name = "colTen";
+            colTen.ReadOnly = true;
+            colTen.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colEmail
+            // 
+            resources.ApplyResources(colEmail, "colEmail");
+            colEmail.Name = "colEmail";
+            colEmail.ReadOnly = true;
+            colEmail.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colNgayTao
+            // 
+            resources.ApplyResources(colNgayTao, "colNgayTao");
+            colNgayTao.Name = "colNgayTao";
+            colNgayTao.ReadOnly = true;
+            colNgayTao.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colGhiChu
+            // 
+            resources.ApplyResources(colGhiChu, "colGhiChu");
+            colGhiChu.Name = "colGhiChu";
+            colGhiChu.ReadOnly = true;
+            colGhiChu.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colTuongTacCuoi
+            // 
+            resources.ApplyResources(colTuongTacCuoi, "colTuongTacCuoi");
+            colTuongTacCuoi.Name = "colTuongTacCuoi";
+            colTuongTacCuoi.ReadOnly = true;
+            colTuongTacCuoi.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colTrangThai
+            // 
+            colTrangThai.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            resources.ApplyResources(colTrangThai, "colTrangThai");
+            colTrangThai.Name = "colTrangThai";
+            colTrangThai.ReadOnly = true;
+            colTrangThai.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colCookie
+            // 
+            resources.ApplyResources(colCookie, "colCookie");
+            colCookie.Name = "colCookie";
+            colCookie.ReadOnly = true;
+            colCookie.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
             // Form1
             // 
             resources.ApplyResources(this, "$this");
@@ -584,18 +609,7 @@
         private ToolStripStatusLabel tssTong;
         private ToolStripStatusLabel tssSpace3;
         private ToolStripStatusLabel tssTime;
-        private DataGridViewTextBoxColumn colSTT;
-        private DataGridViewTextBoxColumn colChon;
-        private DataGridViewTextBoxColumn colUID;
-        private DataGridViewTextBoxColumn colPass;
-        private DataGridViewTextBoxColumn colTen;
-        private DataGridViewTextBoxColumn colEmail;
-        private DataGridViewTextBoxColumn colNgayTao;
-        private DataGridViewTextBoxColumn colGhiChu;
-        private DataGridViewTextBoxColumn colTuongTacCuoi;
-        private DataGridViewTextBoxColumn colTrangThai;
         private ToolStripMenuItem nhậpDanhSáchToolStripMenuItem;
-        private DataGridViewTextBoxColumn colCookie;
         private ToolStripMenuItem uIDToolStripMenuItem1;
         private ToolStripMenuItem tênToolStripMenuItem1;
         private ToolStripMenuItem passToolStripMenuItem;
@@ -606,5 +620,16 @@
         private ToolStripMenuItem checkWallToolStripMenuItem;
         private ToolStripMenuItem checkÌnorToolStripMenuItem;
         private ToolStripMenuItem mởToolStripMenuItem;
+        private DataGridViewTextBoxColumn colSTT;
+        private DataGridViewCheckBoxColumn colChon;
+        private DataGridViewTextBoxColumn colUID;
+        private DataGridViewTextBoxColumn colPass;
+        private DataGridViewTextBoxColumn colTen;
+        private DataGridViewTextBoxColumn colEmail;
+        private DataGridViewTextBoxColumn colNgayTao;
+        private DataGridViewTextBoxColumn colGhiChu;
+        private DataGridViewTextBoxColumn colTuongTacCuoi;
+        private DataGridViewTextBoxColumn colTrangThai;
+        private DataGridViewTextBoxColumn colCookie;
     }
 }
