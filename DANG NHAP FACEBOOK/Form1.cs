@@ -8,11 +8,14 @@ namespace DANG_NHAP_FACEBOOK
         private readonly string dsFilePath;
         private readonly string profileMauPath;
         private readonly string profileRanhPath;
+        private readonly string userAgentDangDungFilePath;
         private const string mobileUserAgentMacDinh = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36";
+        private const string metaDesktopUserAgentMacDinh = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36";
 
         public Form1()
         {
             InitializeComponent();
+            userAgentDangDungFilePath = Path.Combine(AppContext.BaseDirectory, "ua_dang_dung.txt"); // File txt lưu lại URL và User-Agent đang dùng để sau này còn lần theo vết
             dsFilePath = Path.Combine(AppContext.BaseDirectory, "ds.txt");                    // Đường dẫn đầy đủ tới file ds.txt nằm cạnh file chạy app
             profileMauPath = Path.Combine(AppContext.BaseDirectory, "profile_mau");           // Đường dẫn đầy đủ tới thư mục profile mẫu
             profileRanhPath = Path.Combine(AppContext.BaseDirectory, "profile_ranh");         // Đường dẫn đầy đủ tới thư mục profile rảnh
@@ -341,7 +344,8 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             string urlCanMo = LayUrlFacebookDaChon();                                          // Lấy đúng URL Facebook theo giao diện đang chọn trên combobox
-            string thamSoUserAgent = LayThamSoUserAgentTheoGiaoDien(urlCanMo);                 // Nếu là giao diện mobile thì ghép thêm User-Agent mobile cố định
+            string userAgentDangDung = LayGiaTriUserAgentTheoGiaoDien(urlCanMo);               // Xác định đúng UA sẽ dùng cho giao diện hiện tại để vừa mở Chrome vừa lưu lại làm mốc test
+            string thamSoUserAgent = LayThamSoUserAgentTheoGiaoDien(urlCanMo);                 // Nếu là giao diện mobile hoặc meta thì ghép thêm User-Agent cố định
             int congDebugChrome = LayCongDebugChromeTrong();                                   // Mỗi lần mở Chrome cấp một cổng debug riêng để app có thể tự điền UID và Password chính xác
 
             var psi = new System.Diagnostics.ProcessStartInfo
@@ -353,6 +357,7 @@ namespace DANG_NHAP_FACEBOOK
 
             try
             {
+                GhiLaiUserAgentDangDung(urlCanMo, userAgentDangDung);                          // Ghi lại ngay URL và UA đang dùng để nếu Facebook đổi giao diện còn có dữ liệu đối chiếu
                 System.Diagnostics.Process.Start(psi);                                         // Mở Chrome theo đúng profile, dùng chung cho cả Mở dòng và Next
                 _ = TuDongDienThongTinDangNhapAsync(congDebugChrome, urlCanMo, tenProfile, password); // Chạy nền bước tự điền để người dùng đỡ phải nhập tay lại UID và Password
             }
@@ -385,12 +390,44 @@ namespace DANG_NHAP_FACEBOOK
         //
         private string LayThamSoUserAgentTheoGiaoDien(string urlCanMo)
         {
-            if (urlCanMo.Contains("m.facebook.com", StringComparison.OrdinalIgnoreCase))
+            string userAgentDangDung = LayGiaTriUserAgentTheoGiaoDien(urlCanMo);               // Tách riêng giá trị UA để cùng một nguồn dữ liệu được dùng cho cả lệnh mở Chrome lẫn file ghi log
+
+            if (!string.IsNullOrWhiteSpace(userAgentDangDung))
             {
-                return $"--user-agent=\"{mobileUserAgentMacDinh}\"";                           // Nếu mở giao diện mobile thì ép luôn User-Agent mobile mặc định
+                return $"--user-agent=\"{userAgentDangDung}\"";                                // Nếu giao diện này cần ép UA thì ghép đúng tham số --user-agent để Chrome mở theo ý app
             }
 
             return string.Empty;                                                               // Các giao diện còn lại tạm thời chưa cần ép User-Agent
+        }
+        //
+        //  HÀM LẤY GIÁ TRỊ USER-AGENT THEO GIAO DIỆN
+        //
+        private string LayGiaTriUserAgentTheoGiaoDien(string urlCanMo)
+        {
+            if (urlCanMo.Contains("m.facebook.com", StringComparison.OrdinalIgnoreCase))
+            {
+                return mobileUserAgentMacDinh;                                                 // Giao diện mobile luôn phải ép UA mobile thì Facebook mới chịu giữ giao diện m.facebook
+            }
+
+            if (urlCanMo.Contains("facebook.com/meta", StringComparison.OrdinalIgnoreCase))
+            {
+                return metaDesktopUserAgentMacDinh;                                            // Meta sẽ dùng một UA desktop cố định để mình còn lưu lại và test ổn định hơn
+            }
+
+            return string.Empty;                                                               // Facebook thường hiện tại vẫn dùng UA mặc định của Chrome
+        }
+        //
+        //  HÀM GHI LẠI USER-AGENT ĐANG DÙNG
+        //
+        private void GhiLaiUserAgentDangDung(string urlCanMo, string userAgentDangDung)
+        {
+            string noiDung = $"""
+Thời gian: {DateTime.Now:dd/MM/yyyy HH:mm:ss}
+URL: {urlCanMo}
+User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent mặc định của Chrome" : userAgentDangDung)}
+""";
+
+            File.WriteAllText(userAgentDangDungFilePath, noiDung, Encoding.UTF8);              // Mỗi lần mở Chrome ghi đè mốc UA mới nhất để người dùng dễ nhìn và dễ lưu lại
         }
         //
         //  HÀM LẤY CỔNG DEBUG CHROME TRỐNG
