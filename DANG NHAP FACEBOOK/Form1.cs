@@ -261,7 +261,16 @@ namespace DANG_NHAP_FACEBOOK
                 return;
             }
 
-            Directory.Move(duongDanProfileSuDung, duongDanProfileTheoUid);                    // Đổi tên thư mục profile đang dùng sang đúng UID của tài khoản mới
+            if (!ThuDongTatCaChromeDeXuLyProfile())
+            {
+                return;                                                                        // Trước khi đổi tên profile_ranh thành UID phải đóng toàn bộ Chrome để tránh khóa thư mục
+            }
+
+            if (!ThuDoiTenThuMucProfile(duongDanProfileSuDung, duongDanProfileTheoUid, uid))
+            {
+                return;                                                                        // Nếu vẫn chưa đổi tên được thì dừng lại để tránh thêm dòng grid khi profile chưa sẵn sàng
+            }
+
             ThemDongMoiLenGrid(uid, password, uid);                                           // Sau khi đã có profile đúng tên, thêm ngay dòng mới lên grid
             MoChromeTheoProfile(duongDanProfileTheoUid, uid, password);                        // Mở ngay profile mới theo giao diện đã chọn để người dùng tiếp tục thao tác
         }
@@ -652,7 +661,7 @@ namespace DANG_NHAP_FACEBOOK
                 return;                                                                        // Chặn xóa nhầm các thư mục hệ thống như runtimes nếu chúng từng bị nạp sai lên grid
             }
 
-            if (!ThuDongTatCaChromeTruocKhiXoa())
+            if (!ThuDongTatCaChromeDeXuLyProfile())
             {
                 return;                                                                        // Khi đã xác định xóa thì app phải đóng toàn bộ Chrome trước để tránh lỗi khóa file profile
             }
@@ -698,7 +707,7 @@ namespace DANG_NHAP_FACEBOOK
                 dsUidCanXoa.Add(uid);                                                          // Gom UID hợp lệ để xóa profile và dữ liệu đồng bộ theo cùng một danh sách
             }
 
-            if (!ThuDongTatCaChromeTruocKhiXoa())
+            if (!ThuDongTatCaChromeDeXuLyProfile())
             {
                 return;                                                                        // Xóa nhiều dòng cũng phải dừng toàn bộ Chrome trước để xóa profile dứt điểm
             }
@@ -807,9 +816,9 @@ namespace DANG_NHAP_FACEBOOK
             return ThuXoaThuMucProfile(profileRanhPath, "profile_ranh");                       // Xóa nhiều dòng thì xóa luôn cả profile_ranh như logic đã chốt
         }
         //
-        //  HÀM ĐÓNG TOÀN BỘ CHROME TRƯỚC KHI XÓA
+        //  HÀM ĐÓNG TOÀN BỘ CHROME ĐỂ XỬ LÝ PROFILE
         //
-        private bool ThuDongTatCaChromeTruocKhiXoa()
+        private bool ThuDongTatCaChromeDeXuLyProfile()
         {
             try
             {
@@ -916,6 +925,7 @@ namespace DANG_NHAP_FACEBOOK
             {
                 try
                 {
+                    BoThuocTinhThuMucVeBinhThuong(duongDanNguon);                              // Gỡ ReadOnly và attribute đặc biệt trước khi đổi tên để tránh Access Denied trên Windows
                     Directory.Move(duongDanNguon, duongDanDich);                               // Đổi tên profile sau khi chắc chắn Chrome đã nhả thư mục
                     return true;
                 }

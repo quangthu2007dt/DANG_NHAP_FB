@@ -119,6 +119,8 @@ Các bước:
 1. Gọi TryLayTaiKhoanMoiTuDs để lấy UID và Password mới.
 2. Gọi TimProfileRanhHoacTaoMoi để lấy profile có thể dùng.
 3. Đổi tên profile đó thành đúng UID.
+3.1. Trước khi đổi tên, đóng toàn bộ Chrome.
+3.2. Gỡ ReadOnly/attribute đặc biệt của profile nếu có.
 4. Gọi ThemDongMoiLenGrid để thêm dòng mới lên grid.
 5. Tự chọn dòng mới đó.
 6. Gọi hàm mở Chrome theo profile vừa tạo.
