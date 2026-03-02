@@ -173,15 +173,18 @@ Các bước:
 1. Duyệt các thư mục profile đang có cạnh file exe.
 2. Bỏ qua profile_mau.
 3. Bỏ qua profile_ranh.
-4. Với mỗi thư mục UID còn lại thì thêm 1 dòng lên grid.
-5. Đổ UID.
-6. Đổ ProfileName = UID.
-7. Đổ Ngày tạo từ thời gian tạo thư mục hoặc để trống nếu chưa cần.
-8. Để trống các cột còn lại nếu chưa có dữ liệu.
+4. Đọc ds.txt để đối chiếu UID và Password.
+5. Với mỗi thư mục UID còn lại thì thêm 1 dòng lên grid.
+6. Đổ UID.
+7. Đổ Password nếu tìm thấy trong ds.txt.
+8. Đổ ProfileName = UID.
+9. Đổ Ngày tạo từ thời gian tạo thư mục hoặc để trống nếu chưa cần.
+10. Để trống các cột còn lại nếu chưa có dữ liệu.
 
 Ghi chu:
 - Ham nay giup app nho lai trang thai cu sau khi tat mo lai.
 - Day la buoc can thiet de Next khong lay nham tai khoan da co profile.
+- Du lieu tren grid phai duoc dong bo voi ds.txt o nhung cot hien da co du lieu nguon.
 
 
 7. CAC HAM DU KIEN SE CO SAU NAY

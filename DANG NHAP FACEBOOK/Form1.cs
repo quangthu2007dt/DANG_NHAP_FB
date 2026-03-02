@@ -195,6 +195,42 @@ namespace DANG_NHAP_FACEBOOK
         //
         private void LoadDuLieuLenGridKhiMoApp()
         {
+            Dictionary<string, string> matKhauTheoUid = new(StringComparer.OrdinalIgnoreCase); // Lưu tạm mật khẩu theo UID để đồng bộ lại dữ liệu khi nạp grid lúc mở app
+            if (File.Exists(dsFilePath))
+            {
+                string[] lines = File.ReadAllLines(dsFilePath);                                // Đọc ds.txt để đối chiếu UID và mật khẩu tương ứng
+
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    string line = lines[i].Trim();                                             // Loại khoảng trắng thừa trước khi kiểm tra định dạng từng dòng
+
+                    if (string.IsNullOrWhiteSpace(line))
+                    {
+                        continue;
+                    }
+
+                    string[] parts = line.Split('|');                                          // Tách UID và mật khẩu từ từng dòng trong ds.txt
+
+                    if (parts.Length != 2)
+                    {
+                        continue;                                                               // Bỏ qua dòng lỗi để việc nạp dữ liệu cũ không bị dừng
+                    }
+
+                    string uid = parts[0].Trim();                                              // Lấy UID từ phần tử đầu tiên của dòng hợp lệ
+                    string password = parts[1].Trim();                                         // Lấy mật khẩu từ phần tử thứ hai của dòng hợp lệ
+
+                    if (string.IsNullOrWhiteSpace(uid) || string.IsNullOrWhiteSpace(password))
+                    {
+                        continue;                                                               // Bỏ qua dòng lỗi hoặc thiếu dữ liệu
+                    }
+
+                    if (!matKhauTheoUid.ContainsKey(uid))
+                    {
+                        matKhauTheoUid.Add(uid, password);                                      // Chỉ lấy giá trị đầu tiên của UID để tránh ghi đè không rõ nguyên nhân
+                    }
+                }
+            }
+
             string[] thuMucProfiles = Directory.GetDirectories(AppContext.BaseDirectory);     // Lấy toàn bộ thư mục đang nằm cạnh file chạy app
 
             foreach (string thuMucProfile in thuMucProfiles)                                   // Duyệt lần lượt từng thư mục để tìm các profile đã có
@@ -217,7 +253,7 @@ namespace DANG_NHAP_FACEBOOK
                 row.Cells["colSTT"].Value = rowIndex + 1;                                      // Đánh số thứ tự theo vị trí hiện tại trên grid
                 row.Cells["colChon"].Value = false;                                            // Cột chọn là checkbox nên phải gán giá trị bool để tránh lỗi kiểu dữ liệu
                 row.Cells["colUID"].Value = tenThuMuc;                                         // Tên thư mục hiện tại chính là UID và cũng là profileName của tài khoản
-                row.Cells["colPass"].Value = string.Empty;                                     // Mật khẩu chưa biết nên để trống
+                row.Cells["colPass"].Value = matKhauTheoUid.TryGetValue(tenThuMuc, out string password) ? password : string.Empty; // Nếu UID còn trong ds.txt thì đổ lại đúng mật khẩu để dữ liệu luôn đồng bộ
                 row.Cells["colTen"].Value = string.Empty;                                      // Tên để trống, sau này có thể cập nhật tay hoặc bằng code
                 row.Cells["colEmail"].Value = string.Empty;                                    // Email để trống ở bước hiện tại
                 row.Cells["colNgayTao"].Value = Directory.GetCreationTime(thuMucProfile).ToString("dd/MM/yyyy HH:mm:ss"); // Lấy ngày tạo thư mục làm ngày tạo dòng hiển thị
