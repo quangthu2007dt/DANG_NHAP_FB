@@ -127,12 +127,16 @@ namespace DANG_NHAP_FACEBOOK
             row.Selected = true;                                                              // Tự chọn ngay dòng vừa được thêm
             dataGridView1.CurrentCell = row.Cells["colUID"];                                  // Đưa con trỏ hiện tại về cột UID của dòng mới
         }
-
+        //
+        //   HÀM XỬ LÝ SỰ KIỆN NÚT TIẾP TỤC
+        //
         private void btnTiepTuc_Click(object sender, EventArgs e)
         {
             XuLyNutNext();                                                                     // Nút btnTiepTuc hiện tại đang đóng vai trò Next
         }
-
+        // 
+        //  HÀM TẠO PRORILE RẢNH NẾU CHƯA CÓ KHI NÚT CHỌN DC GỌI
+        //
         private bool TimProfileRanhHoacTaoMoi(out string duongDanProfileSuDung)
         {
             duongDanProfileSuDung = string.Empty;                                              // Đường dẫn profile sẽ trả ra ngoài nếu tìm hoặc tạo được
@@ -153,9 +157,37 @@ namespace DANG_NHAP_FACEBOOK
             duongDanProfileSuDung = profileRanhPath;                                           // Sau khi sao chép xong thì profile_ranh chính là profile dùng được
             return true;                                                                       // Báo đã tạo thành công profile để dùng cho bước tiếp theo
         }
-
+        //
+        //  HÀM XỬ LÝ KHI CHỌN NÚT TIẾP TỤC
+        //
         private void XuLyNutNext()
         {
+            if (!TryLayTaiKhoanMoiTuDs(out string uid, out string password))                  // Nếu chưa lấy được tài khoản mới từ ds.txt thì dừng tại đây
+            {
+                return;
+            }
+
+            if (!TimProfileRanhHoacTaoMoi(out string duongDanProfileSuDung))                  // Nếu chưa lấy hoặc tạo được profile sẵn sàng thì dừng tại đây
+            {
+                return;
+            }
+
+            string duongDanProfileTheoUid = Path.Combine(AppContext.BaseDirectory, uid);      // Tạo đường dẫn profile mới theo đúng tên UID của tài khoản
+
+            if (string.Equals(duongDanProfileSuDung, duongDanProfileTheoUid, StringComparison.OrdinalIgnoreCase)) // Nếu profile hiện tại đã mang đúng tên UID thì không cần đổi tên
+            {
+                ThemDongMoiLenGrid(uid, password, uid);
+                return;
+            }
+
+            if (Directory.Exists(duongDanProfileTheoUid))                                     // Nếu thư mục profile theo UID đã tồn tại sẵn thì báo để tránh ghi đè nhầm
+            {
+                MessageBox.Show($"Profile {uid} đã tồn tại.");
+                return;
+            }
+
+            Directory.Move(duongDanProfileSuDung, duongDanProfileTheoUid);                    // Đổi tên thư mục profile đang dùng sang đúng UID của tài khoản mới
+            ThemDongMoiLenGrid(uid, password, uid);                                           // Sau khi đã có profile đúng tên, thêm ngay dòng mới lên grid
         }
 
         private void CopyDirectory(string sourcePath, string destinationPath)
@@ -176,5 +208,6 @@ namespace DANG_NHAP_FACEBOOK
                 CopyDirectory(directoryPath, destinationDirectoryPath);                         // Gọi đệ quy để sao chép tiếp toàn bộ nội dung thư mục con
             }
         }
+
     }
 }
