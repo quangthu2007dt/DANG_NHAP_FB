@@ -1016,7 +1016,21 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                     System.Threading.Thread.Sleep(1200);                                       // Chờ thêm một nhịp để hệ thống nhả hẳn file profile sau khi mọi phiên Chrome đã đóng
                 }
 
-                return true;
+                ThuDongChromeBangTaskkill();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    if (System.Diagnostics.Process.GetProcessesByName("chrome").Length == 0)
+                    {
+                        return true;
+                    }
+
+                    ThuDongChromeBangTaskkill();
+                    System.Threading.Thread.Sleep(500);
+                }
+
+                MessageBox.Show("Chrome vẫn chưa tắt hết, không thể xử lý xóa profile.");
+                return false;
             }
             catch (Exception ex)
             {
@@ -1034,7 +1048,9 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                 return true;                                                                   // Nếu thư mục không còn thì coi như đã xóa xong
             }
 
-            for (int i = 0; i < 10; i++)
+            string chiTietLoiCuoi = string.Empty;
+
+            for (int i = 0; i < 15; i++)
             {
                 try
                 {
@@ -1044,17 +1060,55 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                 }
                 catch (IOException)
                 {
-                    System.Threading.Thread.Sleep(300);                                        // Chờ ngắn để hệ thống nhả file rồi thử lại
+                    chiTietLoiCuoi = "IOException";
+                    System.Threading.Thread.Sleep(500);                                        // Chờ ngắn để hệ thống nhả file rồi thử lại
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    System.Threading.Thread.Sleep(300);                                        // Chờ ngắn để xử lý nốt các file còn đang khóa rồi thử lại
+                    chiTietLoiCuoi = "UnauthorizedAccessException";
+                    System.Threading.Thread.Sleep(500);                                        // Chờ ngắn để xử lý nốt các file còn đang khóa rồi thử lại
                 }
             }
 
-            MessageBox.Show($"Không thể xóa profile {tenProfile}. Vui lòng thử lại.");
+            if (ThuXoaThuMucProfileBangLenhHeThong(duongDanProfile))
+            {
+                return true;
+            }
+
+            MessageBox.Show($"Không thể xóa profile {tenProfile}. {chiTietLoiCuoi}");
             return false;
         }
+
+        private void ThuDongChromeBangTaskkill()
+        {
+            using var process = new System.Diagnostics.Process();                               // Dùng taskkill để dọn nốt các tiến trình con của Chrome mà Kill(true) đôi khi vẫn để sót
+            process.StartInfo.FileName = "taskkill";
+            process.StartInfo.Arguments = "/F /T /IM chrome.exe";
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.UseShellExecute = false;
+            process.Start();
+            process.WaitForExit(5000);
+        }
+
+        private bool ThuXoaThuMucProfileBangLenhHeThong(string duongDanProfile)
+        {
+            try
+            {
+                using var process = new System.Diagnostics.Process();                           // Fallback cuối cùng dùng lệnh hệ thống để xóa khi Directory.Delete vẫn vướng trên Windows
+                process.StartInfo.FileName = "cmd.exe";
+                process.StartInfo.Arguments = $"/c attrib -r -s -h \"{duongDanProfile}\" /s /d & rmdir /s /q \"{duongDanProfile}\"";
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.UseShellExecute = false;
+                process.Start();
+                process.WaitForExit(5000);
+                return !Directory.Exists(duongDanProfile);
+            }
+            catch
+            {
+                return false;                                                                   // Nếu fallback này cũng thất bại thì để hàm ngoài báo lỗi ra cho người dùng
+            }
+        }
+
         //
         //  HÀM ĐƯA THUỘC TÍNH THƯ MỤC VỀ BÌNH THƯỜNG
         //
