@@ -50,6 +50,7 @@
             điềnUIDPaswordToolStripMenuItem = new ToolStripMenuItem();
             mởToolStripMenuItem = new ToolStripMenuItem();
             làmMớiToolStripMenuItem = new ToolStripMenuItem();
+            xóaToolStripMenuItem = new ToolStripMenuItem();
             chọnToolStripMenuItem = new ToolStripMenuItem();
             tToolStripMenuItem = new ToolStripMenuItem();
             cácDòngBôiĐenToolStripMenuItem = new ToolStripMenuItem();
@@ -72,7 +73,6 @@
             xóaProfileToolStripMenuItem = new ToolStripMenuItem();
             dọnDẹpProfileToolStripMenuItem = new ToolStripMenuItem();
             xóaCaToolStripMenuItem = new ToolStripMenuItem();
-            xóaToolStripMenuItem = new ToolStripMenuItem();
             cậpNhậtDữLiệuToolStripMenuItem = new ToolStripMenuItem();
             uIDToolStripMenuItem = new ToolStripMenuItem();
             tênToolStripMenuItem = new ToolStripMenuItem();
@@ -210,7 +210,7 @@
             // 
             // cmsGirdRightClick
             // 
-            cmsGirdRightClick.Items.AddRange(new ToolStripItem[] { điềnUIDPaswordToolStripMenuItem, mởToolStripMenuItem, làmMớiToolStripMenuItem, chọnToolStripMenuItem, bỏChọnTấtCảToolStripMenuItem, copyToolStripMenuItem, chứcNăngToolStripMenuItem, profileToolStripMenuItem, xóaToolStripMenuItem, cậpNhậtDữLiệuToolStripMenuItem, mởChromeMẫuToolStripMenuItem, nhậpDanhSáchToolStripMenuItem, kiểmTraTàiKhoảnToolStripMenuItem });
+            cmsGirdRightClick.Items.AddRange(new ToolStripItem[] { điềnUIDPaswordToolStripMenuItem, mởToolStripMenuItem, làmMớiToolStripMenuItem, xóaToolStripMenuItem, chọnToolStripMenuItem, bỏChọnTấtCảToolStripMenuItem, copyToolStripMenuItem, chứcNăngToolStripMenuItem, profileToolStripMenuItem, cậpNhậtDữLiệuToolStripMenuItem, mởChromeMẫuToolStripMenuItem, nhậpDanhSáchToolStripMenuItem, kiểmTraTàiKhoảnToolStripMenuItem });
             cmsGirdRightClick.Name = "cmsGirdRightClick";
             resources.ApplyResources(cmsGirdRightClick, "cmsGirdRightClick");
             // 
@@ -230,6 +230,12 @@
             // 
             làmMớiToolStripMenuItem.Name = "làmMớiToolStripMenuItem";
             resources.ApplyResources(làmMớiToolStripMenuItem, "làmMớiToolStripMenuItem");
+            // 
+            // xóaToolStripMenuItem
+            // 
+            xóaToolStripMenuItem.Name = "xóaToolStripMenuItem";
+            resources.ApplyResources(xóaToolStripMenuItem, "xóaToolStripMenuItem");
+            xóaToolStripMenuItem.Click += xóaToolStripMenuItem_Click;
             // 
             // chọnToolStripMenuItem
             // 
@@ -344,12 +350,6 @@
             // 
             xóaCaToolStripMenuItem.Name = "xóaCaToolStripMenuItem";
             resources.ApplyResources(xóaCaToolStripMenuItem, "xóaCaToolStripMenuItem");
-            // 
-            // xóaToolStripMenuItem
-            // 
-            xóaToolStripMenuItem.Name = "xóaToolStripMenuItem";
-            resources.ApplyResources(xóaToolStripMenuItem, "xóaToolStripMenuItem");
-            xóaToolStripMenuItem.Click += xóaToolStripMenuItem_Click;
             // 
             // cậpNhậtDữLiệuToolStripMenuItem
             // 
@@ -529,6 +529,7 @@
             // 
             resources.ApplyResources(this, "$this");
             AutoScaleMode = AutoScaleMode.Font;
+            ContextMenuStrip = cmsGirdRightClick;
             Controls.Add(lblDanhSach);
             Controls.Add(btnXoa);
             Controls.Add(cboUrl);
@@ -540,7 +541,10 @@
             Controls.Add(lblTieuDe);
             Controls.Add(statusStrip1);
             Controls.Add(dataGridView1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "Form1";
+            SizeGripStyle = SizeGripStyle.Show;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             cmsGirdRightClick.ResumeLayout(false);
             statusStrip1.ResumeLayout(false);

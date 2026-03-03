@@ -224,6 +224,12 @@
   <data name="làmMớiToolStripMenuItem.Text" xml:space="preserve">
     <value>Làm mới</value>
   </data>
+  <data name="xóaToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>175, 22</value>
+  </data>
+  <data name="xóaToolStripMenuItem.Text" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
   <data name="tToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>171, 22</value>
   </data>
@@ -355,12 +361,6 @@
   </data>
   <data name="profileToolStripMenuItem.Text" xml:space="preserve">
     <value>Profile</value>
-  </data>
-  <data name="xóaToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>175, 22</value>
-  </data>
-  <data name="xóaToolStripMenuItem.Text" xml:space="preserve">
-    <value>Xóa</value>
   </data>
   <data name="uIDToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>124, 22</value>
@@ -825,6 +825,9 @@
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
     <value>7, 15</value>
   </data>
+  <data name="$this.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
     <value>946, 526</value>
   </data>
@@ -916,6 +919,12 @@
     <value>làmMớiToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;làmMớiToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;xóaToolStripMenuItem.Name" xml:space="preserve">
+    <value>xóaToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;xóaToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;chọnToolStripMenuItem.Name" xml:space="preserve">
@@ -1048,12 +1057,6 @@
     <value>xóaCaToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;xóaCaToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;xóaToolStripMenuItem.Name" xml:space="preserve">
-    <value>xóaToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;xóaToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;cậpNhậtDữLiệuToolStripMenuItem.Name" xml:space="preserve">
