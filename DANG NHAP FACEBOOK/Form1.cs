@@ -9,6 +9,7 @@ namespace DANG_NHAP_FACEBOOK
         private readonly string profileMauPath;
         private readonly string profileRanhPath;
         private readonly string userAgentDangDungFilePath;
+        private readonly Dictionary<string, int> congDebugTheoUid = new(StringComparer.OrdinalIgnoreCase);
         private const string mobileUserAgentMacDinh = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36";
         private const string metaDesktopUserAgentMacDinh = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36";
 
@@ -359,6 +360,7 @@ namespace DANG_NHAP_FACEBOOK
             {
                 GhiLaiUserAgentDangDung(urlCanMo, userAgentDangDung);                          // Ghi lại ngay URL và UA đang dùng để nếu Facebook đổi giao diện còn có dữ liệu đối chiếu
                 System.Diagnostics.Process.Start(psi);                                         // Mở Chrome theo đúng profile, dùng chung cho cả Mở dòng và Next
+                congDebugTheoUid[tenProfile] = congDebugChrome;                                // Lưu lại cổng debug theo UID để các chức năng như Điền UID Password còn bám lại đúng phiên Chrome đang mở
                 _ = TuDongDienThongTinDangNhapAsync(congDebugChrome, urlCanMo, tenProfile, password); // Chạy nền bước tự điền để người dùng đỡ phải nhập tay lại UID và Password
             }
             catch (Exception ex)
@@ -1172,7 +1174,9 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                 CopyDirectory(directoryPath, destinationDirectoryPath);                         // Gọi đệ quy để sao chép tiếp toàn bộ nội dung thư mục con
             }
         }
-
+        //
+        //   HÀM TÌM CHROME
+        //
         private string TimChromeExe()
         {
             string chrome1 = @"C:\Program Files\Google\Chrome\Application\chrome.exe";        // Vị trí cài đặt Chrome phổ biến trên Windows 64-bit
@@ -1183,6 +1187,36 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
 
             return string.Empty;                                                                // Trả rỗng nếu chưa tìm thấy chrome.exe ở các vị trí đang hỗ trợ
         }
+        //
+        //  SỰ ĐIỆN CHUỘT PHẢI ĐIỀN UID/PASSWORD
+        //
+        private void điềnUIDPaswordToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<DataGridViewRow> dsDongDaTick = LayDanhSachDongDaTick();                      // Chỉ lấy những dòng được chọn thật bằng checkbox để tránh điền nhầm theo bôi đen
+            if (dsDongDaTick.Count != 1)
+            {
+                MessageBox.Show("Vui lòng tick đúng 1 dòng để điền lại UID và Password.");
+                return;                                                                        // Menu này chỉ có ý nghĩa khi đang làm việc với đúng 1 tài khoản đang mở
+            }
 
+            DataGridViewRow row = dsDongDaTick[0];                                             // Lấy đúng dòng đang muốn điền lại thông tin vào phiên Chrome đang mở
+            string uid = row.Cells["colUID"].Value?.ToString()?.Trim() ?? string.Empty;        // UID cũng là khóa để tìm lại đúng cổng debug của phiên Chrome đã mở trước đó
+            string password = row.Cells["colPass"].Value?.ToString()?.Trim() ?? string.Empty;  // Mật khẩu lấy trực tiếp từ grid để điền lại vào form đăng nhập đang mở
+
+            if (string.IsNullOrWhiteSpace(uid) || string.IsNullOrWhiteSpace(password))
+            {
+                MessageBox.Show("Dòng đang chọn chưa có đủ UID hoặc Password.");
+                return;                                                                        // Nếu thiếu dữ liệu thì dừng để tránh điền sai hoặc điền chuỗi rỗng
+            }
+
+            if (!congDebugTheoUid.TryGetValue(uid, out int congDebugChrome))
+            {
+                MessageBox.Show("Dòng này chưa có Chrome đang mở. Hãy mở dòng này bằng app trước rồi thử lại.");
+                return;                                                                        // Chỉ điền lại được khi profile này đã được app mở trước đó và còn giữ cổng debug
+            }
+
+            string urlCanMo = LayUrlFacebookDaChon();                                          // Dùng lại giao diện đang chọn để ưu tiên bắt đúng tab Facebook tương ứng
+            _ = TuDongDienThongTinDangNhapAsync(congDebugChrome, urlCanMo, uid, password);     // Chỉ gọi lại bước tự điền trên phiên Chrome đang mở, không mở thêm Chrome mới
+        }
     }
 }
