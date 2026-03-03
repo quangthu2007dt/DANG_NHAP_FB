@@ -47,6 +47,7 @@
             colTrangThai = new DataGridViewTextBoxColumn();
             colCookie = new DataGridViewTextBoxColumn();
             cmsGirdRightClick = new ContextMenuStrip(components);
+            điềnUIDPaswordToolStripMenuItem = new ToolStripMenuItem();
             chọnToolStripMenuItem = new ToolStripMenuItem();
             tToolStripMenuItem = new ToolStripMenuItem();
             cácDòngBôiĐenToolStripMenuItem = new ToolStripMenuItem();
@@ -213,9 +214,15 @@
             // 
             // cmsGirdRightClick
             // 
-            cmsGirdRightClick.Items.AddRange(new ToolStripItem[] { chọnToolStripMenuItem, bỏChọnTấtCảToolStripMenuItem, copyToolStripMenuItem, chứcNăngToolStripMenuItem, profileToolStripMenuItem, xóaToolStripMenuItem, cậpNhậtDữLiệuToolStripMenuItem, mởChromeMẫuToolStripMenuItem, làmMớiToolStripMenuItem, nhậpDanhSáchToolStripMenuItem, kiểmTraTàiKhoảnToolStripMenuItem, mởToolStripMenuItem });
+            cmsGirdRightClick.Items.AddRange(new ToolStripItem[] { điềnUIDPaswordToolStripMenuItem, chọnToolStripMenuItem, bỏChọnTấtCảToolStripMenuItem, copyToolStripMenuItem, chứcNăngToolStripMenuItem, profileToolStripMenuItem, xóaToolStripMenuItem, cậpNhậtDữLiệuToolStripMenuItem, mởChromeMẫuToolStripMenuItem, làmMớiToolStripMenuItem, nhậpDanhSáchToolStripMenuItem, kiểmTraTàiKhoảnToolStripMenuItem, mởToolStripMenuItem });
             cmsGirdRightClick.Name = "cmsGirdRightClick";
             resources.ApplyResources(cmsGirdRightClick, "cmsGirdRightClick");
+            // 
+            // điềnUIDPaswordToolStripMenuItem
+            // 
+            điềnUIDPaswordToolStripMenuItem.Name = "điềnUIDPaswordToolStripMenuItem";
+            resources.ApplyResources(điềnUIDPaswordToolStripMenuItem, "điềnUIDPaswordToolStripMenuItem");
+            điềnUIDPaswordToolStripMenuItem.Click += điềnUIDPaswordToolStripMenuItem_Click;
             // 
             // chọnToolStripMenuItem
             // 
@@ -580,6 +587,7 @@
         private Label lblChonGiaoDien;
         private ComboBox cboUrl;
         private ContextMenuStrip cmsGirdRightClick;
+        private ToolStripMenuItem điềnUIDPaswordToolStripMenuItem;
         private ToolStripMenuItem chọnToolStripMenuItem;
         private ToolStripMenuItem tToolStripMenuItem;
         private ToolStripMenuItem cácDòngBôiĐenToolStripMenuItem;
