@@ -10,6 +10,7 @@ namespace DANG_NHAP_FACEBOOK
         private readonly string profileRanhPath;
         private readonly string userAgentDangDungFilePath;
         private readonly Dictionary<string, int> congDebugTheoUid = new(StringComparer.OrdinalIgnoreCase);
+        private const string facebookDesktopUserAgentMacDinh = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36";
         private const string mobileUserAgentMacDinh = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36";
         private const string metaDesktopUserAgentMacDinh = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36";
 
@@ -34,6 +35,16 @@ namespace DANG_NHAP_FACEBOOK
             if (cboUrl.Items.Count > 0 && cboUrl.SelectedIndex < 0)
             {
                 cboUrl.SelectedIndex = 0;                                                     // Mặc định chọn giao diện đầu tiên để khi bấm Mở dòng không bị thiếu URL
+            }
+
+            if (!cboUserAgent.Items.Contains(facebookDesktopUserAgentMacDinh))
+            {
+                cboUserAgent.Items.Add(facebookDesktopUserAgentMacDinh);                      // Thêm UA desktop vừa test ổn vào danh sách để người dùng còn nhìn lại và dùng về sau
+            }
+
+            if (cboUserAgent.Items.Count > 0 && cboUserAgent.SelectedIndex < 0)
+            {
+                cboUserAgent.SelectedItem = facebookDesktopUserAgentMacDinh;                  // Facebook thường hiện tại sẽ bám theo UA desktop này nên đặt luôn làm mặc định nhìn thấy trên giao diện
             }
         }
 
@@ -431,7 +442,7 @@ namespace DANG_NHAP_FACEBOOK
                 return metaDesktopUserAgentMacDinh;                                            // Meta sẽ dùng một UA desktop cố định để mình còn lưu lại và test ổn định hơn
             }
 
-            return string.Empty;                                                               // Facebook thường hiện tại vẫn dùng UA mặc định của Chrome
+            return facebookDesktopUserAgentMacDinh;                                            // Facebook thường giờ cũng ép theo UA desktop đã test ổn thay vì thả theo mặc định của Chrome
         }
         //
         //  HÀM GHI LẠI USER-AGENT ĐANG DÙNG
