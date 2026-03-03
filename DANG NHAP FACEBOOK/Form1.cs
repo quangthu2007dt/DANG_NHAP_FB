@@ -9,14 +9,17 @@ namespace DANG_NHAP_FACEBOOK
         private readonly string profileMauPath;
         private readonly string profileRanhPath;
         private readonly string userAgentDangDungFilePath;
+        private readonly string userAgentsFilePath;
         private readonly Dictionary<string, int> congDebugTheoUid = new(StringComparer.OrdinalIgnoreCase);
         private const string facebookDesktopUserAgentMacDinh = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36";
+        private const string safariIphoneUserAgentMacDinh = "Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1";
         private const string mobileUserAgentMacDinh = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36";
         private const string metaDesktopUserAgentMacDinh = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36";
 
         public Form1()
         {
             InitializeComponent();
+            userAgentsFilePath = Path.Combine(AppContext.BaseDirectory, "user_agents.txt");         // File txt l?u danh s?ch User-Agent ?? app c? th? n?p l?n combobox
             userAgentDangDungFilePath = Path.Combine(AppContext.BaseDirectory, "ua_dang_dung.txt"); // File txt lưu lại URL và User-Agent đang dùng để sau này còn lần theo vết
             dsFilePath = Path.Combine(AppContext.BaseDirectory, "ds.txt");                    // Đường dẫn đầy đủ tới file ds.txt nằm cạnh file chạy app
             profileMauPath = Path.Combine(AppContext.BaseDirectory, "profile_mau");           // Đường dẫn đầy đủ tới thư mục profile mẫu
@@ -37,15 +40,8 @@ namespace DANG_NHAP_FACEBOOK
                 cboUrl.SelectedIndex = 0;                                                     // Mặc định chọn giao diện đầu tiên để khi bấm Mở dòng không bị thiếu URL
             }
 
-            if (!cboUserAgent.Items.Contains(facebookDesktopUserAgentMacDinh))
-            {
-                cboUserAgent.Items.Add(facebookDesktopUserAgentMacDinh);                      // Thêm UA desktop vừa test ổn vào danh sách để người dùng còn nhìn lại và dùng về sau
-            }
-
-            if (cboUserAgent.Items.Count > 0 && cboUserAgent.SelectedIndex < 0)
-            {
-                cboUserAgent.SelectedItem = facebookDesktopUserAgentMacDinh;                  // Facebook thường hiện tại sẽ bám theo UA desktop này nên đặt luôn làm mặc định nhìn thấy trên giao diện
-            }
+            DamBaoTonTaiUserAgentsTxt();                                                       // ??m b?o lu?n c? file user_agents.txt ?? kh?ng hardcode danh s?ch User-Agent tr?n UI
+            TaiDanhSachUserAgentLenCombobox();                                                 // N?p danh s?ch User-Agent t? file txt l?n combobox ngay khi app kh?i ??ng
         }
 
         //
@@ -64,7 +60,61 @@ namespace DANG_NHAP_FACEBOOK
             tssTong.Text = $"Tổng : {dataGridView1.Rows.Count}";                               // Thanh trạng thái Tổng phản ánh số dòng hiện đang có trên grid
         }
 
-        private bool TryLayTaiKhoanMoiTuDs(out string uid, out string password)
+        private void DamBaoTonTaiUserAgentsTxt()
+        {
+            string[] danhSachMacDinh =
+            [
+                facebookDesktopUserAgentMacDinh,                                               // Gi? s?n UA desktop ?ang test ?n cho facebook.com
+                safariIphoneUserAgentMacDinh                                                   // Th?m s?n m?t UA Safari iPhone ?? sau n?y c?n test giao di?n c?
+            ];
+            if (!File.Exists(userAgentsFilePath))
+            {
+                File.WriteAllLines(userAgentsFilePath, danhSachMacDinh, Encoding.UTF8);        // N?u ch?a c? file th? t?o m?i v? ghi s?n 2 UA m?c ??nh
+                return;
+            }
+            bool fileDangRong = File.ReadAllLines(userAgentsFilePath)
+                .All(line => string.IsNullOrWhiteSpace(line));                                 // Neu file dang co nhung khong chua UA nao thi coi nhu rong
+            if (fileDangRong)
+            {
+                File.WriteAllLines(userAgentsFilePath, danhSachMacDinh, Encoding.UTF8);        // Ghi l?i danh s?ch m?c ??nh ?? combobox kh?ng b? tr?ng
+            }
+        }
+        private void TaiDanhSachUserAgentLenCombobox()
+        {
+            cboUserAgent.Items.Clear();                                                         // M?i l?n n?p l?i th? x?a danh s?ch c? ?? tr?nh b? tr?ng l?p
+            if (!File.Exists(userAgentsFilePath))
+            {
+                return;                                                                         // Thi?u file th? d?ng, v? h?m ??m b?o s? t?o l?i tr??c ?? r?i
+            }
+            List<string> danhSachUserAgent = File.ReadAllLines(userAgentsFilePath)
+                .Select(line => line.Trim())
+                .Where(line => !string.IsNullOrWhiteSpace(line))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();                                                                      // Ch? l?y c?c d?ng UA c? gi? tr? v? lo?i b? tr?ng l?p
+            foreach (string userAgent in danhSachUserAgent)
+            {
+                cboUserAgent.Items.Add(userAgent);                                              // ?? t?ng User-Agent t? file txt l?n combobox ?? ng??i d?ng ch?n
+            }
+            if (cboUserAgent.Items.Count == 0)
+            {
+                return;                                                                         // Kh?ng c? UA n?o th? d?ng, tr?nh g?t SelectedItem khi combobox ?ang tr?ng
+            }
+            if (danhSachUserAgent.Contains(facebookDesktopUserAgentMacDinh, StringComparer.OrdinalIgnoreCase))
+            {
+                cboUserAgent.SelectedItem = facebookDesktopUserAgentMacDinh;                   // Facebook th??ng m?c ??nh quay v? UA desktop ?ang test ?n n?y
+                return;
+            }
+            cboUserAgent.SelectedIndex = 0;                                                     // N?u kh?ng c? UA desktop m?c ??nh th? ch?n d?ng ??u ti?n trong file
+        }
+        private string LayUserAgentFacebookThuongDangChon()
+        {
+            string userAgentDangChon = cboUserAgent.SelectedItem?.ToString()?.Trim() ?? string.Empty; // ??c ??ng User-Agent ng??i d?ng ?ang ch?n tr?n combobox
+            if (!string.IsNullOrWhiteSpace(userAgentDangChon))
+            {
+                return userAgentDangChon;                                                      // N?u combobox ?ang c? gi? tr? th? facebook.com s? d?ng ch?nh UA n?y
+            }
+            return facebookDesktopUserAgentMacDinh;                                            // Fall back v? UA desktop m?c ??nh n?u combobox ch?a ch?n g?
+        }        private bool TryLayTaiKhoanMoiTuDs(out string uid, out string password)
         {
             uid = string.Empty;                                                               // Giá trị UID trả ra ngoài nếu tìm thấy dòng hợp lệ
             password = string.Empty;                                                          // Giá trị mật khẩu trả ra ngoài nếu tìm thấy dòng hợp lệ
@@ -1380,3 +1430,4 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         }
     }
 }
+
