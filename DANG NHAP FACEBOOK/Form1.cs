@@ -521,6 +521,41 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
             return webSocketDebuggerUrlPhuHopNhat;
         }
         //
+        //  HÀM LẤY WEBSOCKET DEBUGGER URL CỦA TAB FACEBOOK ĐANG MỞ
+        //
+        private async Task<string?> LayWebSocketDebuggerUrlFacebookDangMoAsync(int congDebugChrome)
+        {
+            using var httpClient = new HttpClient();
+            httpClient.Timeout = TimeSpan.FromSeconds(3);
+
+            string json = await httpClient.GetStringAsync($"http://127.0.0.1:{congDebugChrome}/json"); // Đọc danh sách tab hiện có của phiên Chrome đang mở để bám vào tab Facebook hiện tại
+            using JsonDocument document = JsonDocument.Parse(json);
+
+            foreach (JsonElement tab in document.RootElement.EnumerateArray())
+            {
+                string type = tab.TryGetProperty("type", out JsonElement typeElement) ? typeElement.GetString() ?? string.Empty : string.Empty;
+                string url = tab.TryGetProperty("url", out JsonElement urlElement) ? urlElement.GetString() ?? string.Empty : string.Empty;
+                string webSocketDebuggerUrl = tab.TryGetProperty("webSocketDebuggerUrl", out JsonElement wsElement) ? wsElement.GetString() ?? string.Empty : string.Empty;
+
+                if (!string.Equals(type, "page", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                if (!url.Contains("facebook.com", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                if (!string.IsNullOrWhiteSpace(webSocketDebuggerUrl))
+                {
+                    return webSocketDebuggerUrl;                                               // Chỉ cần tab Facebook nào đang mở được là menu Điền UID Password có thể bám vào để điền lại
+                }
+            }
+
+            return null;
+        }
+        //
         //  HÀM THỬ CHẠY SCRIPT TỰ ĐIỀN
         //
         private async Task<bool> ThuChayScriptTuDongDienAsync(string webSocketDebuggerUrl, string script)
@@ -1215,8 +1250,34 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                 return;                                                                        // Chỉ điền lại được khi profile này đã được app mở trước đó và còn giữ cổng debug
             }
 
-            string urlCanMo = LayUrlFacebookDaChon();                                          // Dùng lại giao diện đang chọn để ưu tiên bắt đúng tab Facebook tương ứng
-            _ = TuDongDienThongTinDangNhapAsync(congDebugChrome, urlCanMo, uid, password);     // Chỉ gọi lại bước tự điền trên phiên Chrome đang mở, không mở thêm Chrome mới
+            _ = DienLaiUidVaPasswordLenChromeDangMoAsync(congDebugChrome, uid, password);      // Chỉ điền lại trên tab Facebook hiện có của phiên Chrome đang mở, không phụ thuộc combobox URL
+        }
+
+        //
+        //  HÀM ĐIỀN LẠI UID/PASSWORD LÊN CHROME ĐANG MỞ
+        //
+        private async Task DienLaiUidVaPasswordLenChromeDangMoAsync(int congDebugChrome, string uid, string password)
+        {
+            try
+            {
+                string? webSocketDebuggerUrl = await LayWebSocketDebuggerUrlFacebookDangMoAsync(congDebugChrome); // Lấy tab Facebook đang mở thực tế của phiên Chrome này, bất kể đang ở URL nào
+                if (string.IsNullOrWhiteSpace(webSocketDebuggerUrl))
+                {
+                    MessageBox.Show("Không tìm thấy tab Facebook đang mở để điền lại UID và Password.");
+                    return;                                                                    // Nếu Chrome đang mở nhưng không còn tab Facebook nào thì menu này không còn mục tiêu để điền
+                }
+
+                string script = TaoScriptTuDongDienDangNhap(uid, password);                    // Dùng lại cùng một script tự điền đã ổn định ở các luồng khác để tránh tách logic rời rạc
+                bool daDienThanhCong = await ThuChayScriptTuDongDienAsync(webSocketDebuggerUrl, script);
+                if (!daDienThanhCong)
+                {
+                    MessageBox.Show("Không tìm thấy ô đăng nhập trên tab Facebook đang mở.");
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Không thể kết nối lại phiên Chrome đang mở của dòng này.");
+            }
         }
     }
 }
