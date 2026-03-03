@@ -24,13 +24,7 @@ namespace DANG_NHAP_FACEBOOK
             dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridView1.RowsAdded += (_, _) => CapNhatThongTinSoLuong();                    // Chạy sau cùng để lblDanhSach đọc đúng số dòng còn lại trong ds.txt
             dataGridView1.RowsRemoved += (_, _) => CapNhatThongTinSoLuong();                  // Chạy sau cùng để Tổng luôn bám đúng số dòng hiện còn trên grid
-            dataGridView1.RowsAdded += (_, _) => CapNhatSoLuongDanhSach();                    // Giữ label đếm danh sách tự cập nhật khi có dòng mới
-            dataGridView1.RowsRemoved += (_, _) => CapNhatSoLuongDanhSach();                  // Giữ label đếm danh sách tự cập nhật khi có dòng bị xóa
-
             CapNhatThongTinSoLuong();                                                         // Ghi lại đúng ý nghĩa mới của lblDanhSach và Tổng sau khi đã nạp xong dữ liệu
-
-            dataGridView1.RowsAdded += (_, _) => CapNhatThongTinSoLuong();                    // Gắn thêm một lượt sau cùng để kết quả hiển thị cuối luôn đúng theo ý nghĩa mới
-            dataGridView1.RowsRemoved += (_, _) => CapNhatThongTinSoLuong();                  // Gắn thêm một lượt sau cùng để kết quả hiển thị cuối luôn đúng theo ý nghĩa mới
 
             if (!cboUrl.Items.Contains("m.facebook.com"))
             {
@@ -41,8 +35,6 @@ namespace DANG_NHAP_FACEBOOK
             {
                 cboUrl.SelectedIndex = 0;                                                     // Mặc định chọn giao diện đầu tiên để khi bấm Mở dòng không bị thiếu URL
             }
-
-            CapNhatSoLuongDanhSach();                                                         // Hiển thị ngay số lượng tài khoản đang có trên grid
         }
 
         //
@@ -1130,7 +1122,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         //
         //  HÀM KIỂM TRA TÊN PROFILE UID HỢP LỆ
         //
-        private void CapNhatSoLuongDanhSach()
+        private void CapNhatSoLuongDanhSach_CU()
         {
             lblDanhSach.Text = $"Số Lượng DS : {dataGridView1.Rows.Count}";                    // Hiển thị số dòng hiện có trên grid để người dùng biết app đang nạp bao nhiêu tài khoản
         }
