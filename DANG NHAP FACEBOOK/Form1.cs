@@ -42,6 +42,7 @@ namespace DANG_NHAP_FACEBOOK
 
             DamBaoTonTaiUserAgentsTxt();                                                       // ??m b?o lu?n c? file user_agents.txt ?? kh?ng hardcode danh s?ch User-Agent tr?n UI
             TaiDanhSachUserAgentLenCombobox();                                                 // N?p danh s?ch User-Agent t? file txt l?n combobox ngay khi app kh?i ??ng
+            GanMenuUserAgentChoCombobox();                                                     // Gắn menu chuột phải để thêm và xóa User-Agent ngay trên app mà không phải sửa txt bằng tay
         }
 
         //
@@ -106,6 +107,131 @@ namespace DANG_NHAP_FACEBOOK
             }
             cboUserAgent.SelectedIndex = 0;                                                     // N?u kh?ng c? UA desktop m?c ??nh th? ch?n d?ng ??u ti?n trong file
         }
+
+        private void GanMenuUserAgentChoCombobox()
+        {
+            ContextMenuStrip cmsUserAgent = new();                                              // Tạo menu chuột phải riêng cho combobox User-Agent để không đụng layout hiện có
+            ToolStripMenuItem themUserAgentToolStripMenuItem = new("Thêm User-Agent");         // Mục thêm mới để người dùng tự bổ sung UA cần test
+            ToolStripMenuItem xoaUserAgentToolStripMenuItem = new("Xóa User-Agent đang chọn"); // Mục xóa đúng UA đang chọn khỏi danh sách
+
+            themUserAgentToolStripMenuItem.Click += (_, _) => ThemUserAgentMoi();              // Bấm menu là mở hộp thoại nhập UA mới rồi lưu vào file txt
+            xoaUserAgentToolStripMenuItem.Click += (_, _) => XoaUserAgentDangChon();           // Bấm menu là xóa đúng UA đang chọn khỏi combobox và file txt
+
+            cmsUserAgent.Items.Add(themUserAgentToolStripMenuItem);
+            cmsUserAgent.Items.Add(xoaUserAgentToolStripMenuItem);
+            cboUserAgent.ContextMenuStrip = cmsUserAgent;                                       // Gắn menu thẳng vào combobox để dùng ngay trên app
+        }
+
+        private void ThemUserAgentMoi()
+        {
+            string? userAgentMoi = HienHopThoaiNhapUserAgent();                                 // Lấy chuỗi UA người dùng nhập từ hộp thoại nhỏ trên app
+            if (string.IsNullOrWhiteSpace(userAgentMoi))
+            {
+                return;                                                                         // Hủy hoặc để trống thì dừng, không ghi gì vào danh sách
+            }
+
+            userAgentMoi = userAgentMoi.Trim();                                                 // Cắt khoảng trắng thừa để tránh lưu cùng một UA thành hai dòng khác nhau
+
+            foreach (object item in cboUserAgent.Items)
+            {
+                string userAgentDangCo = item?.ToString()?.Trim() ?? string.Empty;
+                if (string.Equals(userAgentDangCo, userAgentMoi, StringComparison.OrdinalIgnoreCase))
+                {
+                    cboUserAgent.SelectedItem = item;                                           // Nếu UA đã có thì chỉ chọn lại để khỏi tạo bản trùng
+                    MessageBox.Show("User-Agent này đã có sẵn.");
+                    return;
+                }
+            }
+
+            cboUserAgent.Items.Add(userAgentMoi);                                               // Thêm UA mới vào combobox để người dùng thấy ngay trên app
+            cboUserAgent.SelectedItem = userAgentMoi;                                           // Chọn luôn UA vừa thêm để tiện test facebook.com ngay
+            LuuDanhSachUserAgentTuCombobox();                                                   // Ghi lại toàn bộ danh sách xuống user_agents.txt để giữ đồng bộ với UI
+        }
+
+        private void XoaUserAgentDangChon()
+        {
+            if (cboUserAgent.SelectedItem == null)
+            {
+                MessageBox.Show("Hãy chọn User-Agent cần xóa trước.");                          // Không có dòng nào đang chọn thì chưa xác định được sẽ xóa UA nào
+                return;
+            }
+
+            if (cboUserAgent.Items.Count <= 1)
+            {
+                MessageBox.Show("Cần giữ lại ít nhất 1 User-Agent.");                           // Chặn xóa trắng danh sách để facebook.com không bị mất UA đang dùng
+                return;
+            }
+
+            object userAgentDangChon = cboUserAgent.SelectedItem;                               // Giữ lại giá trị đang chọn để xóa đúng item khỏi danh sách hiện tại
+            cboUserAgent.Items.Remove(userAgentDangChon);                                       // Xóa UA đang chọn khỏi combobox
+
+            if (cboUserAgent.Items.Count > 0)
+            {
+                cboUserAgent.SelectedIndex = 0;                                                 // Sau khi xóa thì chọn lại một UA hợp lệ để app vẫn chạy tiếp được ngay
+            }
+
+            LuuDanhSachUserAgentTuCombobox();                                                   // Ghi lại danh sách còn lại xuống file txt để UI và file luôn đồng bộ
+        }
+
+        private void LuuDanhSachUserAgentTuCombobox()
+        {
+            List<string> danhSachUserAgent = [];
+
+            foreach (object item in cboUserAgent.Items)
+            {
+                string userAgent = item?.ToString()?.Trim() ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace(userAgent))
+                {
+                    danhSachUserAgent.Add(userAgent);                                           // Chỉ lưu các UA còn dữ liệu thật để file txt luôn sạch
+                }
+            }
+
+            File.WriteAllLines(userAgentsFilePath, danhSachUserAgent.Distinct(StringComparer.OrdinalIgnoreCase), Encoding.UTF8); // Lưu lại danh sách hiện có trên app xuống user_agents.txt
+        }
+
+        private string? HienHopThoaiNhapUserAgent()
+        {
+            using Form formNhap = new();                                                        // Hộp thoại nhỏ tạo bằng code để không phải thêm control mới vào Designer
+            using Label lblNoiDung = new();
+            using TextBox txtUserAgent = new();
+            using Button btnDongY = new();
+            using Button btnHuy = new();
+
+            formNhap.Text = "Thêm User-Agent";
+            formNhap.StartPosition = FormStartPosition.CenterParent;
+            formNhap.FormBorderStyle = FormBorderStyle.FixedDialog;
+            formNhap.MinimizeBox = false;
+            formNhap.MaximizeBox = false;
+            formNhap.ClientSize = new Size(640, 150);
+
+            lblNoiDung.Text = "Nhập User-Agent mới:";
+            lblNoiDung.AutoSize = true;
+            lblNoiDung.Location = new Point(12, 15);
+
+            txtUserAgent.Location = new Point(12, 40);
+            txtUserAgent.Size = new Size(610, 23);
+            txtUserAgent.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+
+            btnDongY.Text = "Lưu";
+            btnDongY.Location = new Point(466, 95);
+            btnDongY.Size = new Size(75, 30);
+            btnDongY.DialogResult = DialogResult.OK;
+
+            btnHuy.Text = "Hủy";
+            btnHuy.Location = new Point(547, 95);
+            btnHuy.Size = new Size(75, 30);
+            btnHuy.DialogResult = DialogResult.Cancel;
+
+            formNhap.Controls.Add(lblNoiDung);
+            formNhap.Controls.Add(txtUserAgent);
+            formNhap.Controls.Add(btnDongY);
+            formNhap.Controls.Add(btnHuy);
+            formNhap.AcceptButton = btnDongY;
+            formNhap.CancelButton = btnHuy;
+
+            return formNhap.ShowDialog(this) == DialogResult.OK ? txtUserAgent.Text : null;    // Trả chuỗi đã nhập nếu người dùng bấm Lưu, ngược lại trả null
+        }
+
         private string LayUserAgentFacebookThuongDangChon()
         {
             string userAgentDangChon = cboUserAgent.SelectedItem?.ToString()?.Trim() ?? string.Empty; // ??c ??ng User-Agent ng??i d?ng ?ang ch?n tr?n combobox
