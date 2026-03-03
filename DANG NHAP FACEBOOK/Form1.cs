@@ -38,7 +38,7 @@ namespace DANG_NHAP_FACEBOOK
         }
 
         //
-        //  HÀM LÁY DÒNG TÀI KHOẢN TỪ DS.TXT
+        //  HÀM CẬP NHẬT SỐ LƯỢNG
         //
         private void CapNhatThongTinSoLuong()
         {
@@ -138,7 +138,7 @@ namespace DANG_NHAP_FACEBOOK
         //
         //  HÀM THÊM DÒNG MỚI TRONG BẢNG (GIRD)
         //
-        private void ThemDongMoiLenGrid(string uid, string password, string profileName)
+        private void ThemDongMoiLenGrid(string uid, string password)
         {
             int rowIndex = dataGridView1.Rows.Add();                                          // Tạo một dòng mới và lấy ra vị trí của dòng vừa thêm
             DataGridViewRow row = dataGridView1.Rows[rowIndex];                               // Lấy đối tượng dòng để đổ dữ liệu vào các cột
@@ -154,11 +154,6 @@ namespace DANG_NHAP_FACEBOOK
             row.Cells["colTuongTacCuoi"].Value = string.Empty;                                // Tương tác cuối để trống ở bước hiện tại
             row.Cells["colTrangThai"].Value = string.Empty;                                   // Trạng thái để trống, ưu tiên hiện ở label phía dưới
             row.Cells["colCookie"].Value = string.Empty;                                      // Cookie để trống, sau này mới tính tới
-
-            if (dataGridView1.Columns.Contains("colProfileName"))                             // Nếu sau này có cột profile riêng thì đổ thêm ProfileName vào đó
-            {
-                row.Cells["colProfileName"].Value = profileName;
-            }
 
             dataGridView1.ClearSelection();                                                   // Bỏ toàn bộ lựa chọn cũ để chỉ giữ đúng dòng mới
             row.Selected = true;                                                              // Tự chọn ngay dòng vừa được thêm
@@ -270,7 +265,7 @@ namespace DANG_NHAP_FACEBOOK
 
             if (string.Equals(duongDanProfileSuDung, duongDanProfileTheoUid, StringComparison.OrdinalIgnoreCase)) // Nếu profile hiện tại đã mang đúng tên UID thì không cần đổi tên
             {
-                ThemDongMoiLenGrid(uid, password, uid);
+                ThemDongMoiLenGrid(uid, password);
                 MoChromeTheoProfile(duongDanProfileTheoUid, uid, password);                    // Sau khi đã có dòng mới thì mở luôn Chrome theo profile vừa tạo để hoàn chỉnh luồng Next
                 return;
             }
@@ -291,7 +286,7 @@ namespace DANG_NHAP_FACEBOOK
                 return;                                                                        // Nếu vẫn chưa đổi tên được thì dừng lại để tránh thêm dòng grid khi profile chưa sẵn sàng
             }
 
-            ThemDongMoiLenGrid(uid, password, uid);                                           // Sau khi đã có profile đúng tên, thêm ngay dòng mới lên grid
+            ThemDongMoiLenGrid(uid, password);                                                // Sau khi đã có profile đúng tên, thêm ngay dòng mới lên grid
             MoChromeTheoProfile(duongDanProfileTheoUid, uid, password);                        // Mở ngay profile mới theo giao diện đã chọn để người dùng tiếp tục thao tác
         }
         //
