@@ -16,6 +16,15 @@ namespace DANG_NHAP_FACEBOOK
         private const string mobileUserAgentMacDinh = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36";
         private const string metaDesktopUserAgentMacDinh = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36";
 
+        private sealed class DuLieuCapNhatDong
+        {
+            public string Uid { get; set; } = string.Empty;
+            public string Password { get; set; } = string.Empty;
+            public string Ten { get; set; } = string.Empty;
+            public string Email { get; set; } = string.Empty;
+            public string GhiChu { get; set; } = string.Empty;
+        }
+
         public Form1()
         {
             InitializeComponent();
@@ -43,6 +52,7 @@ namespace DANG_NHAP_FACEBOOK
             DamBaoTonTaiUserAgentsTxt();                                                       // ??m b?o lu?n c? file user_agents.txt ?? kh?ng hardcode danh s?ch User-Agent tr?n UI
             TaiDanhSachUserAgentLenCombobox();                                                 // N?p danh s?ch User-Agent t? file txt l?n combobox ngay khi app kh?i ??ng
             GanMenuUserAgentChoCombobox();                                                     // Gắn menu chuột phải để thêm và xóa User-Agent ngay trên app mà không phải sửa txt bằng tay
+            GanSuKienCapNhatDuLieu();                                                          // Gắn các mục con của menu Cập nhật dữ liệu vào cùng một luồng sửa dòng
         }
 
         //
@@ -230,6 +240,279 @@ namespace DANG_NHAP_FACEBOOK
             formNhap.CancelButton = btnHuy;
 
             return formNhap.ShowDialog(this) == DialogResult.OK ? txtUserAgent.Text : null;    // Trả chuỗi đã nhập nếu người dùng bấm Lưu, ngược lại trả null
+        }
+
+        private void GanSuKienCapNhatDuLieu()
+        {
+            uIDToolStripMenuItem.Click += capNhatDuLieuToolStripMenuItemChiTiet_Click;
+            tênToolStripMenuItem.Click += capNhatDuLieuToolStripMenuItemChiTiet_Click;
+            passwordToolStripMenuItem.Click += capNhatDuLieuToolStripMenuItemChiTiet_Click;
+            emailToolStripMenuItem.Click += capNhatDuLieuToolStripMenuItemChiTiet_Click;
+            ghiChúToolStripMenuItem.Click += capNhatDuLieuToolStripMenuItemChiTiet_Click;
+        }
+
+        private void capNhatDuLieuToolStripMenuItemChiTiet_Click(object? sender, EventArgs e)
+        {
+            CapNhatDuLieuDongDaTick();                                                         // Các mục con khác nhau nhưng hiện cùng mở một hộp sửa của đúng dòng đang tick
+        }
+
+        private void CapNhatDuLieuDongDaTick()
+        {
+            List<DataGridViewRow> dsDongDaTick = LayDanhSachDongDaTick();
+            if (dsDongDaTick.Count != 1)
+            {
+                MessageBox.Show("Vui lòng tick đúng 1 dòng để cập nhật dữ liệu.");
+                return;
+            }
+
+            DataGridViewRow row = dsDongDaTick[0];
+            string uidCu = row.Cells["colUID"].Value?.ToString()?.Trim() ?? string.Empty;
+
+            DuLieuCapNhatDong duLieuHienTai = new()
+            {
+                Uid = uidCu,
+                Password = row.Cells["colPass"].Value?.ToString()?.Trim() ?? string.Empty,
+                Ten = row.Cells["colTen"].Value?.ToString()?.Trim() ?? string.Empty,
+                Email = row.Cells["colEmail"].Value?.ToString()?.Trim() ?? string.Empty,
+                GhiChu = row.Cells["colGhiChu"].Value?.ToString() ?? string.Empty
+            };
+
+            DuLieuCapNhatDong? duLieuMoi = HienHopThoaiCapNhatDuLieu(duLieuHienTai);
+            if (duLieuMoi == null)
+            {
+                return;
+            }
+
+            duLieuMoi.Uid = duLieuMoi.Uid.Trim();
+            duLieuMoi.Password = duLieuMoi.Password.Trim();
+            duLieuMoi.Ten = duLieuMoi.Ten.Trim();
+            duLieuMoi.Email = duLieuMoi.Email.Trim();
+            duLieuMoi.GhiChu = duLieuMoi.GhiChu.Trim();
+
+            if (string.IsNullOrWhiteSpace(duLieuMoi.Uid) || string.IsNullOrWhiteSpace(duLieuMoi.Password))
+            {
+                MessageBox.Show("UID và Password không được để trống.");
+                return;
+            }
+
+            if (!LaTenProfileUidHopLe(duLieuMoi.Uid))
+            {
+                MessageBox.Show("UID chỉ được gồm chữ số để app còn đồng bộ với tên profile.");
+                return;
+            }
+
+            if (CoDongKhacTrungUid(row, duLieuMoi.Uid))
+            {
+                MessageBox.Show("UID này đã có trên grid.");
+                return;
+            }
+
+            if (!XuLyDongBoUidVaProfileKhiCapNhat(uidCu, duLieuMoi.Uid))
+            {
+                return;
+            }
+
+            CapNhatTaiKhoanTrongDsTxt(uidCu, duLieuMoi.Uid, duLieuMoi.Password);
+
+            row.Cells["colUID"].Value = duLieuMoi.Uid;
+            row.Cells["colPass"].Value = duLieuMoi.Password;
+            row.Cells["colTen"].Value = duLieuMoi.Ten;
+            row.Cells["colEmail"].Value = duLieuMoi.Email;
+            row.Cells["colGhiChu"].Value = duLieuMoi.GhiChu;
+
+            CapNhatThongTinSoLuong();
+        }
+
+        private bool CoDongKhacTrungUid(DataGridViewRow dongDangSua, string uidMoi)
+        {
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (row.IsNewRow || ReferenceEquals(row, dongDangSua))
+                {
+                    continue;
+                }
+
+                string uidTrenDong = row.Cells["colUID"].Value?.ToString()?.Trim() ?? string.Empty;
+                if (string.Equals(uidTrenDong, uidMoi, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool XuLyDongBoUidVaProfileKhiCapNhat(string uidCu, string uidMoi)
+        {
+            if (string.Equals(uidCu, uidMoi, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            string duongDanProfileCu = Path.Combine(AppContext.BaseDirectory, uidCu);
+            string duongDanProfileMoi = Path.Combine(AppContext.BaseDirectory, uidMoi);
+
+            if (Directory.Exists(duongDanProfileMoi))
+            {
+                MessageBox.Show($"Profile {uidMoi} đã tồn tại.");
+                return false;
+            }
+
+            if (!Directory.Exists(duongDanProfileCu))
+            {
+                congDebugTheoUid.Remove(uidCu);
+                congDebugTheoUid.Remove(uidMoi);
+                return true;
+            }
+
+            if (!ThuDongTatCaChromeDeXuLyProfile())
+            {
+                return false;
+            }
+
+            if (!ThuDoiTenThuMucProfile(duongDanProfileCu, duongDanProfileMoi, uidCu))
+            {
+                return false;
+            }
+
+            congDebugTheoUid.Remove(uidCu);                                                   // Đổi UID xong thì mapping phiên Chrome cũ không còn tin cậy nữa
+            congDebugTheoUid.Remove(uidMoi);
+            return true;
+        }
+
+        private void CapNhatTaiKhoanTrongDsTxt(string uidCu, string uidMoi, string passwordMoi)
+        {
+            List<string> dsSauCapNhat = new();
+            bool daCapNhat = false;
+
+            if (File.Exists(dsFilePath))
+            {
+                foreach (string line in File.ReadAllLines(dsFilePath))
+                {
+                    string lineDaCat = line.Trim();
+                    if (string.IsNullOrWhiteSpace(lineDaCat))
+                    {
+                        continue;
+                    }
+
+                    string[] parts = lineDaCat.Split('|');
+                    if (parts.Length == 2 && string.Equals(parts[0].Trim(), uidCu, StringComparison.OrdinalIgnoreCase))
+                    {
+                        dsSauCapNhat.Add($"{uidMoi}|{passwordMoi}");
+                        daCapNhat = true;
+                        continue;
+                    }
+
+                    dsSauCapNhat.Add(lineDaCat);
+                }
+            }
+
+            if (!daCapNhat)
+            {
+                dsSauCapNhat.Add($"{uidMoi}|{passwordMoi}");                                   // Nếu profile cũ chưa còn trong ds.txt thì thêm lại một dòng mới cho đồng bộ
+            }
+
+            File.WriteAllLines(dsFilePath, dsSauCapNhat, Encoding.UTF8);
+        }
+
+        private DuLieuCapNhatDong? HienHopThoaiCapNhatDuLieu(DuLieuCapNhatDong duLieuHienTai)
+        {
+            using Form formNhap = new();
+            using Label lblUid = new();
+            using Label lblPassword = new();
+            using Label lblTen = new();
+            using Label lblEmail = new();
+            using Label lblGhiChu = new();
+            using TextBox txtUid = new();
+            using TextBox txtPassword = new();
+            using TextBox txtTen = new();
+            using TextBox txtEmail = new();
+            using TextBox txtGhiChu = new();
+            using Button btnLuu = new();
+            using Button btnHuy = new();
+
+            formNhap.Text = "Cập nhật dữ liệu";
+            formNhap.StartPosition = FormStartPosition.CenterParent;
+            formNhap.FormBorderStyle = FormBorderStyle.FixedDialog;
+            formNhap.MinimizeBox = false;
+            formNhap.MaximizeBox = false;
+            formNhap.ClientSize = new Size(520, 310);
+
+            lblUid.Text = "UID";
+            lblUid.Location = new Point(12, 15);
+            lblUid.AutoSize = true;
+            txtUid.Location = new Point(110, 12);
+            txtUid.Size = new Size(390, 23);
+            txtUid.Text = duLieuHienTai.Uid;
+
+            lblPassword.Text = "Password";
+            lblPassword.Location = new Point(12, 50);
+            lblPassword.AutoSize = true;
+            txtPassword.Location = new Point(110, 47);
+            txtPassword.Size = new Size(390, 23);
+            txtPassword.Text = duLieuHienTai.Password;
+
+            lblTen.Text = "Tên";
+            lblTen.Location = new Point(12, 85);
+            lblTen.AutoSize = true;
+            txtTen.Location = new Point(110, 82);
+            txtTen.Size = new Size(390, 23);
+            txtTen.Text = duLieuHienTai.Ten;
+
+            lblEmail.Text = "Mail";
+            lblEmail.Location = new Point(12, 120);
+            lblEmail.AutoSize = true;
+            txtEmail.Location = new Point(110, 117);
+            txtEmail.Size = new Size(390, 23);
+            txtEmail.Text = duLieuHienTai.Email;
+
+            lblGhiChu.Text = "Ghi chú";
+            lblGhiChu.Location = new Point(12, 155);
+            lblGhiChu.AutoSize = true;
+            txtGhiChu.Location = new Point(110, 152);
+            txtGhiChu.Size = new Size(390, 100);
+            txtGhiChu.Multiline = true;
+            txtGhiChu.ScrollBars = ScrollBars.Vertical;
+            txtGhiChu.Text = duLieuHienTai.GhiChu;
+
+            btnLuu.Text = "Lưu";
+            btnLuu.Location = new Point(344, 268);
+            btnLuu.Size = new Size(75, 30);
+            btnLuu.DialogResult = DialogResult.OK;
+
+            btnHuy.Text = "Hủy";
+            btnHuy.Location = new Point(425, 268);
+            btnHuy.Size = new Size(75, 30);
+            btnHuy.DialogResult = DialogResult.Cancel;
+
+            formNhap.Controls.Add(lblUid);
+            formNhap.Controls.Add(txtUid);
+            formNhap.Controls.Add(lblPassword);
+            formNhap.Controls.Add(txtPassword);
+            formNhap.Controls.Add(lblTen);
+            formNhap.Controls.Add(txtTen);
+            formNhap.Controls.Add(lblEmail);
+            formNhap.Controls.Add(txtEmail);
+            formNhap.Controls.Add(lblGhiChu);
+            formNhap.Controls.Add(txtGhiChu);
+            formNhap.Controls.Add(btnLuu);
+            formNhap.Controls.Add(btnHuy);
+            formNhap.AcceptButton = btnLuu;
+            formNhap.CancelButton = btnHuy;
+
+            if (formNhap.ShowDialog(this) != DialogResult.OK)
+            {
+                return null;
+            }
+
+            return new DuLieuCapNhatDong
+            {
+                Uid = txtUid.Text,
+                Password = txtPassword.Text,
+                Ten = txtTen.Text,
+                Email = txtEmail.Text,
+                GhiChu = txtGhiChu.Text
+            };
         }
 
         private string LayUserAgentFacebookThuongDangChon()
