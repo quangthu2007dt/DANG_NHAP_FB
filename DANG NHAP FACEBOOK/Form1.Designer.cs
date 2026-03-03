@@ -48,6 +48,8 @@
             colCookie = new DataGridViewTextBoxColumn();
             cmsGirdRightClick = new ContextMenuStrip(components);
             điềnUIDPaswordToolStripMenuItem = new ToolStripMenuItem();
+            mởToolStripMenuItem = new ToolStripMenuItem();
+            làmMớiToolStripMenuItem = new ToolStripMenuItem();
             chọnToolStripMenuItem = new ToolStripMenuItem();
             tToolStripMenuItem = new ToolStripMenuItem();
             cácDòngBôiĐenToolStripMenuItem = new ToolStripMenuItem();
@@ -71,8 +73,6 @@
             dọnDẹpProfileToolStripMenuItem = new ToolStripMenuItem();
             xóaCaToolStripMenuItem = new ToolStripMenuItem();
             xóaToolStripMenuItem = new ToolStripMenuItem();
-            dòngToolStripMenuItem1 = new ToolStripMenuItem();
-            cácDòngĐãChọnToolStripMenuItem = new ToolStripMenuItem();
             cậpNhậtDữLiệuToolStripMenuItem = new ToolStripMenuItem();
             uIDToolStripMenuItem = new ToolStripMenuItem();
             tênToolStripMenuItem = new ToolStripMenuItem();
@@ -80,12 +80,10 @@
             emailToolStripMenuItem = new ToolStripMenuItem();
             ghiChúToolStripMenuItem = new ToolStripMenuItem();
             mởChromeMẫuToolStripMenuItem = new ToolStripMenuItem();
-            làmMớiToolStripMenuItem = new ToolStripMenuItem();
             nhậpDanhSáchToolStripMenuItem = new ToolStripMenuItem();
             kiểmTraTàiKhoảnToolStripMenuItem = new ToolStripMenuItem();
             checkWallToolStripMenuItem = new ToolStripMenuItem();
             checkÌnorToolStripMenuItem = new ToolStripMenuItem();
-            mởToolStripMenuItem = new ToolStripMenuItem();
             statusStrip1 = new StatusStrip();
             tssSpace1 = new ToolStripStatusLabel();
             tssTrangThai = new ToolStripStatusLabel();
@@ -95,10 +93,6 @@
             tssSpace3 = new ToolStripStatusLabel();
             tssTime = new ToolStripStatusLabel();
             lblTieuDe = new Label();
-            lblUid = new Label();
-            lblPass = new Label();
-            txtUid = new TextBox();
-            txtPass = new TextBox();
             btnDangNhap = new Button();
             btnTiepTuc = new Button();
             lblUserAgent = new Label();
@@ -106,6 +100,8 @@
             lblChonGiaoDien = new Label();
             cboUrl = new ComboBox();
             ttMain = new ToolTip(components);
+            btnXoa = new Button();
+            lblDanhSach = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             cmsGirdRightClick.SuspendLayout();
             statusStrip1.SuspendLayout();
@@ -214,7 +210,7 @@
             // 
             // cmsGirdRightClick
             // 
-            cmsGirdRightClick.Items.AddRange(new ToolStripItem[] { điềnUIDPaswordToolStripMenuItem, chọnToolStripMenuItem, bỏChọnTấtCảToolStripMenuItem, copyToolStripMenuItem, chứcNăngToolStripMenuItem, profileToolStripMenuItem, xóaToolStripMenuItem, cậpNhậtDữLiệuToolStripMenuItem, mởChromeMẫuToolStripMenuItem, làmMớiToolStripMenuItem, nhậpDanhSáchToolStripMenuItem, kiểmTraTàiKhoảnToolStripMenuItem, mởToolStripMenuItem });
+            cmsGirdRightClick.Items.AddRange(new ToolStripItem[] { điềnUIDPaswordToolStripMenuItem, mởToolStripMenuItem, làmMớiToolStripMenuItem, chọnToolStripMenuItem, bỏChọnTấtCảToolStripMenuItem, copyToolStripMenuItem, chứcNăngToolStripMenuItem, profileToolStripMenuItem, xóaToolStripMenuItem, cậpNhậtDữLiệuToolStripMenuItem, mởChromeMẫuToolStripMenuItem, nhậpDanhSáchToolStripMenuItem, kiểmTraTàiKhoảnToolStripMenuItem });
             cmsGirdRightClick.Name = "cmsGirdRightClick";
             resources.ApplyResources(cmsGirdRightClick, "cmsGirdRightClick");
             // 
@@ -223,6 +219,17 @@
             điềnUIDPaswordToolStripMenuItem.Name = "điềnUIDPaswordToolStripMenuItem";
             resources.ApplyResources(điềnUIDPaswordToolStripMenuItem, "điềnUIDPaswordToolStripMenuItem");
             điềnUIDPaswordToolStripMenuItem.Click += điềnUIDPaswordToolStripMenuItem_Click;
+            // 
+            // mởToolStripMenuItem
+            // 
+            mởToolStripMenuItem.Name = "mởToolStripMenuItem";
+            resources.ApplyResources(mởToolStripMenuItem, "mởToolStripMenuItem");
+            mởToolStripMenuItem.Click += mởToolStripMenuItem_Click;
+            // 
+            // làmMớiToolStripMenuItem
+            // 
+            làmMớiToolStripMenuItem.Name = "làmMớiToolStripMenuItem";
+            resources.ApplyResources(làmMớiToolStripMenuItem, "làmMớiToolStripMenuItem");
             // 
             // chọnToolStripMenuItem
             // 
@@ -340,21 +347,9 @@
             // 
             // xóaToolStripMenuItem
             // 
-            xóaToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dòngToolStripMenuItem1, cácDòngĐãChọnToolStripMenuItem });
             xóaToolStripMenuItem.Name = "xóaToolStripMenuItem";
             resources.ApplyResources(xóaToolStripMenuItem, "xóaToolStripMenuItem");
-            // 
-            // dòngToolStripMenuItem1
-            // 
-            dòngToolStripMenuItem1.Name = "dòngToolStripMenuItem1";
-            resources.ApplyResources(dòngToolStripMenuItem1, "dòngToolStripMenuItem1");
-            dòngToolStripMenuItem1.Click += dòngToolStripMenuItem1_Click;
-            // 
-            // cácDòngĐãChọnToolStripMenuItem
-            // 
-            cácDòngĐãChọnToolStripMenuItem.Name = "cácDòngĐãChọnToolStripMenuItem";
-            resources.ApplyResources(cácDòngĐãChọnToolStripMenuItem, "cácDòngĐãChọnToolStripMenuItem");
-            cácDòngĐãChọnToolStripMenuItem.Click += cácDòngĐãChọnToolStripMenuItem_Click;
+            xóaToolStripMenuItem.Click += xóaToolStripMenuItem_Click;
             // 
             // cậpNhậtDữLiệuToolStripMenuItem
             // 
@@ -393,11 +388,6 @@
             resources.ApplyResources(mởChromeMẫuToolStripMenuItem, "mởChromeMẫuToolStripMenuItem");
             mởChromeMẫuToolStripMenuItem.Click += mởChromeMẫuToolStripMenuItem_Click;
             // 
-            // làmMớiToolStripMenuItem
-            // 
-            làmMớiToolStripMenuItem.Name = "làmMớiToolStripMenuItem";
-            resources.ApplyResources(làmMớiToolStripMenuItem, "làmMớiToolStripMenuItem");
-            // 
             // nhậpDanhSáchToolStripMenuItem
             // 
             nhậpDanhSáchToolStripMenuItem.Name = "nhậpDanhSáchToolStripMenuItem";
@@ -418,12 +408,6 @@
             // 
             checkÌnorToolStripMenuItem.Name = "checkÌnorToolStripMenuItem";
             resources.ApplyResources(checkÌnorToolStripMenuItem, "checkÌnorToolStripMenuItem");
-            // 
-            // mởToolStripMenuItem
-            // 
-            mởToolStripMenuItem.Name = "mởToolStripMenuItem";
-            resources.ApplyResources(mởToolStripMenuItem, "mởToolStripMenuItem");
-            mởToolStripMenuItem.Click += mởToolStripMenuItem_Click;
             // 
             // statusStrip1
             // 
@@ -477,44 +461,24 @@
             lblTieuDe.ForeColor = Color.Blue;
             lblTieuDe.Name = "lblTieuDe";
             // 
-            // lblUid
-            // 
-            resources.ApplyResources(lblUid, "lblUid");
-            lblUid.Name = "lblUid";
-            // 
-            // lblPass
-            // 
-            resources.ApplyResources(lblPass, "lblPass");
-            lblPass.Name = "lblPass";
-            // 
-            // txtUid
-            // 
-            resources.ApplyResources(txtUid, "txtUid");
-            txtUid.Name = "txtUid";
-            ttMain.SetToolTip(txtUid, resources.GetString("txtUid.ToolTip"));
-            // 
-            // txtPass
-            // 
-            resources.ApplyResources(txtPass, "txtPass");
-            txtPass.Name = "txtPass";
-            ttMain.SetToolTip(txtPass, resources.GetString("txtPass.ToolTip"));
-            // 
             // btnDangNhap
             // 
+            btnDangNhap.BackColor = Color.FromArgb(128, 255, 255);
             resources.ApplyResources(btnDangNhap, "btnDangNhap");
             btnDangNhap.ForeColor = Color.Blue;
             btnDangNhap.Name = "btnDangNhap";
             ttMain.SetToolTip(btnDangNhap, resources.GetString("btnDangNhap.ToolTip"));
-            btnDangNhap.UseVisualStyleBackColor = true;
+            btnDangNhap.UseVisualStyleBackColor = false;
             btnDangNhap.Click += btnDangNhap_Click;
             // 
             // btnTiepTuc
             // 
+            btnTiepTuc.BackColor = Color.Teal;
             resources.ApplyResources(btnTiepTuc, "btnTiepTuc");
-            btnTiepTuc.ForeColor = Color.FromArgb(255, 128, 128);
+            btnTiepTuc.ForeColor = Color.Yellow;
             btnTiepTuc.Name = "btnTiepTuc";
             ttMain.SetToolTip(btnTiepTuc, resources.GetString("btnTiepTuc.ToolTip"));
-            btnTiepTuc.UseVisualStyleBackColor = true;
+            btnTiepTuc.UseVisualStyleBackColor = false;
             btnTiepTuc.Click += btnTiepTuc_Click;
             // 
             // lblUserAgent
@@ -545,20 +509,34 @@
             cboUrl.Name = "cboUrl";
             ttMain.SetToolTip(cboUrl, resources.GetString("cboUrl.ToolTip"));
             // 
+            // btnXoa
+            // 
+            btnXoa.BackColor = Color.FromArgb(255, 192, 192);
+            resources.ApplyResources(btnXoa, "btnXoa");
+            btnXoa.ForeColor = Color.Red;
+            btnXoa.Name = "btnXoa";
+            ttMain.SetToolTip(btnXoa, resources.GetString("btnXoa.ToolTip"));
+            btnXoa.UseVisualStyleBackColor = false;
+            btnXoa.Click += btnXoa_Click;
+            // 
+            // lblDanhSach
+            // 
+            resources.ApplyResources(lblDanhSach, "lblDanhSach");
+            lblDanhSach.Name = "lblDanhSach";
+            ttMain.SetToolTip(lblDanhSach, resources.GetString("lblDanhSach.ToolTip"));
+            // 
             // Form1
             // 
             resources.ApplyResources(this, "$this");
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(lblDanhSach);
+            Controls.Add(btnXoa);
             Controls.Add(cboUrl);
             Controls.Add(lblChonGiaoDien);
             Controls.Add(cboUserAgent);
             Controls.Add(lblUserAgent);
             Controls.Add(btnTiepTuc);
             Controls.Add(btnDangNhap);
-            Controls.Add(txtPass);
-            Controls.Add(txtUid);
-            Controls.Add(lblPass);
-            Controls.Add(lblUid);
             Controls.Add(lblTieuDe);
             Controls.Add(statusStrip1);
             Controls.Add(dataGridView1);
@@ -576,10 +554,6 @@
         private DataGridView dataGridView1;
         private StatusStrip statusStrip1;
         private Label lblTieuDe;
-        private Label lblUid;
-        private Label lblPass;
-        private TextBox txtUid;
-        private TextBox txtPass;
         private Button btnDangNhap;
         private Button btnTiepTuc;
         private Label lblUserAgent;
@@ -605,8 +579,6 @@
         private ToolStripMenuItem dọnDẹpProfileToolStripMenuItem;
         private ToolStripMenuItem xóaCaToolStripMenuItem;
         private ToolStripMenuItem xóaToolStripMenuItem;
-        private ToolStripMenuItem dòngToolStripMenuItem1;
-        private ToolStripMenuItem cácDòngĐãChọnToolStripMenuItem;
         private ToolStripMenuItem cậpNhậtDữLiệuToolStripMenuItem;
         private ToolStripMenuItem uIDToolStripMenuItem;
         private ToolStripMenuItem tênToolStripMenuItem;
@@ -645,5 +617,7 @@
         private DataGridViewTextBoxColumn colTuongTacCuoi;
         private DataGridViewTextBoxColumn colTrangThai;
         private DataGridViewTextBoxColumn colCookie;
+        private Button btnXoa;
+        private Label lblDanhSach;
     }
 }

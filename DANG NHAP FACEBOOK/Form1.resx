@@ -199,15 +199,30 @@
   <data name="colCookie.HeaderText" xml:space="preserve">
     <value>Cookie</value>
   </data>
+  <data name="colCookie.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <metadata name="cmsGirdRightClick.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>132, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="điềnUIDPaswordToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>175, 22</value>
   </data>
   <data name="điềnUIDPaswordToolStripMenuItem.Text" xml:space="preserve">
     <value>Điền UID/Password</value>
+  </data>
+  <data name="mởToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>175, 22</value>
+  </data>
+  <data name="mởToolStripMenuItem.Text" xml:space="preserve">
+    <value>Mở Trình duyệt</value>
+  </data>
+  <data name="làmMớiToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>175, 22</value>
+  </data>
+  <data name="làmMớiToolStripMenuItem.Text" xml:space="preserve">
+    <value>Làm mới</value>
   </data>
   <data name="tToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>171, 22</value>
@@ -222,13 +237,13 @@
     <value>Các dòng đã chọn</value>
   </data>
   <data name="chọnToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>175, 22</value>
   </data>
   <data name="chọnToolStripMenuItem.Text" xml:space="preserve">
     <value>Chọn</value>
   </data>
   <data name="bỏChọnTấtCảToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>175, 22</value>
   </data>
   <data name="bỏChọnTấtCảToolStripMenuItem.Text" xml:space="preserve">
     <value>Bỏ chọn tất cả</value>
@@ -282,7 +297,7 @@
     <value>Ghi Chú</value>
   </data>
   <data name="copyToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>175, 22</value>
   </data>
   <data name="copyToolStripMenuItem.Text" xml:space="preserve">
     <value>Copy</value>
@@ -306,7 +321,7 @@
     <value>Xóa tài khoản trùng nhau</value>
   </data>
   <data name="chứcNăngToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>175, 22</value>
   </data>
   <data name="chứcNăngToolStripMenuItem.Text" xml:space="preserve">
     <value>Chức năng</value>
@@ -336,25 +351,13 @@
     <value>Xóa cache Profile</value>
   </data>
   <data name="profileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>175, 22</value>
   </data>
   <data name="profileToolStripMenuItem.Text" xml:space="preserve">
     <value>Profile</value>
   </data>
-  <data name="dòngToolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>171, 22</value>
-  </data>
-  <data name="dòngToolStripMenuItem1.Text" xml:space="preserve">
-    <value>Dòng</value>
-  </data>
-  <data name="cácDòngĐãChọnToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>171, 22</value>
-  </data>
-  <data name="cácDòngĐãChọnToolStripMenuItem.Text" xml:space="preserve">
-    <value>Các dòng đã chọn</value>
-  </data>
   <data name="xóaToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>175, 22</value>
   </data>
   <data name="xóaToolStripMenuItem.Text" xml:space="preserve">
     <value>Xóa</value>
@@ -390,25 +393,19 @@
     <value>Ghi chú</value>
   </data>
   <data name="cậpNhậtDữLiệuToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>175, 22</value>
   </data>
   <data name="cậpNhậtDữLiệuToolStripMenuItem.Text" xml:space="preserve">
     <value>Cập nhật dữ liệu</value>
   </data>
   <data name="mởChromeMẫuToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>175, 22</value>
   </data>
   <data name="mởChromeMẫuToolStripMenuItem.Text" xml:space="preserve">
     <value>Mở Chrome mẫu</value>
   </data>
-  <data name="làmMớiToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
-  </data>
-  <data name="làmMớiToolStripMenuItem.Text" xml:space="preserve">
-    <value>Làm mới</value>
-  </data>
   <data name="nhậpDanhSáchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>175, 22</value>
   </data>
   <data name="nhậpDanhSáchToolStripMenuItem.Text" xml:space="preserve">
     <value>Nhập Danh sách</value>
@@ -429,19 +426,13 @@
     <value>Check Info UID</value>
   </data>
   <data name="kiểmTraTàiKhoảnToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
+    <value>175, 22</value>
   </data>
   <data name="kiểmTraTàiKhoảnToolStripMenuItem.Text" xml:space="preserve">
     <value>Kiểm Tra Tài Khoản</value>
   </data>
-  <data name="mởToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>173, 22</value>
-  </data>
-  <data name="mởToolStripMenuItem.Text" xml:space="preserve">
-    <value>Mở Trình duyệt</value>
-  </data>
   <data name="cmsGirdRightClick.Size" type="System.Drawing.Size, System.Drawing">
-    <value>174, 268</value>
+    <value>176, 290</value>
   </data>
   <data name="&gt;&gt;cmsGirdRightClick.Name" xml:space="preserve">
     <value>cmsGirdRightClick</value>
@@ -449,14 +440,11 @@
   <data name="&gt;&gt;cmsGirdRightClick.Type" xml:space="preserve">
     <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;điềnUIDPaswordToolStripMenuItem.Name" xml:space="preserve">
-    <value>điềnUIDPaswordToolStripMenuItem</value>
-  </data>
   <data name="dataGridView1.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 147</value>
   </data>
   <data name="dataGridView1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1070, 354</value>
+    <value>922, 354</value>
   </data>
   <data name="dataGridView1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -486,7 +474,7 @@
     <value>Segoe UI, 9pt, style=Bold</value>
   </data>
   <data name="tssTrangThai.Size" type="System.Drawing.Size, System.Drawing">
-    <value>749, 17</value>
+    <value>601, 17</value>
   </data>
   <data name="tssTrangThai.Text" xml:space="preserve">
     <value>Trạng Thái</value>
@@ -543,7 +531,7 @@
     <value>0, 504</value>
   </data>
   <data name="statusStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1094, 22</value>
+    <value>946, 22</value>
   </data>
   <data name="statusStrip1.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -593,125 +581,11 @@
   <data name="&gt;&gt;lblTieuDe.ZOrder" xml:space="preserve">
     <value>11</value>
   </data>
-  <data name="lblUid.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblUid.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 51</value>
-  </data>
-  <data name="lblUid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>64, 15</value>
-  </data>
-  <data name="lblUid.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="lblUid.Text" xml:space="preserve">
-    <value>Nhập UID :</value>
-  </data>
-  <data name="&gt;&gt;lblUid.Name" xml:space="preserve">
-    <value>lblUid</value>
-  </data>
-  <data name="&gt;&gt;lblUid.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblUid.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;lblUid.ZOrder" xml:space="preserve">
-    <value>10</value>
-  </data>
-  <data name="lblPass.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblPass.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 88</value>
-  </data>
-  <data name="lblPass.Size" type="System.Drawing.Size, System.Drawing">
-    <value>95, 15</value>
-  </data>
-  <data name="lblPass.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="lblPass.Text" xml:space="preserve">
-    <value>Nhập mật khẩu :</value>
-  </data>
-  <data name="&gt;&gt;lblPass.Name" xml:space="preserve">
-    <value>lblPass</value>
-  </data>
-  <data name="&gt;&gt;lblPass.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblPass.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;lblPass.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="txtUid.Location" type="System.Drawing.Point, System.Drawing">
-    <value>121, 43</value>
-  </data>
-  <data name="txtUid.PlaceholderText" xml:space="preserve">
-    <value>Nhập UID...</value>
-  </data>
-  <data name="txtUid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 23</value>
-  </data>
-  <data name="txtUid.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <metadata name="ttMain.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>284, 17</value>
-  </metadata>
-  <data name="txtUid.ToolTip" xml:space="preserve">
-    <value>Nhập UID</value>
-  </data>
-  <data name="&gt;&gt;txtUid.Name" xml:space="preserve">
-    <value>txtUid</value>
-  </data>
-  <data name="&gt;&gt;txtUid.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtUid.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;txtUid.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="txtPass.Location" type="System.Drawing.Point, System.Drawing">
-    <value>121, 80</value>
-  </data>
-  <data name="txtPass.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
-    <value>*</value>
-  </data>
-  <data name="txtPass.PlaceholderText" xml:space="preserve">
-    <value>Nhập Password...</value>
-  </data>
-  <data name="txtPass.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 23</value>
-  </data>
-  <data name="txtPass.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="txtPass.ToolTip" xml:space="preserve">
-    <value>Nhập Mật Khẩu</value>
-  </data>
-  <data name="&gt;&gt;txtPass.Name" xml:space="preserve">
-    <value>txtPass</value>
-  </data>
-  <data name="&gt;&gt;txtPass.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtPass.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;txtPass.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
   <data name="btnDangNhap.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9pt, style=Bold</value>
   </data>
   <data name="btnDangNhap.Location" type="System.Drawing.Point, System.Drawing">
-    <value>879, 68</value>
+    <value>12, 57</value>
   </data>
   <data name="btnDangNhap.Size" type="System.Drawing.Size, System.Drawing">
     <value>90, 35</value>
@@ -722,6 +596,9 @@
   <data name="btnDangNhap.Text" xml:space="preserve">
     <value>Đăng Nhập</value>
   </data>
+  <metadata name="ttMain.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>284, 17</value>
+  </metadata>
   <data name="btnDangNhap.ToolTip" xml:space="preserve">
     <value>Đăng nhập thủ công</value>
   </data>
@@ -735,7 +612,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btnDangNhap.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>8</value>
   </data>
   <data name="btnTiepTuc.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9pt, style=Bold</value>
@@ -745,7 +622,7 @@
     <value>NoControl</value>
   </data>
   <data name="btnTiepTuc.Location" type="System.Drawing.Point, System.Drawing">
-    <value>992, 68</value>
+    <value>121, 57</value>
   </data>
   <data name="btnTiepTuc.Size" type="System.Drawing.Size, System.Drawing">
     <value>90, 35</value>
@@ -769,7 +646,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btnTiepTuc.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>7</value>
   </data>
   <data name="lblUserAgent.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -796,13 +673,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;lblUserAgent.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>6</value>
   </data>
   <data name="cboUserAgent.Location" type="System.Drawing.Point, System.Drawing">
-    <value>121, 109</value>
+    <value>118, 109</value>
   </data>
   <data name="cboUserAgent.Size" type="System.Drawing.Size, System.Drawing">
-    <value>634, 23</value>
+    <value>461, 23</value>
   </data>
   <data name="cboUserAgent.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -820,13 +697,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;cboUserAgent.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>5</value>
   </data>
   <data name="lblChonGiaoDien.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="lblChonGiaoDien.Location" type="System.Drawing.Point, System.Drawing">
-    <value>777, 117</value>
+    <value>623, 117</value>
   </data>
   <data name="lblChonGiaoDien.Size" type="System.Drawing.Size, System.Drawing">
     <value>96, 15</value>
@@ -850,7 +727,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;lblChonGiaoDien.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
   </data>
   <data name="cboUrl.Items" xml:space="preserve">
     <value>Facebook.com/meta</value>
@@ -859,7 +736,7 @@
     <value>Facebook.com</value>
   </data>
   <data name="cboUrl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>879, 109</value>
+    <value>731, 109</value>
   </data>
   <data name="cboUrl.Size" type="System.Drawing.Size, System.Drawing">
     <value>203, 23</value>
@@ -880,6 +757,66 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;cboUrl.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="btnXoa.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 9pt, style=Bold</value>
+  </data>
+  <data name="btnXoa.Location" type="System.Drawing.Point, System.Drawing">
+    <value>844, 57</value>
+  </data>
+  <data name="btnXoa.Size" type="System.Drawing.Size, System.Drawing">
+    <value>90, 35</value>
+  </data>
+  <data name="btnXoa.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="btnXoa.Text" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="btnXoa.ToolTip" xml:space="preserve">
+    <value>Xóa dòng và xóa luôn profile</value>
+  </data>
+  <data name="&gt;&gt;btnXoa.Name" xml:space="preserve">
+    <value>btnXoa</value>
+  </data>
+  <data name="&gt;&gt;btnXoa.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnXoa.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnXoa.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="lblDanhSach.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 9pt</value>
+  </data>
+  <data name="lblDanhSach.Location" type="System.Drawing.Point, System.Drawing">
+    <value>623, 67</value>
+  </data>
+  <data name="lblDanhSach.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 23</value>
+  </data>
+  <data name="lblDanhSach.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="lblDanhSach.Text" xml:space="preserve">
+    <value>Số Lượng DS :</value>
+  </data>
+  <data name="lblDanhSach.ToolTip" xml:space="preserve">
+    <value>Danh sách tài khoản đã nạp</value>
+  </data>
+  <data name="&gt;&gt;lblDanhSach.Name" xml:space="preserve">
+    <value>lblDanhSach</value>
+  </data>
+  <data name="&gt;&gt;lblDanhSach.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblDanhSach.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblDanhSach.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -889,7 +826,7 @@
     <value>7, 15</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1094, 526</value>
+    <value>946, 526</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>
@@ -962,6 +899,24 @@
   </data>
   <data name="&gt;&gt;colCookie.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;điềnUIDPaswordToolStripMenuItem.Name" xml:space="preserve">
+    <value>điềnUIDPaswordToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;điềnUIDPaswordToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mởToolStripMenuItem.Name" xml:space="preserve">
+    <value>mởToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;mởToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;làmMớiToolStripMenuItem.Name" xml:space="preserve">
+    <value>làmMớiToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;làmMớiToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;chọnToolStripMenuItem.Name" xml:space="preserve">
     <value>chọnToolStripMenuItem</value>
@@ -1101,18 +1056,6 @@
   <data name="&gt;&gt;xóaToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;dòngToolStripMenuItem1.Name" xml:space="preserve">
-    <value>dòngToolStripMenuItem1</value>
-  </data>
-  <data name="&gt;&gt;dòngToolStripMenuItem1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cácDòngĐãChọnToolStripMenuItem.Name" xml:space="preserve">
-    <value>cácDòngĐãChọnToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;cácDòngĐãChọnToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;cậpNhậtDữLiệuToolStripMenuItem.Name" xml:space="preserve">
     <value>cậpNhậtDữLiệuToolStripMenuItem</value>
   </data>
@@ -1155,12 +1098,6 @@
   <data name="&gt;&gt;mởChromeMẫuToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;làmMớiToolStripMenuItem.Name" xml:space="preserve">
-    <value>làmMớiToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;làmMớiToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;nhậpDanhSáchToolStripMenuItem.Name" xml:space="preserve">
     <value>nhậpDanhSáchToolStripMenuItem</value>
   </data>
@@ -1183,12 +1120,6 @@
     <value>checkÌnorToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;checkÌnorToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;mởToolStripMenuItem.Name" xml:space="preserve">
-    <value>mởToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;mởToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tssSpace1.Name" xml:space="preserve">

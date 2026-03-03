@@ -22,6 +22,8 @@ namespace DANG_NHAP_FACEBOOK
             profileRanhPath = Path.Combine(AppContext.BaseDirectory, "profile_ranh");         // Đường dẫn đầy đủ tới thư mục profile rảnh
             LoadDuLieuLenGridKhiMoApp();                                                       // Khi app vừa mở thì nạp lại các profile cũ lên grid để giữ đúng trạng thái hiện có                                                                                              // Dòng này là "chìa khóa" nè bạn
             dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridView1.RowsAdded += (_, _) => CapNhatSoLuongDanhSach();                    // Giữ label đếm danh sách tự cập nhật khi có dòng mới
+            dataGridView1.RowsRemoved += (_, _) => CapNhatSoLuongDanhSach();                  // Giữ label đếm danh sách tự cập nhật khi có dòng bị xóa
 
             if (!cboUrl.Items.Contains("m.facebook.com"))
             {
@@ -32,6 +34,8 @@ namespace DANG_NHAP_FACEBOOK
             {
                 cboUrl.SelectedIndex = 0;                                                     // Mặc định chọn giao diện đầu tiên để khi bấm Mở dòng không bị thiếu URL
             }
+
+            CapNhatSoLuongDanhSach();                                                         // Hiển thị ngay số lượng tài khoản đang có trên grid
         }
 
         //
@@ -203,14 +207,14 @@ namespace DANG_NHAP_FACEBOOK
             MoProfileTheoDongDangChon();                                                       // Menu Mở cũng dùng chung luồng mở profile của dòng đang chọn
         }
 
-        private void dòngToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void btnXoa_Click(object sender, EventArgs e)
         {
-            XoaMotDongDaTick();                                                                // Menu xóa dòng chỉ xử lý khi có đúng 1 dòng đang được tick thật
+            XoaCacDongDaTick();                                                                // Nút Xóa trên form dùng chung một luồng xóa theo các dòng đang tick
         }
 
-        private void cácDòngĐãChọnToolStripMenuItem_Click(object sender, EventArgs e)
+        private void xóaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            XoaNhieuDongDaTick();                                                              // Menu xóa nhiều dòng dùng danh sách checkbox đang được tick
+            XoaCacDongDaTick();                                                                // Menu chuột phải giờ chỉ còn một nhánh Xóa chung
         }
         // 
         //  HÀM TẠO PRORILE RẢNH NẾU CHƯA CÓ KHI NÚT CHỌN DC GỌI
@@ -1106,6 +1110,11 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         //
         //  HÀM KIỂM TRA TÊN PROFILE UID HỢP LỆ
         //
+        private void CapNhatSoLuongDanhSach()
+        {
+            lblDanhSach.Text = $"Số Lượng DS : {dataGridView1.Rows.Count}";                    // Hiển thị số dòng hiện có trên grid để người dùng biết app đang nạp bao nhiêu tài khoản
+        }
+
         private bool LaTenProfileUidHopLe(string tenThuMuc)
         {
             return !string.IsNullOrWhiteSpace(tenThuMuc) && tenThuMuc.All(char.IsDigit);      // App hiện tại chỉ coi tên thư mục toàn số là profile UID hợp lệ để tránh nạp nhầm runtimes hay thư mục hệ thống
@@ -1225,6 +1234,25 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         //
         //  SỰ ĐIỆN CHUỘT PHẢI ĐIỀN UID/PASSWORD
         //
+        private void XoaCacDongDaTick()
+        {
+            int soDongDaTick = LayDanhSachDongDaTick().Count;                                  // Đếm số dòng được tick để điều phối đúng nhánh xóa bên trong
+
+            if (soDongDaTick == 0)
+            {
+                MessageBox.Show("Vui lòng tick ít nhất 1 dòng để xóa.");
+                return;                                                                        // Không có dòng nào được tick thì không có mục tiêu để xóa
+            }
+
+            if (soDongDaTick == 1)
+            {
+                XoaMotDongDaTick();                                                            // Giữ lại logic xóa 1 dòng đang chạy ổn, chỉ gom đầu vào về một chỗ
+                return;
+            }
+
+            XoaNhieuDongDaTick();                                                              // Từ 2 dòng trở lên thì đi theo nhánh xóa nhiều dòng như nghiệp vụ đã chốt
+        }
+
         private void điềnUIDPaswordToolStripMenuItem_Click(object sender, EventArgs e)
         {
             List<DataGridViewRow> dsDongDaTick = LayDanhSachDongDaTick();                      // Chỉ lấy những dòng được chọn thật bằng checkbox để tránh điền nhầm theo bôi đen
