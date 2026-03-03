@@ -22,8 +22,15 @@ namespace DANG_NHAP_FACEBOOK
             profileRanhPath = Path.Combine(AppContext.BaseDirectory, "profile_ranh");         // Đường dẫn đầy đủ tới thư mục profile rảnh
             LoadDuLieuLenGridKhiMoApp();                                                       // Khi app vừa mở thì nạp lại các profile cũ lên grid để giữ đúng trạng thái hiện có                                                                                              // Dòng này là "chìa khóa" nè bạn
             dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridView1.RowsAdded += (_, _) => CapNhatThongTinSoLuong();                    // Chạy sau cùng để lblDanhSach đọc đúng số dòng còn lại trong ds.txt
+            dataGridView1.RowsRemoved += (_, _) => CapNhatThongTinSoLuong();                  // Chạy sau cùng để Tổng luôn bám đúng số dòng hiện còn trên grid
             dataGridView1.RowsAdded += (_, _) => CapNhatSoLuongDanhSach();                    // Giữ label đếm danh sách tự cập nhật khi có dòng mới
             dataGridView1.RowsRemoved += (_, _) => CapNhatSoLuongDanhSach();                  // Giữ label đếm danh sách tự cập nhật khi có dòng bị xóa
+
+            CapNhatThongTinSoLuong();                                                         // Ghi lại đúng ý nghĩa mới của lblDanhSach và Tổng sau khi đã nạp xong dữ liệu
+
+            dataGridView1.RowsAdded += (_, _) => CapNhatThongTinSoLuong();                    // Gắn thêm một lượt sau cùng để kết quả hiển thị cuối luôn đúng theo ý nghĩa mới
+            dataGridView1.RowsRemoved += (_, _) => CapNhatThongTinSoLuong();                  // Gắn thêm một lượt sau cùng để kết quả hiển thị cuối luôn đúng theo ý nghĩa mới
 
             if (!cboUrl.Items.Contains("m.facebook.com"))
             {
@@ -41,6 +48,19 @@ namespace DANG_NHAP_FACEBOOK
         //
         //  HÀM LÁY DÒNG TÀI KHOẢN TỪ DS.TXT
         //
+        private void CapNhatThongTinSoLuong()
+        {
+            int soLuongDsTxtConLai = 0;                                                       // Đếm số dòng còn lại trong ds.txt để đổ đúng lên label Danh Sách
+            if (File.Exists(dsFilePath))
+            {
+                soLuongDsTxtConLai = File.ReadAllLines(dsFilePath)
+                    .Count(line => !string.IsNullOrWhiteSpace(line));                         // Chỉ tính các dòng còn dữ liệu thực trong ds.txt
+            }
+
+            lblDanhSach.Text = $"Số lượng DS.txt : {soLuongDsTxtConLai}";                     // Label Danh Sách phản ánh số dòng còn lại trong ds.txt
+            tssTong.Text = $"Tổng : {dataGridView1.Rows.Count}";                               // Thanh trạng thái Tổng phản ánh số dòng hiện đang có trên grid
+        }
+
         private bool TryLayTaiKhoanMoiTuDs(out string uid, out string password)
         {
             uid = string.Empty;                                                               // Giá trị UID trả ra ngoài nếu tìm thấy dòng hợp lệ
