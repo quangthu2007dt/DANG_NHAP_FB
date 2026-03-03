@@ -144,7 +144,7 @@ namespace DANG_NHAP_FACEBOOK
             DataGridViewRow row = dataGridView1.Rows[rowIndex];                               // Lấy đối tượng dòng để đổ dữ liệu vào các cột
 
             row.Cells["colSTT"].Value = rowIndex + 1;                                         // Đổ số thứ tự theo vị trí hiện tại trên grid
-            row.Cells["colChon"].Value = false;                                               // Cột chọn là checkbox nên phải gán giá trị bool để tránh lỗi kiểu dữ liệu
+            row.Cells["colChon"].Value = true;                                                // Dòng mới do Next tạo ra phải được tick ngay để app bám đúng dòng đang xử lý
             row.Cells["colUID"].Value = uid;                                                  // Đổ UID vừa lấy được từ ds.txt
             row.Cells["colPass"].Value = password;                                            // Đổ mật khẩu tương ứng với UID
             row.Cells["colNgayTao"].Value = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");     // Đổ thời gian tạo dòng theo thời điểm hiện tại
@@ -360,10 +360,14 @@ namespace DANG_NHAP_FACEBOOK
             string thamSoUserAgent = LayThamSoUserAgentTheoGiaoDien(urlCanMo);                 // Nếu là giao diện mobile hoặc meta thì ghép thêm User-Agent cố định
             int congDebugChrome = LayCongDebugChromeTrong();                                   // Mỗi lần mở Chrome cấp một cổng debug riêng để app có thể tự điền UID và Password chính xác
 
+            Rectangle vungLamViec = Screen.PrimaryScreen?.WorkingArea ?? new Rectangle(0, 0, 1200, 900); // Lấy vùng làm việc hiện tại để mở Chrome nhỏ hơn, không full màn hình
+            int chieuRongCuaSo = Math.Max(900, vungLamViec.Width / 2);                          // Giữ chiều rộng khoảng nửa màn hình để đủ chỗ thao tác
+            int chieuCaoCuaSo = Math.Max(700, (int)(vungLamViec.Height * 0.85));                // Giữ chiều cao thoải mái nhưng vẫn nhỏ hơn full màn hình
+
             var psi = new System.Diagnostics.ProcessStartInfo
             {
                 FileName = chromeExe,
-                Arguments = $"--remote-debugging-port={congDebugChrome} --user-data-dir=\"{duongDanProfile}\" {thamSoUserAgent} {urlCanMo}".Trim(), // Mở Chrome bằng đúng profile, kèm cổng debug để app tự điền tài khoản sau khi trang tải xong
+                Arguments = $"--new-window --window-size={chieuRongCuaSo},{chieuCaoCuaSo} --window-position=0,0 --remote-debugging-port={congDebugChrome} --user-data-dir=\"{duongDanProfile}\" {thamSoUserAgent} {urlCanMo}".Trim(), // Mở Chrome theo cửa sổ vừa phải để dễ quan sát, không chiếm full màn hình
                 UseShellExecute = true
             };
 
