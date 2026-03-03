@@ -459,7 +459,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;dataGridView1.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>11</value>
   </data>
   <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
@@ -549,7 +549,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;statusStrip1.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>10</value>
   </data>
   <data name="lblTieuDe.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -558,7 +558,7 @@
     <value>Segoe UI, 15.75pt, style=Bold</value>
   </data>
   <data name="lblTieuDe.Location" type="System.Drawing.Point, System.Drawing">
-    <value>419, 9</value>
+    <value>345, 9</value>
   </data>
   <data name="lblTieuDe.Size" type="System.Drawing.Size, System.Drawing">
     <value>256, 30</value>
@@ -579,7 +579,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;lblTieuDe.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>9</value>
   </data>
   <data name="btnDangNhap.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9pt, style=Bold</value>
@@ -796,7 +796,7 @@
     <value>623, 67</value>
   </data>
   <data name="lblDanhSach.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 23</value>
+    <value>180, 23</value>
   </data>
   <data name="lblDanhSach.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
