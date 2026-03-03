@@ -1122,11 +1122,6 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         //
         //  HÀM KIỂM TRA TÊN PROFILE UID HỢP LỆ
         //
-        private void CapNhatSoLuongDanhSach_CU()
-        {
-            lblDanhSach.Text = $"Số Lượng DS : {dataGridView1.Rows.Count}";                    // Hiển thị số dòng hiện có trên grid để người dùng biết app đang nạp bao nhiêu tài khoản
-        }
-
         private bool LaTenProfileUidHopLe(string tenThuMuc)
         {
             return !string.IsNullOrWhiteSpace(tenThuMuc) && tenThuMuc.All(char.IsDigit);      // App hiện tại chỉ coi tên thư mục toàn số là profile UID hợp lệ để tránh nạp nhầm runtimes hay thư mục hệ thống
