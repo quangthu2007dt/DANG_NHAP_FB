@@ -901,7 +901,7 @@ namespace DANG_NHAP_FACEBOOK
                 return metaDesktopUserAgentMacDinh;                                            // Meta sẽ dùng một UA desktop cố định để mình còn lưu lại và test ổn định hơn
             }
 
-            return facebookDesktopUserAgentMacDinh;                                            // Facebook thường giờ cũng ép theo UA desktop đã test ổn thay vì thả theo mặc định của Chrome
+            return LayUserAgentFacebookThuongDangChon();                                       // Facebook thường phải lấy đúng UA đang chọn trên combobox thì mới đúng ý đồ test của app
         }
         //
         //  HÀM GHI LẠI USER-AGENT ĐANG DÙNG
