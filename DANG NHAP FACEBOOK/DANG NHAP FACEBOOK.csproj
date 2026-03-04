@@ -37,4 +37,17 @@
     </None>
   </ItemGroup>
 
+  <Target Name="BuildAndCopyUpdater" AfterTargets="Build">
+    <MSBuild Projects="..\Updater\Updater.csproj" Targets="Build" Properties="Configuration=$(Configuration)" />
+
+    <ItemGroup>
+      <UpdaterOutputFiles Include="..\Updater\bin\$(Configuration)\net9.0\*.*" />
+    </ItemGroup>
+
+    <Copy
+      SourceFiles="@(UpdaterOutputFiles)"
+      DestinationFiles="@(UpdaterOutputFiles->'$(OutDir)%(Filename)%(Extension)')"
+      SkipUnchangedFiles="true" />
+  </Target>
+
 </Project>
