@@ -15,6 +15,8 @@ namespace DANG_NHAP_FACEBOOK
 
     internal static class ManifestService
     {
+        private const string RemoteManifestUrl = "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/main/release/stable/manifest.json";
+
         public static string ManifestFilePath => Path.Combine(AppPaths.BaseDirectory, "manifest.json");
 
         public static AppReleaseManifest DocManifestCucBo()
@@ -53,6 +55,42 @@ namespace DANG_NHAP_FACEBOOK
                 PackageUrl = string.Empty,
                 Notes = string.Empty
             };
+        }
+
+        public static AppReleaseManifest DocManifestCapNhat()
+        {
+            AppReleaseManifest? manifestTuXa = DocManifestTuXa();
+            return manifestTuXa ?? DocManifestCucBo();
+        }
+
+        private static AppReleaseManifest? DocManifestTuXa()
+        {
+            try
+            {
+                using var httpClient = new HttpClient
+                {
+                    Timeout = TimeSpan.FromSeconds(8)
+                };
+
+                string json = httpClient.GetStringAsync(RemoteManifestUrl).GetAwaiter().GetResult(); // Ưu tiên manifest phát hành trên GitHub để app biết có bản mới thật hay không
+                AppReleaseManifest? manifest = JsonSerializer.Deserialize<AppReleaseManifest>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                if (manifest != null &&
+                    !string.IsNullOrWhiteSpace(manifest.AppName) &&
+                    !string.IsNullOrWhiteSpace(manifest.LatestVersion) &&
+                    !string.IsNullOrWhiteSpace(manifest.PackageFileName))
+                {
+                    return manifest;
+                }
+            }
+            catch
+            {
+            }
+
+            return null;                                                                      // Nếu không đọc được manifest từ xa thì fallback về manifest local
         }
 
         public static void KiemTraManifestCucBo()

@@ -9,7 +9,7 @@ namespace DANG_NHAP_FACEBOOK
         public static bool ThuKichHoatCapNhatNeuCo()
         {
             AppVersionInfo thongTinHienTai = VersionService.DocThongTinPhienBanHienTai();
-            AppReleaseManifest manifest = ManifestService.DocManifestCucBo();
+            AppReleaseManifest manifest = ManifestService.DocManifestCapNhat();
 
             if (!CoBanMoiHon(thongTinHienTai.Version, manifest.LatestVersion))
             {
