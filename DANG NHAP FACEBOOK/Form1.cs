@@ -27,6 +27,7 @@ namespace DANG_NHAP_FACEBOOK
         public Form1()
         {
             InitializeComponent();
+            CapNhatTrangThai("Đang khởi tạo dữ liệu ứng dụng...", Color.DarkGoldenrod);      // Báo ngay từ đầu để người dùng thấy app đang nạp dữ liệu chứ không bị treo
             GanVersionLenTieuDeForm();                                                        // Hiển thị version ngay trên thanh tiêu đề để dễ nhận biết bản đang chạy
             userAgentsFilePath = AppPaths.UserAgentsFilePath;                                 // Danh sách User-Agent chính thức nằm trong data\
             userAgentDangDungFilePath = AppPaths.UserAgentDangDungFilePath;                   // File log User-Agent đang dùng cũng đi theo data\
@@ -51,6 +52,7 @@ namespace DANG_NHAP_FACEBOOK
 
             TaiDanhSachUserAgentLenCombobox();                                                 // Nạp danh sách User-Agent từ file txt lên combobox ngay khi app khởi động
             GanMenuUserAgentChoCombobox();                                                     // Gắn menu chuột phải để thêm và xóa User-Agent ngay trên app mà không phải sửa txt bằng tay
+            CapNhatTrangThai("Sẵn sàng.", Color.RoyalBlue);                                    // Sau khi khởi tạo xong thì đưa app về trạng thái chờ thao tác
         }
 
         private void GanVersionLenTieuDeForm()
@@ -62,6 +64,21 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             Text = $"{Text} - v{thongTinPhienBan.Version}";                                    // Hiển thị phiên bản ngay trên thanh tiêu đề cho chuyên nghiệp và dễ kiểm tra
+        }
+
+        private void CapNhatTrangThai(string noiDung, Color mauChu)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(() => CapNhatTrangThai(noiDung, mauChu));                          // Các luồng async vẫn phải quay về UI thread để tránh lỗi cross-thread
+                return;
+            }
+
+            tssTrangThai.Text = $"Trạng thái: {noiDung}";                                      // Gom toàn bộ diễn giải tiến trình về đúng một nhãn trung tâm ở cạnh dưới form
+            tssTrangThai.ForeColor = mauChu;
+            tssTrangThai.Owner?.Refresh();                                                     // Ép refresh ngay để người dùng thấy trạng thái mới trong lúc app còn đang xử lý
+            statusStrip1.Refresh();
+            Update();
         }
 
         //
@@ -239,9 +256,11 @@ namespace DANG_NHAP_FACEBOOK
 
         private void CapNhatDuLieuDongDaTick()
         {
+            CapNhatTrangThai("Đang chuẩn bị cập nhật dữ liệu dòng đang chọn...", Color.DarkGoldenrod); // Báo trước để người dùng biết app đang mở luồng sửa dữ liệu của dòng
             List<DataGridViewRow> dsDongDaTick = LayDanhSachDongDaTick();
             if (dsDongDaTick.Count != 1)
             {
+                CapNhatTrangThai("Cập nhật dữ liệu thất bại: chưa tick đúng 1 dòng.", Color.Firebrick);
                 MessageBox.Show("Vui lòng tick đúng 1 dòng để cập nhật dữ liệu.");
                 return;
             }
@@ -261,6 +280,7 @@ namespace DANG_NHAP_FACEBOOK
             DuLieuCapNhatDong? duLieuMoi = HienHopThoaiCapNhatDuLieu(duLieuHienTai);
             if (duLieuMoi == null)
             {
+                CapNhatTrangThai("Đã hủy cập nhật dữ liệu dòng.", Color.RoyalBlue);
                 return;
             }
 
@@ -272,18 +292,21 @@ namespace DANG_NHAP_FACEBOOK
 
             if (string.IsNullOrWhiteSpace(duLieuMoi.Uid) || string.IsNullOrWhiteSpace(duLieuMoi.Password))
             {
+                CapNhatTrangThai("Cập nhật dữ liệu thất bại: thiếu UID hoặc Password.", Color.Firebrick);
                 MessageBox.Show("UID và Password không được để trống.");
                 return;
             }
 
             if (!LaTenProfileUidHopLe(duLieuMoi.Uid))
             {
+                CapNhatTrangThai("Cập nhật dữ liệu thất bại: UID không hợp lệ.", Color.Firebrick);
                 MessageBox.Show("UID chỉ được gồm chữ số để app còn đồng bộ với tên profile.");
                 return;
             }
 
             if (CoDongKhacTrungUid(row, duLieuMoi.Uid))
             {
+                CapNhatTrangThai("Cập nhật dữ liệu thất bại: UID đã tồn tại trên grid.", Color.Firebrick);
                 MessageBox.Show("UID này đã có trên grid.");
                 return;
             }
@@ -302,6 +325,7 @@ namespace DANG_NHAP_FACEBOOK
             row.Cells["colGhiChu"].Value = duLieuMoi.GhiChu;
 
             CapNhatThongTinSoLuong();
+            CapNhatTrangThai($"Đã cập nhật dữ liệu dòng {duLieuMoi.Uid}.", Color.ForestGreen);
         }
 
         private bool CoDongKhacTrungUid(DataGridViewRow dongDangSua, string uidMoi)
@@ -784,13 +808,17 @@ namespace DANG_NHAP_FACEBOOK
         //
         private void XuLyNutNext()
         {
+            CapNhatTrangThai("Đang lấy tài khoản mới từ ds.txt...", Color.DarkGoldenrod);    // Đây là bước đầu của luồng Next nên cần báo rõ để người dùng biết app chưa bị đứng
             if (!TryLayTaiKhoanMoiTuDs(out string uid, out string password))                  // Nếu chưa lấy được tài khoản mới từ ds.txt thì dừng tại đây
             {
+                CapNhatTrangThai("Không lấy được tài khoản mới từ ds.txt.", Color.Firebrick);
                 return;
             }
 
+            CapNhatTrangThai($"Đang chuẩn bị profile cho UID {uid}...", Color.DarkGoldenrod); // Sau khi đã có tài khoản thì chuyển sang khâu profile để người dùng nắm đúng tiến trình
             if (!TimProfileRanhHoacTaoMoi(out string duongDanProfileSuDung))                  // Nếu chưa lấy hoặc tạo được profile sẵn sàng thì dừng tại đây
             {
+                CapNhatTrangThai("Không chuẩn bị được profile để chạy tài khoản mới.", Color.Firebrick);
                 return;
             }
 
@@ -798,28 +826,37 @@ namespace DANG_NHAP_FACEBOOK
 
             if (string.Equals(duongDanProfileSuDung, duongDanProfileTheoUid, StringComparison.OrdinalIgnoreCase)) // Nếu profile hiện tại đã mang đúng tên UID thì không cần đổi tên
             {
+                CapNhatTrangThai($"Đang thêm dòng mới {uid} lên grid...", Color.DarkGoldenrod);
                 ThemDongMoiLenGrid(uid, password);
+                CapNhatTrangThai($"Đang mở Chrome cho UID {uid}...", Color.DarkGoldenrod);
                 MoChromeTheoProfile(duongDanProfileTheoUid, uid, password);                    // Sau khi đã có dòng mới thì mở luôn Chrome theo profile vừa tạo để hoàn chỉnh luồng Next
                 return;
             }
 
             if (Directory.Exists(duongDanProfileTheoUid))                                     // Nếu thư mục profile theo UID đã tồn tại sẵn thì báo để tránh ghi đè nhầm
             {
+                CapNhatTrangThai($"Next thất bại: profile {uid} đã tồn tại.", Color.Firebrick);
                 MessageBox.Show($"Profile {uid} đã tồn tại.");
                 return;
             }
 
+            CapNhatTrangThai("Đang đóng Chrome để xử lý profile...", Color.DarkGoldenrod);
             if (!ThuDongTatCaChromeDeXuLyProfile())
             {
+                CapNhatTrangThai("Next thất bại: không thể đóng Chrome để xử lý profile.", Color.Firebrick);
                 return;                                                                        // Trước khi đổi tên profile_ranh thành UID phải đóng toàn bộ Chrome để tránh khóa thư mục
             }
 
+            CapNhatTrangThai($"Đang đổi profile_ranh thành {uid}...", Color.DarkGoldenrod);
             if (!ThuDoiTenThuMucProfile(duongDanProfileSuDung, duongDanProfileTheoUid, uid))
             {
+                CapNhatTrangThai($"Next thất bại: không đổi được profile sang {uid}.", Color.Firebrick);
                 return;                                                                        // Nếu vẫn chưa đổi tên được thì dừng lại để tránh thêm dòng grid khi profile chưa sẵn sàng
             }
 
+            CapNhatTrangThai($"Đang thêm dòng mới {uid} lên grid...", Color.DarkGoldenrod);
             ThemDongMoiLenGrid(uid, password);                                                // Sau khi đã có profile đúng tên, thêm ngay dòng mới lên grid
+            CapNhatTrangThai($"Đang mở Chrome cho UID {uid}...", Color.DarkGoldenrod);
             MoChromeTheoProfile(duongDanProfileTheoUid, uid, password);                        // Mở ngay profile mới theo giao diện đã chọn để người dùng tiếp tục thao tác
         }
         //
@@ -827,11 +864,13 @@ namespace DANG_NHAP_FACEBOOK
         //
         private void MoChromeMau()
         {
+            CapNhatTrangThai("Đang mở Chrome mẫu...", Color.DarkGoldenrod);                   // Báo trạng thái riêng cho profile mẫu để người dùng biết app vẫn đang chạy bình thường
             Directory.CreateDirectory(profileMauPath);                                         // Nếu chưa có profile_mau thì tạo mới để luôn có nơi chuẩn bị profile gốc
 
             string chromeExe = TimChromeExe();                                                 // Tìm đường dẫn chrome.exe từ các vị trí cài đặt thông dụng
             if (string.IsNullOrWhiteSpace(chromeExe))
             {
+                CapNhatTrangThai("Mở Chrome mẫu thất bại: không tìm thấy chrome.exe.", Color.Firebrick);
                 MessageBox.Show("Không tìm thấy chrome.exe.");
                 return;                                                                        // Không mở tiếp nếu máy chưa tìm thấy Chrome
             }
@@ -844,15 +883,18 @@ namespace DANG_NHAP_FACEBOOK
             };
 
             System.Diagnostics.Process.Start(psi);                                             // Mở Chrome mẫu để người dùng cấu hình các thành phần cần thiết
+            CapNhatTrangThai("Đã mở Chrome mẫu.", Color.ForestGreen);
         }
         //
         //  HÀM MỞ CHROM THEO DÒNG
         //
         private void MoProfileTheoDongDangChon()
         {
+            CapNhatTrangThai("Đang chuẩn bị mở profile của dòng đang tick...", Color.DarkGoldenrod); // Mỗi lần mở dòng cũ đều phải báo rõ để tránh cảm giác app đứng
             List<DataGridViewRow> dsDongDaTick = LayDanhSachDongDaTick();                      // Lấy danh sách dòng được chọn thật theo checkbox, không dùng bôi đen
             if (dsDongDaTick.Count != 1)                                                       // Chỉ cho phép mở khi đang tick đúng 1 dòng
             {
+                CapNhatTrangThai("Mở profile thất bại: chưa tick đúng 1 dòng.", Color.Firebrick);
                 MessageBox.Show("Vui lòng tick đúng 1 dòng để mở profile.");
                 return;
             }
@@ -863,6 +905,7 @@ namespace DANG_NHAP_FACEBOOK
 
             if (string.IsNullOrWhiteSpace(uid))
             {
+                CapNhatTrangThai("Mở profile thất bại: dòng đang tick không có UID hợp lệ.", Color.Firebrick);
                 MessageBox.Show("Dòng đang chọn không có UID hợp lệ.");
                 return;                                                                        // Không thể mở profile nếu dòng chưa có UID
             }
@@ -870,10 +913,12 @@ namespace DANG_NHAP_FACEBOOK
             string duongDanProfile = AppPaths.GetProfilePath(uid);                             // Tạo đường dẫn đầy đủ tới profile của dòng đang chọn trong data\profiles
             if (!Directory.Exists(duongDanProfile))
             {
+                CapNhatTrangThai($"Mở profile thất bại: không tìm thấy profile {uid}.", Color.Firebrick);
                 MessageBox.Show($"Không tìm thấy profile {uid}.");
                 return;                                                                        // Thoát nếu profile tương ứng đã bị thiếu hoặc chưa được tạo
             }
 
+            CapNhatTrangThai($"Đang mở profile {uid}...", Color.DarkGoldenrod);
             MoChromeTheoProfile(duongDanProfile, uid, password);                               // Dùng chung một hàm mở Chrome để đồng bộ logic URL, User-Agent và tự điền với nút Next
         }
         //
@@ -881,9 +926,11 @@ namespace DANG_NHAP_FACEBOOK
         //
         private void MoChromeTheoProfile(string duongDanProfile, string tenProfile, string password)
         {
+            CapNhatTrangThai($"Đang khởi chạy Chrome cho profile {tenProfile}...", Color.DarkGoldenrod); // Báo riêng bước mở Chrome vì đây là đoạn người dùng hay tưởng app bị treo nhất
             string chromeExe = TimChromeExe();                                                 // Tìm đường dẫn chrome.exe để mở profile bằng Chrome thật
             if (string.IsNullOrWhiteSpace(chromeExe))
             {
+                CapNhatTrangThai("Mở Chrome thất bại: không tìm thấy chrome.exe.", Color.Firebrick);
                 MessageBox.Show("Không tìm thấy chrome.exe.");
                 return;                                                                        // Không mở tiếp nếu máy chưa tìm thấy Chrome
             }
@@ -909,10 +956,12 @@ namespace DANG_NHAP_FACEBOOK
                 GhiLaiUserAgentDangDung(urlCanMo, userAgentDangDung);                          // Ghi lại ngay URL và UA đang dùng để nếu Facebook đổi giao diện còn có dữ liệu đối chiếu
                 System.Diagnostics.Process.Start(psi);                                         // Mở Chrome theo đúng profile, dùng chung cho cả Mở dòng và Next
                 congDebugTheoUid[tenProfile] = congDebugChrome;                                // Lưu lại cổng debug theo UID để các chức năng như Điền UID Password còn bám lại đúng phiên Chrome đang mở
+                CapNhatTrangThai($"Đang tự điền UID/Password cho {tenProfile}...", Color.DarkGoldenrod);
                 _ = TuDongDienThongTinDangNhapAsync(congDebugChrome, urlCanMo, tenProfile, password); // Chạy nền bước tự điền để người dùng đỡ phải nhập tay lại UID và Password
             }
             catch (Exception ex)
             {
+                CapNhatTrangThai($"Mở Chrome thất bại cho profile {tenProfile}.", Color.Firebrick);
                 MessageBox.Show($"Không thể mở Chrome cho profile {tenProfile}.{Environment.NewLine}{ex.Message}");
             }
         }
@@ -997,6 +1046,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         {
             if (string.IsNullOrWhiteSpace(uid) || string.IsNullOrWhiteSpace(password))
             {
+                CapNhatTrangThai($"Bỏ qua tự điền cho {uid}: thiếu UID hoặc Password.", Color.Firebrick);
                 return;                                                                        // Nếu thiếu UID hoặc Password thì không tự điền được, tránh đổ nhầm dữ liệu rỗng lên form đăng nhập
             }
 
@@ -1017,6 +1067,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                     bool daDienThanhCong = await ThuChayScriptTuDongDienAsync(webSocketDebuggerUrl, script); // Chạy script bằng CDP, nếu ô đã hiện thì điền ngay UID và Password
                     if (daDienThanhCong)
                     {
+                        CapNhatTrangThai($"Đã tự điền UID/Password cho {uid}.", Color.ForestGreen);
                         return;
                     }
                 }
@@ -1026,6 +1077,8 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
 
                 await Task.Delay(1000);                                                        // Chờ trang tải thêm rồi thử lại vì Facebook có thể render form chậm
             }
+
+            CapNhatTrangThai($"Không tìm thấy ô đăng nhập để tự điền cho {uid}.", Color.Firebrick);
         }
         //
         //  HÀM LẤY WEBSOCKET DEBUGGER URL CỦA TAB FACEBOOK
@@ -1399,9 +1452,11 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         //
         private void XoaMotDongDaTick()
         {
+            CapNhatTrangThai("Đang chuẩn bị xóa 1 dòng đang tick...", Color.DarkGoldenrod);   // Xóa là luồng người dùng rất cần thấy tiến trình vì có bước đóng Chrome và xóa profile
             List<DataGridViewRow> dsDongDaTick = LayDanhSachDongDaTick();                      // Lấy danh sách tick thật để bảo đảm xóa đúng nghiệp vụ đã chốt
             if (dsDongDaTick.Count != 1)
             {
+                CapNhatTrangThai("Xóa thất bại: chưa tick đúng 1 dòng.", Color.Firebrick);
                 MessageBox.Show("Vui lòng tick đúng 1 dòng để xóa.");                          // Xóa một dòng chỉ chấp nhận đúng 1 checkbox đang bật
                 return;
             }
@@ -1411,38 +1466,47 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
 
             if (string.IsNullOrWhiteSpace(uid))
             {
+                CapNhatTrangThai("Xóa thất bại: dòng đang tick không có UID hợp lệ.", Color.Firebrick);
                 MessageBox.Show("Dòng đang tick không có UID hợp lệ.");
                 return;
             }
 
             if (!LaTenProfileUidHopLe(uid))
             {
+                CapNhatTrangThai("Xóa thất bại: dòng đang tick không phải profile UID hợp lệ.", Color.Firebrick);
                 MessageBox.Show("Dòng đang tick không phải profile UID hợp lệ.");
                 return;                                                                        // Chặn xóa nhầm các thư mục hệ thống như runtimes nếu chúng từng bị nạp sai lên grid
             }
 
+            CapNhatTrangThai("Đang đóng Chrome trước khi xóa...", Color.DarkGoldenrod);
             if (!ThuDongTatCaChromeDeXuLyProfile())
             {
+                CapNhatTrangThai("Xóa thất bại: không thể đóng Chrome.", Color.Firebrick);
                 return;                                                                        // Khi đã xác định xóa thì app phải đóng toàn bộ Chrome trước để tránh lỗi khóa file profile
             }
 
+            CapNhatTrangThai($"Đang xử lý profile của UID {uid}...", Color.DarkGoldenrod);
             if (!XuLyProfileKhiXoaMotDong(uid))                                                // Chỉ tiếp tục xóa dữ liệu khi profile đã được xử lý xong an toàn
             {
+                CapNhatTrangThai($"Xóa thất bại: không xử lý được profile {uid}.", Color.Firebrick);
                 return;
             }
 
             XoaUidKhoiDsTxt(uid);                                                              // Xóa UID tương ứng ra khỏi ds.txt để dữ liệu file và grid luôn đồng bộ
             dataGridView1.Rows.Remove(row);                                                    // Bỏ dòng đã xóa ra khỏi grid
             CapNhatLaiSTT();                                                                   // Đánh lại số thứ tự để bảng không bị lệch sau khi xóa
+            CapNhatTrangThai($"Đã xóa xong dòng {uid}.", Color.ForestGreen);
         }
         //
         //  HÀM XÓA NHIỀU DÒNG ĐÃ TICK
         //
         private void XoaNhieuDongDaTick()
         {
+            CapNhatTrangThai("Đang chuẩn bị xóa nhiều dòng...", Color.DarkGoldenrod);         // Xóa nhiều dòng càng cần báo tiến trình vì khối lượng xử lý profile lớn hơn
             List<DataGridViewRow> dsDongDaTick = LayDanhSachDongDaTick();                      // Lấy toàn bộ dòng đang được tick thật để xử lý xóa hàng loạt
             if (dsDongDaTick.Count < 2)
             {
+                CapNhatTrangThai("Xóa nhiều thất bại: cần tick từ 2 dòng trở lên.", Color.Firebrick);
                 MessageBox.Show("Vui lòng tick từ 2 dòng trở lên để xóa nhiều.");             // Nhánh này chỉ dành cho xóa nhiều dòng cùng lúc
                 return;
             }
@@ -1460,6 +1524,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
 
                 if (!LaTenProfileUidHopLe(uid))
                 {
+                    CapNhatTrangThai("Xóa nhiều thất bại: có dòng tick không phải profile UID hợp lệ.", Color.Firebrick);
                     MessageBox.Show("Có dòng được tick không phải profile UID hợp lệ. Vui lòng mở lại app rồi thử lại.");
                     return;                                                                    // Dừng lại để không đụng nhầm thư mục hệ thống hoặc thư mục phụ của app
                 }
@@ -1467,13 +1532,17 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                 dsUidCanXoa.Add(uid);                                                          // Gom UID hợp lệ để xóa profile và dữ liệu đồng bộ theo cùng một danh sách
             }
 
+            CapNhatTrangThai("Đang đóng Chrome trước khi xóa nhiều dòng...", Color.DarkGoldenrod);
             if (!ThuDongTatCaChromeDeXuLyProfile())
             {
+                CapNhatTrangThai("Xóa nhiều thất bại: không thể đóng Chrome.", Color.Firebrick);
                 return;                                                                        // Xóa nhiều dòng cũng phải dừng toàn bộ Chrome trước để xóa profile dứt điểm
             }
 
+            CapNhatTrangThai("Đang xóa các profile đã tick...", Color.DarkGoldenrod);
             if (!XoaToanBoProfileKhiXoaNhieuDong(dsUidCanXoa))                                 // Xóa nhiều dòng phải xóa sạch luôn cả profile_ranh sau khi đóng phiên Chrome liên quan
             {
+                CapNhatTrangThai("Xóa nhiều thất bại: không xóa được toàn bộ profile.", Color.Firebrick);
                 return;
             }
 
@@ -1488,6 +1557,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
             }
 
             CapNhatLaiSTT();                                                                   // Đánh lại STT sau khi xóa hàng loạt
+            CapNhatTrangThai($"Đã xóa xong {dsUidCanXoa.Count} dòng đã tick.", Color.ForestGreen);
         }
         //
         //  HÀM XÓA UID KHỎI DS.TXT
@@ -1778,6 +1848,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         //
         private void LoadDuLieuLenGridKhiMoApp()
         {
+            CapNhatTrangThai("Đang nạp dữ liệu cũ lên grid...", Color.DarkGoldenrod);         // Báo trạng thái load app để người dùng biết app đang đọc data\profiles và ds.txt
             Dictionary<string, string> matKhauTheoUid = new(StringComparer.OrdinalIgnoreCase); // Lưu tạm mật khẩu theo UID để đồng bộ lại dữ liệu khi nạp grid lúc mở app
             if (File.Exists(dsFilePath))
             {
@@ -1850,6 +1921,8 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                 row.Cells["colTrangThai"].Value = string.Empty;                                // Trạng thái để trống, sau này có thể dùng label/status hoặc cập nhật riêng
                 row.Cells["colCookie"].Value = string.Empty;                                   // Cookie để trống vì chưa có bước đọc dữ liệu phiên
             }
+
+            CapNhatTrangThai($"Đã nạp xong {dataGridView1.Rows.Count} dòng lên grid.", Color.ForestGreen);
         }
         //
         //  HÀM TẠO PROFILE RẢNH NẾU CHƯA CÓ
@@ -1890,10 +1963,12 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         //
         private void XoaCacDongDaTick()
         {
+            CapNhatTrangThai("Đang chuẩn bị xóa các dòng đã tick...", Color.DarkGoldenrod);  // Menu xóa chung cũng cần báo rõ trước khi điều phối sang xóa 1 hay xóa nhiều
             int soDongDaTick = LayDanhSachDongDaTick().Count;                                  // Đếm số dòng được tick để điều phối đúng nhánh xóa bên trong
 
             if (soDongDaTick == 0)
             {
+                CapNhatTrangThai("Xóa thất bại: chưa tick dòng nào.", Color.Firebrick);
                 MessageBox.Show("Vui lòng tick ít nhất 1 dòng để xóa.");
                 return;                                                                        // Không có dòng nào được tick thì không có mục tiêu để xóa
             }
@@ -1909,9 +1984,11 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
 
         private void điềnUIDPaswordToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            CapNhatTrangThai("Đang chuẩn bị điền lại UID/Password...", Color.DarkGoldenrod); // Đây là luồng phụ nhưng người dùng vẫn cần biết app có đang kết nối vào Chrome hay không
             List<DataGridViewRow> dsDongDaTick = LayDanhSachDongDaTick();                      // Chỉ lấy những dòng được chọn thật bằng checkbox để tránh điền nhầm theo bôi đen
             if (dsDongDaTick.Count != 1)
             {
+                CapNhatTrangThai("Điền UID/Password thất bại: chưa tick đúng 1 dòng.", Color.Firebrick);
                 MessageBox.Show("Vui lòng tick đúng 1 dòng để điền lại UID và Password.");
                 return;                                                                        // Menu này chỉ có ý nghĩa khi đang làm việc với đúng 1 tài khoản đang mở
             }
@@ -1922,12 +1999,14 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
 
             if (string.IsNullOrWhiteSpace(uid) || string.IsNullOrWhiteSpace(password))
             {
+                CapNhatTrangThai("Điền UID/Password thất bại: thiếu UID hoặc Password.", Color.Firebrick);
                 MessageBox.Show("Dòng đang chọn chưa có đủ UID hoặc Password.");
                 return;                                                                        // Nếu thiếu dữ liệu thì dừng để tránh điền sai hoặc điền chuỗi rỗng
             }
 
             if (!congDebugTheoUid.TryGetValue(uid, out int congDebugChrome))
             {
+                CapNhatTrangThai("Điền UID/Password thất bại: chưa có Chrome đang mở.", Color.Firebrick);
                 MessageBox.Show("Dòng này chưa có Chrome đang mở. Hãy mở dòng này bằng app trước rồi thử lại.");
                 return;                                                                        // Chỉ điền lại được khi profile này đã được app mở trước đó và còn giữ cổng debug
             }
@@ -1942,9 +2021,11 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         {
             try
             {
+                CapNhatTrangThai($"Đang điền lại UID/Password trên Chrome đang mở của {uid}...", Color.DarkGoldenrod);
                 string? webSocketDebuggerUrl = await LayWebSocketDebuggerUrlFacebookDangMoAsync(congDebugChrome); // Lấy tab Facebook đang mở thực tế của phiên Chrome này, bất kể đang ở URL nào
                 if (string.IsNullOrWhiteSpace(webSocketDebuggerUrl))
                 {
+                    CapNhatTrangThai("Điền UID/Password thất bại: không tìm thấy tab Facebook đang mở.", Color.Firebrick);
                     MessageBox.Show("Không tìm thấy tab Facebook đang mở để điền lại UID và Password.");
                     return;                                                                    // Nếu Chrome đang mở nhưng không còn tab Facebook nào thì menu này không còn mục tiêu để điền
                 }
@@ -1953,11 +2034,16 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                 bool daDienThanhCong = await ThuChayScriptTuDongDienAsync(webSocketDebuggerUrl, script);
                 if (!daDienThanhCong)
                 {
+                    CapNhatTrangThai("Điền UID/Password thất bại: không tìm thấy ô đăng nhập.", Color.Firebrick);
                     MessageBox.Show("Không tìm thấy ô đăng nhập trên tab Facebook đang mở.");
+                    return;
                 }
+
+                CapNhatTrangThai($"Đã điền lại UID/Password cho {uid}.", Color.ForestGreen);
             }
             catch
             {
+                CapNhatTrangThai("Điền UID/Password thất bại: không kết nối được phiên Chrome.", Color.Firebrick);
                 MessageBox.Show("Không thể kết nối lại phiên Chrome đang mở của dòng này.");
             }
         }
