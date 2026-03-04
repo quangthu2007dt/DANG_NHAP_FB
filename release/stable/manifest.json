@@ -1,9 +1,9 @@
 {
   "appName": "DANG NHAP FACEBOOK",
   "channel": "stable",
-  "latestVersion": "1.0.3",
+  "latestVersion": "1.0.4",
   "releaseDate": "2026-03-04",
-  "packageFileName": "DANG_NHAP_FACEBOOK_1.0.3.zip",
-  "packageUrl": "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/main/release/stable/DANG_NHAP_FACEBOOK_1.0.3.zip",
-  "notes": "Bản test để kiểm tra popup và luồng auto-update thực tế từ 1.0.2 lên 1.0.3."
+  "packageFileName": "DANG_NHAP_FACEBOOK_1.0.4.zip",
+  "packageUrl": "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/main/release/stable/DANG_NHAP_FACEBOOK_1.0.4.zip",
+  "notes": "Bản bổ sung Làm mới kiểm tra cập nhật thủ công, hiện rõ nguồn manifest GitHub hay local và chống cache manifest."
 }

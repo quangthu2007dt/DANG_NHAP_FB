@@ -6,33 +6,27 @@ namespace DANG_NHAP_FACEBOOK
     {
         private const string TenUpdaterExe = "Updater.exe";
 
+        internal sealed class UpdateCheckResult
+        {
+            public string VersionHienTai { get; set; } = string.Empty;
+            public string VersionMoiNhat { get; set; } = string.Empty;
+            public bool CoBanMoi { get; set; }
+            public bool CoTheCapNhat { get; set; }
+            public string NguonManifest { get; set; } = "Local";
+            public string? PackagePath { get; set; }
+            public AppReleaseManifest Manifest { get; set; } = new();
+        }
+
         public static bool ThuKichHoatCapNhatNeuCo()
         {
-            AppVersionInfo thongTinHienTai = VersionService.DocThongTinPhienBanHienTai();
-            AppReleaseManifest manifest = ManifestService.DocManifestCapNhat();
-
-            if (!CoBanMoiHon(thongTinHienTai.Version, manifest.LatestVersion))
+            UpdateCheckResult ketQuaKiemTra = KiemTraCapNhat();
+            if (!ketQuaKiemTra.CoBanMoi || !ketQuaKiemTra.CoTheCapNhat)
             {
-                return false;                                                                 // Không có bản mới thì tiếp tục mở app bình thường
-            }
-
-            string updaterExePath = Path.Combine(AppPaths.BaseDirectory, TenUpdaterExe);
-            if (!File.Exists(updaterExePath))
-            {
-                return false;                                                                 // Chưa có Updater.exe cạnh app thì chưa thể kích hoạt luồng update
-            }
-
-            string? packagePath = LayPackagePathNeuCo(manifest);
-            bool coNguonCapNhat = !string.IsNullOrWhiteSpace(packagePath) ||
-                                  !string.IsNullOrWhiteSpace(manifest.PackageUrl);
-
-            if (!coNguonCapNhat)
-            {
-                return false;                                                                 // Chưa có package local hay packageUrl thì chỉ coi như metadata phát hành, chưa chạy updater
+                return false;                                                                 // Không có bản mới hoặc chưa đủ điều kiện updater thì app mở bình thường
             }
 
             DialogResult ketQua = MessageBox.Show(
-                $"Đã có bản mới {manifest.LatestVersion}. Bạn có muốn cập nhật ngay không?",
+                $"Đã có bản mới {ketQuaKiemTra.VersionMoiNhat}. Bạn có muốn cập nhật ngay không?",
                 "Kiểm tra cập nhật",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
@@ -42,7 +36,40 @@ namespace DANG_NHAP_FACEBOOK
                 return false;                                                                 // Người dùng từ chối thì app chạy tiếp bản hiện tại
             }
 
-            string thamSo = TaoThamSoGoiUpdater(AppPaths.BaseDirectory, ManifestService.ManifestFilePath, packagePath);
+            return ThuKhoiDongUpdater(ketQuaKiemTra);
+        }
+
+        public static UpdateCheckResult KiemTraCapNhat()
+        {
+            AppVersionInfo thongTinHienTai = VersionService.DocThongTinPhienBanHienTai();
+            ManifestReadResult ketQuaDocManifest = ManifestService.DocManifestCapNhatChiTiet();
+            AppReleaseManifest manifest = ketQuaDocManifest.Manifest;
+            string? packagePath = LayPackagePathNeuCo(manifest);
+            bool coUpdater = File.Exists(Path.Combine(AppPaths.BaseDirectory, TenUpdaterExe));
+            bool coNguonCapNhat = !string.IsNullOrWhiteSpace(packagePath) ||
+                                  !string.IsNullOrWhiteSpace(manifest.PackageUrl);
+
+            return new UpdateCheckResult
+            {
+                VersionHienTai = thongTinHienTai.Version,
+                VersionMoiNhat = manifest.LatestVersion,
+                CoBanMoi = CoBanMoiHon(thongTinHienTai.Version, manifest.LatestVersion),
+                CoTheCapNhat = coUpdater && coNguonCapNhat,
+                NguonManifest = ketQuaDocManifest.NguonHienThi,
+                PackagePath = packagePath,
+                Manifest = manifest
+            };
+        }
+
+        public static bool ThuKhoiDongUpdater(UpdateCheckResult ketQuaKiemTra)
+        {
+            string updaterExePath = Path.Combine(AppPaths.BaseDirectory, TenUpdaterExe);
+            if (!ketQuaKiemTra.CoTheCapNhat || !File.Exists(updaterExePath))
+            {
+                return false;                                                                 // Chưa đủ điều kiện chạy updater thì dừng ở đây
+            }
+
+            string thamSo = TaoThamSoGoiUpdater(AppPaths.BaseDirectory, ManifestService.ManifestFilePath, ketQuaKiemTra.PackagePath);
             var processStartInfo = new ProcessStartInfo
             {
                 FileName = updaterExePath,

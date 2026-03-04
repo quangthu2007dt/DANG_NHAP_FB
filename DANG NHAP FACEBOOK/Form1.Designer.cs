@@ -225,6 +225,7 @@
             // 
             làmMớiToolStripMenuItem.Name = "làmMớiToolStripMenuItem";
             resources.ApplyResources(làmMớiToolStripMenuItem, "làmMớiToolStripMenuItem");
+            làmMớiToolStripMenuItem.Click += làmMớiToolStripMenuItem_Click;
             // 
             // xóaToolStripMenuItem
             // 

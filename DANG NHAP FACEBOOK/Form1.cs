@@ -692,6 +692,62 @@ namespace DANG_NHAP_FACEBOOK
             MoProfileTheoDongDangChon();                                                       // Menu Mở cũng dùng chung luồng mở profile của dòng đang chọn
         }
 
+        private void làmMớiToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CapNhatTrangThai("Đang kiểm tra cập nhật từ GitHub...", Color.DarkGoldenrod);     // Bấm Làm mới sẽ chủ động kiểm tra manifest online để người dùng nhìn rõ app không bị chạy offline
+            Refresh();
+
+            UpdateService.UpdateCheckResult ketQuaKiemTra = UpdateService.KiemTraCapNhat();
+            if (!ketQuaKiemTra.CoBanMoi)
+            {
+                CapNhatTrangThai($"Đang ở bản mới nhất {ketQuaKiemTra.VersionHienTai} ({ketQuaKiemTra.NguonManifest}).", Color.RoyalBlue);
+                MessageBox.Show(
+                    $"Phiên bản hiện tại: {ketQuaKiemTra.VersionHienTai}{Environment.NewLine}" +
+                    $"Phiên bản mới nhất: {ketQuaKiemTra.VersionMoiNhat}{Environment.NewLine}" +
+                    $"Nguồn manifest: {ketQuaKiemTra.NguonManifest}{Environment.NewLine}{Environment.NewLine}" +
+                    "Hiện chưa có bản mới hơn để cập nhật.",
+                    "Kiểm tra cập nhật",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
+
+            if (!ketQuaKiemTra.CoTheCapNhat)
+            {
+                CapNhatTrangThai($"Đã thấy bản mới {ketQuaKiemTra.VersionMoiNhat} nhưng chưa đủ điều kiện cập nhật.", Color.Firebrick);
+                MessageBox.Show(
+                    $"Đã thấy bản mới {ketQuaKiemTra.VersionMoiNhat} từ {ketQuaKiemTra.NguonManifest}, nhưng app chưa đủ điều kiện chạy updater.{Environment.NewLine}" +
+                    "Hãy kiểm tra lại Updater.exe hoặc gói cập nhật.",
+                    "Kiểm tra cập nhật",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
+            CapNhatTrangThai($"Đã thấy bản mới {ketQuaKiemTra.VersionMoiNhat} từ {ketQuaKiemTra.NguonManifest}.", Color.ForestGreen);
+            DialogResult xacNhan = MessageBox.Show(
+                $"Phiên bản hiện tại: {ketQuaKiemTra.VersionHienTai}{Environment.NewLine}" +
+                $"Phiên bản mới nhất: {ketQuaKiemTra.VersionMoiNhat}{Environment.NewLine}" +
+                $"Nguồn manifest: {ketQuaKiemTra.NguonManifest}{Environment.NewLine}{Environment.NewLine}" +
+                "Bạn có muốn cập nhật ngay không?",
+                "Kiểm tra cập nhật",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (xacNhan != DialogResult.Yes)
+            {
+                CapNhatTrangThai("Đã hủy cập nhật thủ công.", Color.RoyalBlue);
+                return;
+            }
+
+            CapNhatTrangThai($"Đang khởi chạy updater để lên {ketQuaKiemTra.VersionMoiNhat}...", Color.DarkGoldenrod);
+            if (!UpdateService.ThuKhoiDongUpdater(ketQuaKiemTra))
+            {
+                CapNhatTrangThai("Không thể khởi chạy updater.", Color.Firebrick);
+                MessageBox.Show("Không thể khởi chạy updater để cập nhật bản mới.");
+            }
+        }
+
         private void btnXoa_Click(object sender, EventArgs e)
         {
             XoaCacDongDaTick();                                                                // Nút Xóa trên form dùng chung một luồng xóa theo các dòng đang tick

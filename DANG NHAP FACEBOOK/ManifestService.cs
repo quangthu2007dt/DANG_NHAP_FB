@@ -13,6 +13,13 @@ namespace DANG_NHAP_FACEBOOK
         public string Notes { get; set; } = string.Empty;
     }
 
+    internal sealed class ManifestReadResult
+    {
+        public AppReleaseManifest Manifest { get; set; } = new();
+        public bool DocTuGitHub { get; set; }
+        public string NguonHienThi => DocTuGitHub ? "GitHub" : "Local";
+    }
+
     internal static class ManifestService
     {
         private const string RemoteManifestUrl = "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/main/release/stable/manifest.json";
@@ -59,8 +66,26 @@ namespace DANG_NHAP_FACEBOOK
 
         public static AppReleaseManifest DocManifestCapNhat()
         {
+            return DocManifestCapNhatChiTiet().Manifest;
+        }
+
+        public static ManifestReadResult DocManifestCapNhatChiTiet()
+        {
             AppReleaseManifest? manifestTuXa = DocManifestTuXa();
-            return manifestTuXa ?? DocManifestCucBo();
+            if (manifestTuXa != null)
+            {
+                return new ManifestReadResult
+                {
+                    Manifest = manifestTuXa,
+                    DocTuGitHub = true
+                };
+            }
+
+            return new ManifestReadResult
+            {
+                Manifest = DocManifestCucBo(),
+                DocTuGitHub = false
+            };
         }
 
         private static AppReleaseManifest? DocManifestTuXa()
@@ -72,7 +97,8 @@ namespace DANG_NHAP_FACEBOOK
                     Timeout = TimeSpan.FromSeconds(8)
                 };
 
-                string json = httpClient.GetStringAsync(RemoteManifestUrl).GetAwaiter().GetResult(); // Ưu tiên manifest phát hành trên GitHub để app biết có bản mới thật hay không
+                string urlManifestKhongCache = $"{RemoteManifestUrl}?t={DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}"; // Gắn query chống cache để app đọc đúng manifest mới nhất thay vì bị giữ bản cũ
+                string json = httpClient.GetStringAsync(urlManifestKhongCache).GetAwaiter().GetResult(); // Ưu tiên manifest phát hành trên GitHub để app biết có bản mới thật hay không
                 AppReleaseManifest? manifest = JsonSerializer.Deserialize<AppReleaseManifest>(json, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
