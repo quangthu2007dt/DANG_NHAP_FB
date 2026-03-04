@@ -5,3 +5,5 @@
 *.suo
 *.cache
 *.pdb
+_temp_build/
+artifacts/
