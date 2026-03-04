@@ -28,11 +28,12 @@ namespace DANG_NHAP_FACEBOOK
         public Form1()
         {
             InitializeComponent();
-            userAgentsFilePath = Path.Combine(AppContext.BaseDirectory, "user_agents.txt");         // File txt lưu danh sách User-Agent để app nạp lên combobox
-            userAgentDangDungFilePath = Path.Combine(AppContext.BaseDirectory, "ua_dang_dung.txt"); // File txt lưu lại URL và User-Agent đang dùng để sau này còn lần theo vết
-            dsFilePath = Path.Combine(AppContext.BaseDirectory, "ds.txt");                    // Đường dẫn đầy đủ tới file ds.txt nằm cạnh file chạy app
-            profileMauPath = Path.Combine(AppContext.BaseDirectory, "profile_mau");           // Đường dẫn đầy đủ tới thư mục profile mẫu
-            profileRanhPath = Path.Combine(AppContext.BaseDirectory, "profile_ranh");         // Đường dẫn đầy đủ tới thư mục profile rảnh
+            AppPaths.EnsureCoreDirectoriesExist();                                            // Giai đoạn 1 tạo sẵn khung thư mục chuẩn để dần chuyển app sang data\ mà chưa cần updater
+            userAgentsFilePath = AppPaths.ResolveUserAgentsFilePath();                         // Tạm thời ưu tiên data\ nếu đã có, còn không thì vẫn đọc được file cũ cạnh exe
+            userAgentDangDungFilePath = AppPaths.ResolveUserAgentDangDungFilePath();           // File log User-Agent mới sẽ đi theo cấu trúc chuẩn trong data\
+            dsFilePath = AppPaths.ResolveDsFilePath();                                         // Tạm thời ưu tiên data\ nếu đã có, còn không thì vẫn đọc được ds.txt cũ cạnh exe
+            profileMauPath = AppPaths.ResolveProfileMauPath();                                 // Profile mẫu ưu tiên ở data\ nhưng vẫn nhìn được thư mục cũ trước khi làm migration
+            profileRanhPath = AppPaths.ResolveProfileRanhPath();                               // Profile rảnh cũng đi theo nguyên tắc tương thích tạm thời như profile mẫu
             LoadDuLieuLenGridKhiMoApp();                                                       // Khi app vừa mở thì nạp lại các profile cũ lên grid để giữ đúng trạng thái hiện có                                                                                              // Dòng này là "chìa khóa" nè bạn
             dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridView1.RowsAdded += (_, _) => CapNhatThongTinSoLuong();                    // Chạy sau cùng để lblDanhSach đọc đúng số dòng còn lại trong ds.txt
@@ -339,8 +340,8 @@ namespace DANG_NHAP_FACEBOOK
                 return true;
             }
 
-            string duongDanProfileCu = Path.Combine(AppContext.BaseDirectory, uidCu);
-            string duongDanProfileMoi = Path.Combine(AppContext.BaseDirectory, uidMoi);
+            string duongDanProfileCu = AppPaths.ResolveProfilePath(uidCu);
+            string duongDanProfileMoi = AppPaths.ResolveProfilePath(uidMoi);
 
             if (Directory.Exists(duongDanProfileMoi))
             {
@@ -803,7 +804,7 @@ namespace DANG_NHAP_FACEBOOK
                 return;
             }
 
-            string duongDanProfileTheoUid = Path.Combine(AppContext.BaseDirectory, uid);      // Tạo đường dẫn profile mới theo đúng tên UID của tài khoản
+            string duongDanProfileTheoUid = AppPaths.ResolveProfilePath(uid);                  // Tạo đường dẫn profile theo UID, ưu tiên cấu trúc data\profiles nhưng vẫn nhìn được dữ liệu cũ
 
             if (string.Equals(duongDanProfileSuDung, duongDanProfileTheoUid, StringComparison.OrdinalIgnoreCase)) // Nếu profile hiện tại đã mang đúng tên UID thì không cần đổi tên
             {
@@ -876,7 +877,7 @@ namespace DANG_NHAP_FACEBOOK
                 return;                                                                        // Không thể mở profile nếu dòng chưa có UID
             }
 
-            string duongDanProfile = Path.Combine(AppContext.BaseDirectory, uid);              // Tạo đường dẫn đầy đủ tới profile mang tên UID
+            string duongDanProfile = AppPaths.ResolveProfilePath(uid);                         // Tạo đường dẫn đầy đủ tới profile của dòng đang chọn theo cấu trúc mới hoặc dữ liệu cũ
             if (!Directory.Exists(duongDanProfile))
             {
                 MessageBox.Show($"Không tìm thấy profile {uid}.");
@@ -1537,7 +1538,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         //
         private bool XuLyProfileKhiXoaMotDong(string uid)
         {
-            string duongDanProfileTheoUid = Path.Combine(AppContext.BaseDirectory, uid);       // Xác định đúng thư mục profile theo UID của dòng bị xóa
+            string duongDanProfileTheoUid = AppPaths.ResolveProfilePath(uid);                  // Xác định đúng thư mục profile theo UID của dòng bị xóa theo cấu trúc đang có
             if (!Directory.Exists(duongDanProfileTheoUid))
             {
                 return true;                                                                   // Nếu không còn profile thì chỉ cần xóa dữ liệu grid và ds.txt
@@ -1566,7 +1567,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         //
         private bool XoaProfileTheoUid(string uid)
         {
-            string duongDanProfileTheoUid = Path.Combine(AppContext.BaseDirectory, uid);       // Xác định thư mục profile cần xóa hẳn khỏi ổ đĩa
+            string duongDanProfileTheoUid = AppPaths.ResolveProfilePath(uid);                  // Xác định thư mục profile cần xóa hẳn khỏi ổ đĩa theo cấu trúc đang có
             return ThuXoaThuMucProfile(duongDanProfileTheoUid, uid);                           // Xóa sạch profile của các dòng bị loại khỏi app sau khi đã đóng phiên Chrome tương ứng
         }
         //
@@ -1823,7 +1824,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                 }
             }
 
-            string[] thuMucProfiles = Directory.GetDirectories(AppContext.BaseDirectory);     // Lấy toàn bộ thư mục đang nằm cạnh file chạy app
+            string[] thuMucProfiles = AppPaths.EnumerateProfileDirectories().ToArray();       // Lấy profile theo cả cấu trúc data\profiles lẫn dữ liệu cũ cạnh exe để app chưa bị gãy trước migration
 
             foreach (string thuMucProfile in thuMucProfiles)                                   // Duyệt lần lượt từng thư mục để tìm các profile đã có
             {
