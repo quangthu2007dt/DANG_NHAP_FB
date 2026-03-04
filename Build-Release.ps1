@@ -11,8 +11,7 @@ $manifestFile = Join-Path $repoRoot "DANG NHAP FACEBOOK\manifest.json"
 $artifactsRoot = Join-Path $repoRoot "artifacts"
 $releaseRoot = Join-Path $artifactsRoot "release"
 $packageRoot = Join-Path $artifactsRoot "packages"
-$cloneRoot = Join-Path $artifactsRoot "clone"
-$cloneDirectory = Join-Path $cloneRoot "DANG NHAP FB"
+$cloneDirectory = "D:\DANG NHAP FB"
 
 if (-not (Test-Path $versionFile)) {
     throw "Không tìm thấy version.json tại: $versionFile"
@@ -41,7 +40,6 @@ $packagePath = Join-Path $packageRoot $packageFileName
 
 New-Item -ItemType Directory -Force -Path $releaseRoot | Out-Null
 New-Item -ItemType Directory -Force -Path $packageRoot | Out-Null
-New-Item -ItemType Directory -Force -Path $cloneRoot | Out-Null
 
 if (Test-Path $releaseDirectory) {
     Remove-Item -Recurse -Force $releaseDirectory
