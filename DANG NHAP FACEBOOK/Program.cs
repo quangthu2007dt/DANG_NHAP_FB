@@ -12,6 +12,7 @@ namespace DANG_NHAP_FACEBOOK
             // see https://aka.ms/applicationconfiguration.
             DataMigrationService.KhoiTaoCauTrucDuLieu();                                      // Dựng sẵn cấu trúc data chuẩn trước khi bất kỳ form nào bắt đầu đọc file
             VersionService.KiemTraThongTinPhienBan();                                         // Đọc thử version.json ngay lúc startup để bản build luôn có metadata phiên bản hợp lệ
+            ManifestService.KiemTraManifestCucBo();                                           // Đọc thử manifest.json ngay lúc startup để chuẩn bị cho bước updater sau này
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
         }
