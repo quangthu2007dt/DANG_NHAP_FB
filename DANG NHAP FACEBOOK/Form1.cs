@@ -12,7 +12,6 @@ namespace DANG_NHAP_FACEBOOK
         private readonly string userAgentsFilePath;
         private readonly Dictionary<string, int> congDebugTheoUid = new(StringComparer.OrdinalIgnoreCase);
         private const string facebookDesktopUserAgentMacDinh = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36";
-        private const string safariIphoneUserAgentMacDinh = "Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1";
         private const string mobileUserAgentMacDinh = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36";
         private const string metaDesktopUserAgentMacDinh = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36";
 
@@ -28,7 +27,6 @@ namespace DANG_NHAP_FACEBOOK
         public Form1()
         {
             InitializeComponent();
-            AppPaths.EnsureCoreDirectoriesExist();                                            // Tạo sẵn toàn bộ khung thư mục chuẩn trước khi app xử lý dữ liệu
             userAgentsFilePath = AppPaths.UserAgentsFilePath;                                 // Danh sách User-Agent chính thức nằm trong data\
             userAgentDangDungFilePath = AppPaths.UserAgentDangDungFilePath;                   // File log User-Agent đang dùng cũng đi theo data\
             dsFilePath = AppPaths.DsFilePath;                                                 // ds.txt chính thức nằm trong data\
@@ -50,7 +48,6 @@ namespace DANG_NHAP_FACEBOOK
                 cboUrl.SelectedIndex = 0;                                                     // Mặc định chọn giao diện đầu tiên để khi bấm Mở dòng không bị thiếu URL
             }
 
-            DamBaoTonTaiUserAgentsTxt();                                                       // Đảm bảo luôn có file user_agents.txt để không hardcode danh sách User-Agent trên UI
             TaiDanhSachUserAgentLenCombobox();                                                 // Nạp danh sách User-Agent từ file txt lên combobox ngay khi app khởi động
             GanMenuUserAgentChoCombobox();                                                     // Gắn menu chuột phải để thêm và xóa User-Agent ngay trên app mà không phải sửa txt bằng tay
         }
@@ -71,25 +68,6 @@ namespace DANG_NHAP_FACEBOOK
             tssTong.Text = $"Tổng : {dataGridView1.Rows.Count}";                               // Thanh trạng thái Tổng phản ánh số dòng hiện đang có trên grid
         }
 
-        private void DamBaoTonTaiUserAgentsTxt()
-        {
-            string[] danhSachMacDinh =
-            [
-                facebookDesktopUserAgentMacDinh,                                               // Giữ sẵn UA desktop đang test ổn cho facebook.com
-                safariIphoneUserAgentMacDinh                                                   // Thêm sẵn một UA Safari iPhone để sau này còn test giao diện cũ
-            ];
-            if (!File.Exists(userAgentsFilePath))
-            {
-                File.WriteAllLines(userAgentsFilePath, danhSachMacDinh, Encoding.UTF8);        // Nếu chưa có file thì tạo mới và ghi sẵn 2 UA mặc định
-                return;
-            }
-            bool fileDangRong = File.ReadAllLines(userAgentsFilePath)
-                .All(line => string.IsNullOrWhiteSpace(line));                                 // Nếu file đang có nhưng không chứa UA nào thì coi như rỗng
-            if (fileDangRong)
-            {
-                File.WriteAllLines(userAgentsFilePath, danhSachMacDinh, Encoding.UTF8);        // Ghi lại danh sách mặc định để combobox không bị trống
-            }
-        }
         private void TaiDanhSachUserAgentLenCombobox()
         {
             cboUserAgent.Items.Clear();                                                         // Mỗi lần nạp lại thì xóa danh sách cũ để tránh bị trùng lặp
@@ -112,7 +90,7 @@ namespace DANG_NHAP_FACEBOOK
             }
             if (danhSachUserAgent.Contains(facebookDesktopUserAgentMacDinh, StringComparer.OrdinalIgnoreCase))
             {
-                cboUserAgent.SelectedItem = facebookDesktopUserAgentMacDinh;                   // Facebook th??ng m?c ??nh quay v? UA desktop ?ang test ?n n?y
+                cboUserAgent.SelectedItem = facebookDesktopUserAgentMacDinh;                   // Facebook thường mặc định quay về UA desktop đang test ổn này
                 return;
             }
             cboUserAgent.SelectedIndex = 0;                                                     // Nếu không có UA desktop mặc định thì chọn dòng đầu tiên trong file
