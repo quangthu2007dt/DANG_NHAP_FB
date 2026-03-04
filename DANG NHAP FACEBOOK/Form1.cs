@@ -28,13 +28,13 @@ namespace DANG_NHAP_FACEBOOK
         public Form1()
         {
             InitializeComponent();
-            AppPaths.EnsureCoreDirectoriesExist();                                            // Giai đoạn 1 tạo sẵn khung thư mục chuẩn để dần chuyển app sang data\ mà chưa cần updater
-            userAgentsFilePath = AppPaths.ResolveUserAgentsFilePath();                         // Tạm thời ưu tiên data\ nếu đã có, còn không thì vẫn đọc được file cũ cạnh exe
-            userAgentDangDungFilePath = AppPaths.ResolveUserAgentDangDungFilePath();           // File log User-Agent mới sẽ đi theo cấu trúc chuẩn trong data\
-            dsFilePath = AppPaths.ResolveDsFilePath();                                         // Tạm thời ưu tiên data\ nếu đã có, còn không thì vẫn đọc được ds.txt cũ cạnh exe
-            profileMauPath = AppPaths.ResolveProfileMauPath();                                 // Profile mẫu ưu tiên ở data\ nhưng vẫn nhìn được thư mục cũ trước khi làm migration
-            profileRanhPath = AppPaths.ResolveProfileRanhPath();                               // Profile rảnh cũng đi theo nguyên tắc tương thích tạm thời như profile mẫu
-            LoadDuLieuLenGridKhiMoApp();                                                       // Khi app vừa mở thì nạp lại các profile cũ lên grid để giữ đúng trạng thái hiện có                                                                                              // Dòng này là "chìa khóa" nè bạn
+            AppPaths.EnsureCoreDirectoriesExist();                                            // Tạo sẵn toàn bộ khung thư mục chuẩn trước khi app xử lý dữ liệu
+            userAgentsFilePath = AppPaths.UserAgentsFilePath;                                 // Danh sách User-Agent chính thức nằm trong data\
+            userAgentDangDungFilePath = AppPaths.UserAgentDangDungFilePath;                   // File log User-Agent đang dùng cũng đi theo data\
+            dsFilePath = AppPaths.DsFilePath;                                                 // ds.txt chính thức nằm trong data\
+            profileMauPath = AppPaths.ProfileMauPath;                                         // Profile mẫu chính thức nằm trong data\
+            profileRanhPath = AppPaths.ProfileRanhPath;                                       // Profile rảnh chính thức nằm trong data\
+            LoadDuLieuLenGridKhiMoApp();                                                      // Khi app vừa mở thì nạp lại các profile đã có trong data\profiles lên grid
             dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridView1.RowsAdded += (_, _) => CapNhatThongTinSoLuong();                    // Chạy sau cùng để lblDanhSach đọc đúng số dòng còn lại trong ds.txt
             dataGridView1.RowsRemoved += (_, _) => CapNhatThongTinSoLuong();                  // Chạy sau cùng để Tổng luôn bám đúng số dòng hiện còn trên grid
@@ -340,8 +340,8 @@ namespace DANG_NHAP_FACEBOOK
                 return true;
             }
 
-            string duongDanProfileCu = AppPaths.ResolveProfilePath(uidCu);
-            string duongDanProfileMoi = AppPaths.ResolveProfilePath(uidMoi);
+            string duongDanProfileCu = AppPaths.GetProfilePath(uidCu);
+            string duongDanProfileMoi = AppPaths.GetProfilePath(uidMoi);
 
             if (Directory.Exists(duongDanProfileMoi))
             {
@@ -804,7 +804,7 @@ namespace DANG_NHAP_FACEBOOK
                 return;
             }
 
-            string duongDanProfileTheoUid = AppPaths.ResolveProfilePath(uid);                  // Tạo đường dẫn profile theo UID, ưu tiên cấu trúc data\profiles nhưng vẫn nhìn được dữ liệu cũ
+            string duongDanProfileTheoUid = AppPaths.GetProfilePath(uid);                      // Tạo đường dẫn profile theo UID trong data\profiles
 
             if (string.Equals(duongDanProfileSuDung, duongDanProfileTheoUid, StringComparison.OrdinalIgnoreCase)) // Nếu profile hiện tại đã mang đúng tên UID thì không cần đổi tên
             {
@@ -877,7 +877,7 @@ namespace DANG_NHAP_FACEBOOK
                 return;                                                                        // Không thể mở profile nếu dòng chưa có UID
             }
 
-            string duongDanProfile = AppPaths.ResolveProfilePath(uid);                         // Tạo đường dẫn đầy đủ tới profile của dòng đang chọn theo cấu trúc mới hoặc dữ liệu cũ
+            string duongDanProfile = AppPaths.GetProfilePath(uid);                             // Tạo đường dẫn đầy đủ tới profile của dòng đang chọn trong data\profiles
             if (!Directory.Exists(duongDanProfile))
             {
                 MessageBox.Show($"Không tìm thấy profile {uid}.");
@@ -1538,7 +1538,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         //
         private bool XuLyProfileKhiXoaMotDong(string uid)
         {
-            string duongDanProfileTheoUid = AppPaths.ResolveProfilePath(uid);                  // Xác định đúng thư mục profile theo UID của dòng bị xóa theo cấu trúc đang có
+            string duongDanProfileTheoUid = AppPaths.GetProfilePath(uid);                      // Xác định đúng thư mục profile theo UID của dòng bị xóa trong data\profiles
             if (!Directory.Exists(duongDanProfileTheoUid))
             {
                 return true;                                                                   // Nếu không còn profile thì chỉ cần xóa dữ liệu grid và ds.txt
@@ -1567,7 +1567,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         //
         private bool XoaProfileTheoUid(string uid)
         {
-            string duongDanProfileTheoUid = AppPaths.ResolveProfilePath(uid);                  // Xác định thư mục profile cần xóa hẳn khỏi ổ đĩa theo cấu trúc đang có
+            string duongDanProfileTheoUid = AppPaths.GetProfilePath(uid);                      // Xác định thư mục profile cần xóa hẳn khỏi ổ đĩa trong data\profiles
             return ThuXoaThuMucProfile(duongDanProfileTheoUid, uid);                           // Xóa sạch profile của các dòng bị loại khỏi app sau khi đã đóng phiên Chrome tương ứng
         }
         //
@@ -1806,7 +1806,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
 
                     if (parts.Length != 2)
                     {
-                        continue;                                                               // Bỏ qua dòng lỗi để việc nạp dữ liệu cũ không bị dừng
+                        continue;                                                               // Bỏ qua dòng lỗi để việc nạp dữ liệu khi mở app không bị dừng
                     }
 
                     string uid = parts[0].Trim();                                              // Lấy UID từ phần tử đầu tiên của dòng hợp lệ
@@ -1824,7 +1824,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                 }
             }
 
-            string[] thuMucProfiles = AppPaths.EnumerateProfileDirectories().ToArray();       // Lấy profile theo cả cấu trúc data\profiles lẫn dữ liệu cũ cạnh exe để app chưa bị gãy trước migration
+            string[] thuMucProfiles = AppPaths.EnumerateProfileDirectories().ToArray();       // Lấy toàn bộ profile hiện có trong data\profiles
 
             foreach (string thuMucProfile in thuMucProfiles)                                   // Duyệt lần lượt từng thư mục để tìm các profile đã có
             {
