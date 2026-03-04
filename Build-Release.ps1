@@ -53,5 +53,5 @@ dotnet build $appProject -c $Configuration -o $releaseDirectory
 Compress-Archive -Path (Join-Path $releaseDirectory '*') -DestinationPath $packagePath -Force
 
 Write-Host "Build hoàn tất."
-Write-Host "Thu muc release : $releaseDirectory"
-Write-Host "Goi update zip  : $packagePath"
+Write-Host "Thư mục release : $releaseDirectory"
+Write-Host "Gói update zip  : $packagePath"
