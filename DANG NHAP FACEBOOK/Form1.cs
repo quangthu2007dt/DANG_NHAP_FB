@@ -27,6 +27,7 @@ namespace DANG_NHAP_FACEBOOK
         public Form1()
         {
             InitializeComponent();
+            GanVersionLenTieuDeForm();                                                        // Hiển thị version ngay trên thanh tiêu đề để dễ nhận biết bản đang chạy
             userAgentsFilePath = AppPaths.UserAgentsFilePath;                                 // Danh sách User-Agent chính thức nằm trong data\
             userAgentDangDungFilePath = AppPaths.UserAgentDangDungFilePath;                   // File log User-Agent đang dùng cũng đi theo data\
             dsFilePath = AppPaths.DsFilePath;                                                 // ds.txt chính thức nằm trong data\
@@ -50,6 +51,17 @@ namespace DANG_NHAP_FACEBOOK
 
             TaiDanhSachUserAgentLenCombobox();                                                 // Nạp danh sách User-Agent từ file txt lên combobox ngay khi app khởi động
             GanMenuUserAgentChoCombobox();                                                     // Gắn menu chuột phải để thêm và xóa User-Agent ngay trên app mà không phải sửa txt bằng tay
+        }
+
+        private void GanVersionLenTieuDeForm()
+        {
+            AppVersionInfo thongTinPhienBan = VersionService.DocThongTinPhienBanHienTai();    // Lấy version hiện tại từ metadata build để gắn lên tiêu đề form
+            if (string.IsNullOrWhiteSpace(thongTinPhienBan.Version))
+            {
+                return;                                                                        // Nếu thiếu version thì giữ nguyên tiêu đề cũ của form
+            }
+
+            Text = $"{Text} - v{thongTinPhienBan.Version}";                                    // Hiển thị phiên bản ngay trên thanh tiêu đề cho chuyên nghiệp và dễ kiểm tra
         }
 
         //
