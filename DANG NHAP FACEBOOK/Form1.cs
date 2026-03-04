@@ -600,6 +600,7 @@ namespace DANG_NHAP_FACEBOOK
         //
         private void ThemDongMoiLenGrid(string uid, string password)
         {
+            BoTickTatCaDong();                                                                 // Next đi tài khoản mới thì phải giải phóng toàn bộ dòng đang tick trước đó
             int rowIndex = dataGridView1.Rows.Add();                                          // Tạo một dòng mới và lấy ra vị trí của dòng vừa thêm
             DataGridViewRow row = dataGridView1.Rows[rowIndex];                               // Lấy đối tượng dòng để đổ dữ liệu vào các cột
 
@@ -682,6 +683,85 @@ namespace DANG_NHAP_FACEBOOK
         private void xóaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             XoaCacDongDaTick();                                                                // Menu chuột phải giờ chỉ còn một nhánh Xóa chung
+        }
+
+        private void tToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (row.IsNewRow)
+                {
+                    continue;
+                }
+
+                row.Cells["colChon"].Value = true;                                             // Chọn tất cả nghĩa là tick toàn bộ dòng trên grid
+            }
+
+            dataGridView1.ClearSelection();                                                    // Bỏ bôi đen vì checkbox mới là trạng thái chọn thật
+        }
+
+        private void cácDòngBôiĐenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<DataGridViewRow> dsDongBoiDen = LayDanhSachDongBoiDen();
+            if (dsDongBoiDen.Count == 0)
+            {
+                MessageBox.Show("Hãy bôi đen ít nhất 1 dòng để chuyển sang trạng thái chọn.");
+                return;
+            }
+
+            BoTickTatCaDong();                                                                 // Bôi đen chỉ là bước trung gian, khi áp dụng thì đưa hệ thống về đúng trạng thái tick thật
+            foreach (DataGridViewRow row in dsDongBoiDen)
+            {
+                row.Cells["colChon"].Value = true;
+            }
+
+            dataGridView1.ClearSelection();
+        }
+
+        private void bỏChọnTấtCảToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BoTickTatCaDong();                                                                 // Bỏ chọn tất cả là đưa mọi checkbox về false
+            dataGridView1.ClearSelection();
+        }
+
+        private void dòngToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CopyDuLieuTheoDongDaTick(TaoNoiDungDayDuCuaDong);
+        }
+
+        private void cácDòngBôiĐenToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            CopyDuLieuTheoDongDaTick(TaoNoiDungDayDuCuaDong);                                  // Menu copy này cũng bám theo các dòng đã tick để giữ đúng quy ước chọn thật
+        }
+
+        private void uIDToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            CopyDuLieuTheoDongDaTick(row => LayGiaTriCell(row, "colUID"));
+        }
+
+        private void tênToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            CopyDuLieuTheoDongDaTick(row => LayGiaTriCell(row, "colTen"));
+        }
+
+        private void passToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CopyDuLieuTheoDongDaTick(row => LayGiaTriCell(row, "colPass"));
+        }
+
+        private void emailToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            CopyDuLieuTheoDongDaTick(row => LayGiaTriCell(row, "colEmail"));
+        }
+
+        private void cookieToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CopyDuLieuTheoDongDaTick(row => LayGiaTriCell(row, "colCookie"));
+        }
+
+        private void ghiChúToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            CopyDuLieuTheoDongDaTick(row => LayGiaTriCell(row, "colGhiChu"));
         }
         // 
         //  HÀM TẠO PRORILE RẢNH NẾU CHƯA CÓ KHI NÚT CHỌN DC GỌI
@@ -1238,6 +1318,19 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
             row.Cells["colChon"].Value = !dangDuocTick;                                        // Đảo lại trạng thái tick khi người dùng click hoặc double click
             dataGridView1.ClearSelection();                                                    // Bỏ bôi đen để app chỉ coi checkbox là trạng thái chọn thật
         }
+
+        private void BoTickTatCaDong()
+        {
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (row.IsNewRow)
+                {
+                    continue;
+                }
+
+                row.Cells["colChon"].Value = false;                                            // Đưa toàn bộ checkbox về trạng thái không chọn để luồng chọn của app luôn nhất quán
+            }
+        }
         //
         //  HÀM LẤY DANH SÁCH DÒNG ĐÃ TICK
         //
@@ -1259,6 +1352,54 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
             }
 
             return ketQua;                                                                     // Trả lại toàn bộ danh sách dòng đã chọn thật theo cột Chọn
+        }
+
+        private List<DataGridViewRow> LayDanhSachDongBoiDen()
+        {
+            return dataGridView1.SelectedRows
+                .Cast<DataGridViewRow>()
+                .Where(row => !row.IsNewRow)
+                .OrderBy(row => row.Index)
+                .ToList();                                                                     // Bôi đen chỉ dùng như nguồn để menu Chọn những dòng bôi đen chuyển thành tick thật
+        }
+
+        private void CopyDuLieuTheoDongDaTick(Func<DataGridViewRow, string> cachLayNoiDung)
+        {
+            List<DataGridViewRow> dsDongDaTick = LayDanhSachDongDaTick();
+            if (dsDongDaTick.Count == 0)
+            {
+                MessageBox.Show("Vui lòng tick ít nhất 1 dòng để copy.");
+                return;
+            }
+
+            string noiDungCanCopy = string.Join(Environment.NewLine,
+                dsDongDaTick
+                    .Select(cachLayNoiDung)
+                    .Where(value => !string.IsNullOrWhiteSpace(value)));                       // Copy luôn theo các dòng đã tick, kể cả khi đang copy lẻ từng cột
+
+            if (string.IsNullOrWhiteSpace(noiDungCanCopy))
+            {
+                MessageBox.Show("Không có dữ liệu để copy.");
+                return;
+            }
+
+            Clipboard.SetText(noiDungCanCopy);
+        }
+
+        private string TaoNoiDungDayDuCuaDong(DataGridViewRow row)
+        {
+            return string.Join("|",
+                LayGiaTriCell(row, "colUID"),
+                LayGiaTriCell(row, "colPass"),
+                LayGiaTriCell(row, "colTen"),
+                LayGiaTriCell(row, "colEmail"),
+                LayGiaTriCell(row, "colCookie"),
+                LayGiaTriCell(row, "colGhiChu"));                                              // Copy cả dòng theo các trường chính đang cần quản lý
+        }
+
+        private string LayGiaTriCell(DataGridViewRow row, string tenCot)
+        {
+            return row.Cells[tenCot].Value?.ToString()?.Trim() ?? string.Empty;
         }
         //
         //  HÀM XÓA MỘT DÒNG ĐÃ TICK

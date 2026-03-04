@@ -242,16 +242,19 @@
             // 
             tToolStripMenuItem.Name = "tToolStripMenuItem";
             resources.ApplyResources(tToolStripMenuItem, "tToolStripMenuItem");
+            tToolStripMenuItem.Click += tToolStripMenuItem_Click;
             // 
             // cácDòngBôiĐenToolStripMenuItem
             // 
             cácDòngBôiĐenToolStripMenuItem.Name = "cácDòngBôiĐenToolStripMenuItem";
             resources.ApplyResources(cácDòngBôiĐenToolStripMenuItem, "cácDòngBôiĐenToolStripMenuItem");
+            cácDòngBôiĐenToolStripMenuItem.Click += cácDòngBôiĐenToolStripMenuItem_Click;
             // 
             // bỏChọnTấtCảToolStripMenuItem
             // 
             bỏChọnTấtCảToolStripMenuItem.Name = "bỏChọnTấtCảToolStripMenuItem";
             resources.ApplyResources(bỏChọnTấtCảToolStripMenuItem, "bỏChọnTấtCảToolStripMenuItem");
+            bỏChọnTấtCảToolStripMenuItem.Click += bỏChọnTấtCảToolStripMenuItem_Click;
             // 
             // copyToolStripMenuItem
             // 
@@ -263,41 +266,49 @@
             // 
             dòngToolStripMenuItem.Name = "dòngToolStripMenuItem";
             resources.ApplyResources(dòngToolStripMenuItem, "dòngToolStripMenuItem");
+            dòngToolStripMenuItem.Click += dòngToolStripMenuItem_Click;
             // 
             // cácDòngBôiĐenToolStripMenuItem1
             // 
             cácDòngBôiĐenToolStripMenuItem1.Name = "cácDòngBôiĐenToolStripMenuItem1";
             resources.ApplyResources(cácDòngBôiĐenToolStripMenuItem1, "cácDòngBôiĐenToolStripMenuItem1");
+            cácDòngBôiĐenToolStripMenuItem1.Click += cácDòngBôiĐenToolStripMenuItem1_Click;
             // 
             // uIDToolStripMenuItem1
             // 
             uIDToolStripMenuItem1.Name = "uIDToolStripMenuItem1";
             resources.ApplyResources(uIDToolStripMenuItem1, "uIDToolStripMenuItem1");
+            uIDToolStripMenuItem1.Click += uIDToolStripMenuItem1_Click;
             // 
             // tênToolStripMenuItem1
             // 
             tênToolStripMenuItem1.Name = "tênToolStripMenuItem1";
             resources.ApplyResources(tênToolStripMenuItem1, "tênToolStripMenuItem1");
+            tênToolStripMenuItem1.Click += tênToolStripMenuItem1_Click;
             // 
             // passToolStripMenuItem
             // 
             passToolStripMenuItem.Name = "passToolStripMenuItem";
             resources.ApplyResources(passToolStripMenuItem, "passToolStripMenuItem");
+            passToolStripMenuItem.Click += passToolStripMenuItem_Click;
             // 
             // emailToolStripMenuItem1
             // 
             emailToolStripMenuItem1.Name = "emailToolStripMenuItem1";
             resources.ApplyResources(emailToolStripMenuItem1, "emailToolStripMenuItem1");
+            emailToolStripMenuItem1.Click += emailToolStripMenuItem1_Click;
             // 
             // cookieToolStripMenuItem
             // 
             cookieToolStripMenuItem.Name = "cookieToolStripMenuItem";
             resources.ApplyResources(cookieToolStripMenuItem, "cookieToolStripMenuItem");
+            cookieToolStripMenuItem.Click += cookieToolStripMenuItem_Click;
             // 
             // ghiChúToolStripMenuItem1
             // 
             ghiChúToolStripMenuItem1.Name = "ghiChúToolStripMenuItem1";
             resources.ApplyResources(ghiChúToolStripMenuItem1, "ghiChúToolStripMenuItem1");
+            ghiChúToolStripMenuItem1.Click += ghiChúToolStripMenuItem1_Click;
             // 
             // chứcNăngToolStripMenuItem
             // 
