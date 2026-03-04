@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 
 namespace DANG_NHAP_FACEBOOK
@@ -28,7 +28,7 @@ namespace DANG_NHAP_FACEBOOK
         public Form1()
         {
             InitializeComponent();
-            userAgentsFilePath = Path.Combine(AppContext.BaseDirectory, "user_agents.txt");         // File txt l?u danh s?ch User-Agent ?? app c? th? n?p l?n combobox
+            userAgentsFilePath = Path.Combine(AppContext.BaseDirectory, "user_agents.txt");         // File txt lưu danh sách User-Agent để app nạp lên combobox
             userAgentDangDungFilePath = Path.Combine(AppContext.BaseDirectory, "ua_dang_dung.txt"); // File txt lưu lại URL và User-Agent đang dùng để sau này còn lần theo vết
             dsFilePath = Path.Combine(AppContext.BaseDirectory, "ds.txt");                    // Đường dẫn đầy đủ tới file ds.txt nằm cạnh file chạy app
             profileMauPath = Path.Combine(AppContext.BaseDirectory, "profile_mau");           // Đường dẫn đầy đủ tới thư mục profile mẫu
@@ -49,8 +49,8 @@ namespace DANG_NHAP_FACEBOOK
                 cboUrl.SelectedIndex = 0;                                                     // Mặc định chọn giao diện đầu tiên để khi bấm Mở dòng không bị thiếu URL
             }
 
-            DamBaoTonTaiUserAgentsTxt();                                                       // ??m b?o lu?n c? file user_agents.txt ?? kh?ng hardcode danh s?ch User-Agent tr?n UI
-            TaiDanhSachUserAgentLenCombobox();                                                 // N?p danh s?ch User-Agent t? file txt l?n combobox ngay khi app kh?i ??ng
+            DamBaoTonTaiUserAgentsTxt();                                                       // Đảm bảo luôn có file user_agents.txt để không hardcode danh sách User-Agent trên UI
+            TaiDanhSachUserAgentLenCombobox();                                                 // Nạp danh sách User-Agent từ file txt lên combobox ngay khi app khởi động
             GanMenuUserAgentChoCombobox();                                                     // Gắn menu chuột phải để thêm và xóa User-Agent ngay trên app mà không phải sửa txt bằng tay
         }
 
@@ -74,47 +74,47 @@ namespace DANG_NHAP_FACEBOOK
         {
             string[] danhSachMacDinh =
             [
-                facebookDesktopUserAgentMacDinh,                                               // Gi? s?n UA desktop ?ang test ?n cho facebook.com
-                safariIphoneUserAgentMacDinh                                                   // Th?m s?n m?t UA Safari iPhone ?? sau n?y c?n test giao di?n c?
+                facebookDesktopUserAgentMacDinh,                                               // Giữ sẵn UA desktop đang test ổn cho facebook.com
+                safariIphoneUserAgentMacDinh                                                   // Thêm sẵn một UA Safari iPhone để sau này còn test giao diện cũ
             ];
             if (!File.Exists(userAgentsFilePath))
             {
-                File.WriteAllLines(userAgentsFilePath, danhSachMacDinh, Encoding.UTF8);        // N?u ch?a c? file th? t?o m?i v? ghi s?n 2 UA m?c ??nh
+                File.WriteAllLines(userAgentsFilePath, danhSachMacDinh, Encoding.UTF8);        // Nếu chưa có file thì tạo mới và ghi sẵn 2 UA mặc định
                 return;
             }
             bool fileDangRong = File.ReadAllLines(userAgentsFilePath)
-                .All(line => string.IsNullOrWhiteSpace(line));                                 // Neu file dang co nhung khong chua UA nao thi coi nhu rong
+                .All(line => string.IsNullOrWhiteSpace(line));                                 // Nếu file đang có nhưng không chứa UA nào thì coi như rỗng
             if (fileDangRong)
             {
-                File.WriteAllLines(userAgentsFilePath, danhSachMacDinh, Encoding.UTF8);        // Ghi l?i danh s?ch m?c ??nh ?? combobox kh?ng b? tr?ng
+                File.WriteAllLines(userAgentsFilePath, danhSachMacDinh, Encoding.UTF8);        // Ghi lại danh sách mặc định để combobox không bị trống
             }
         }
         private void TaiDanhSachUserAgentLenCombobox()
         {
-            cboUserAgent.Items.Clear();                                                         // M?i l?n n?p l?i th? x?a danh s?ch c? ?? tr?nh b? tr?ng l?p
+            cboUserAgent.Items.Clear();                                                         // Mỗi lần nạp lại thì xóa danh sách cũ để tránh bị trùng lặp
             if (!File.Exists(userAgentsFilePath))
             {
-                return;                                                                         // Thi?u file th? d?ng, v? h?m ??m b?o s? t?o l?i tr??c ?? r?i
+                return;                                                                         // Thiếu file thì dừng, vì hàm đảm bảo sẽ tạo lại trước đó rồi
             }
             List<string> danhSachUserAgent = File.ReadAllLines(userAgentsFilePath)
                 .Select(line => line.Trim())
                 .Where(line => !string.IsNullOrWhiteSpace(line))
                 .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToList();                                                                      // Ch? l?y c?c d?ng UA c? gi? tr? v? lo?i b? tr?ng l?p
+                .ToList();                                                                      // Chỉ lấy các dòng UA có giá trị và loại bỏ trùng lặp
             foreach (string userAgent in danhSachUserAgent)
             {
-                cboUserAgent.Items.Add(userAgent);                                              // ?? t?ng User-Agent t? file txt l?n combobox ?? ng??i d?ng ch?n
+                cboUserAgent.Items.Add(userAgent);                                              // Đổ từng User-Agent từ file txt lên combobox để người dùng chọn
             }
             if (cboUserAgent.Items.Count == 0)
             {
-                return;                                                                         // Kh?ng c? UA n?o th? d?ng, tr?nh g?t SelectedItem khi combobox ?ang tr?ng
+                return;                                                                         // Không có UA nào thì dừng, tránh gán SelectedItem khi combobox đang trống
             }
             if (danhSachUserAgent.Contains(facebookDesktopUserAgentMacDinh, StringComparer.OrdinalIgnoreCase))
             {
                 cboUserAgent.SelectedItem = facebookDesktopUserAgentMacDinh;                   // Facebook th??ng m?c ??nh quay v? UA desktop ?ang test ?n n?y
                 return;
             }
-            cboUserAgent.SelectedIndex = 0;                                                     // N?u kh?ng c? UA desktop m?c ??nh th? ch?n d?ng ??u ti?n trong file
+            cboUserAgent.SelectedIndex = 0;                                                     // Nếu không có UA desktop mặc định thì chọn dòng đầu tiên trong file
         }
 
         private void GanMenuUserAgentChoCombobox()
@@ -507,13 +507,15 @@ namespace DANG_NHAP_FACEBOOK
 
         private string LayUserAgentFacebookThuongDangChon()
         {
-            string userAgentDangChon = cboUserAgent.SelectedItem?.ToString()?.Trim() ?? string.Empty; // ??c ??ng User-Agent ng??i d?ng ?ang ch?n tr?n combobox
-            if (!string.IsNullOrWhiteSpace(userAgentDangChon))
+            string userAgentDangChon = cboUserAgent.SelectedItem?.ToString()?.Trim() ?? string.Empty; // Lấy User-Agent đang chọn trên combobox để dùng cho facebook.com, nếu có
+            if (!string.IsNullOrWhiteSpace(userAgentDangChon))                                // Nếu có User-Agent nào đang chọn thì dùng luôn để test facebook.com
             {
-                return userAgentDangChon;                                                      // N?u combobox ?ang c? gi? tr? th? facebook.com s? d?ng ch?nh UA n?y
+                return userAgentDangChon;                                                     // Nếu có User-Agent nào đang chọn thì dùng luôn để test facebook.com
             }
-            return facebookDesktopUserAgentMacDinh;                                            // Fall back v? UA desktop m?c ??nh n?u combobox ch?a ch?n g?
-        }        private bool TryLayTaiKhoanMoiTuDs(out string uid, out string password)
+            return facebookDesktopUserAgentMacDinh;                                           // Nếu chưa có User-Agent nào được chọn thì dùng UA desktop mặc định để đảm bảo facebook.com luôn có UA hợp lệ để test
+        }
+
+        private bool TryLayTaiKhoanMoiTuDs(out string uid, out string password)              // Hàm này sẽ tìm và trả ra một dòng hợp lệ đầu tiên trong ds.txt mà UID chưa có trên grid, nếu không còn dòng nào hợp lệ thì trả về false
         {
             uid = string.Empty;                                                               // Giá trị UID trả ra ngoài nếu tìm thấy dòng hợp lệ
             password = string.Empty;                                                          // Giá trị mật khẩu trả ra ngoài nếu tìm thấy dòng hợp lệ
