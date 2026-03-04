@@ -362,36 +362,6 @@
   <data name="profileToolStripMenuItem.Text" xml:space="preserve">
     <value>Profile</value>
   </data>
-  <data name="uIDToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 22</value>
-  </data>
-  <data name="uIDToolStripMenuItem.Text" xml:space="preserve">
-    <value>UID</value>
-  </data>
-  <data name="tênToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 22</value>
-  </data>
-  <data name="tênToolStripMenuItem.Text" xml:space="preserve">
-    <value>Tên</value>
-  </data>
-  <data name="passwordToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 22</value>
-  </data>
-  <data name="passwordToolStripMenuItem.Text" xml:space="preserve">
-    <value>Password</value>
-  </data>
-  <data name="emailToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 22</value>
-  </data>
-  <data name="emailToolStripMenuItem.Text" xml:space="preserve">
-    <value>Email</value>
-  </data>
-  <data name="ghiChúToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 22</value>
-  </data>
-  <data name="ghiChúToolStripMenuItem.Text" xml:space="preserve">
-    <value>Ghi chú</value>
-  </data>
   <data name="cậpNhậtDữLiệuToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>175, 22</value>
   </data>
@@ -1063,36 +1033,6 @@
     <value>cậpNhậtDữLiệuToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;cậpNhậtDữLiệuToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;uIDToolStripMenuItem.Name" xml:space="preserve">
-    <value>uIDToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;uIDToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tênToolStripMenuItem.Name" xml:space="preserve">
-    <value>tênToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;tênToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;passwordToolStripMenuItem.Name" xml:space="preserve">
-    <value>passwordToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;passwordToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;emailToolStripMenuItem.Name" xml:space="preserve">
-    <value>emailToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;emailToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ghiChúToolStripMenuItem.Name" xml:space="preserve">
-    <value>ghiChúToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;ghiChúToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;mởChromeMẫuToolStripMenuItem.Name" xml:space="preserve">

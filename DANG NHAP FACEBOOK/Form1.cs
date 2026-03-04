@@ -52,7 +52,6 @@ namespace DANG_NHAP_FACEBOOK
             DamBaoTonTaiUserAgentsTxt();                                                       // ??m b?o lu?n c? file user_agents.txt ?? kh?ng hardcode danh s?ch User-Agent tr?n UI
             TaiDanhSachUserAgentLenCombobox();                                                 // N?p danh s?ch User-Agent t? file txt l?n combobox ngay khi app kh?i ??ng
             GanMenuUserAgentChoCombobox();                                                     // Gắn menu chuột phải để thêm và xóa User-Agent ngay trên app mà không phải sửa txt bằng tay
-            GanSuKienCapNhatDuLieu();                                                          // Gắn các mục con của menu Cập nhật dữ liệu vào cùng một luồng sửa dòng
         }
 
         //
@@ -242,18 +241,9 @@ namespace DANG_NHAP_FACEBOOK
             return formNhap.ShowDialog(this) == DialogResult.OK ? txtUserAgent.Text : null;    // Trả chuỗi đã nhập nếu người dùng bấm Lưu, ngược lại trả null
         }
 
-        private void GanSuKienCapNhatDuLieu()
+        private void cậpNhậtDữLiệuToolStripMenuItem_Click(object? sender, EventArgs e)
         {
-            uIDToolStripMenuItem.Click += capNhatDuLieuToolStripMenuItemChiTiet_Click;
-            tênToolStripMenuItem.Click += capNhatDuLieuToolStripMenuItemChiTiet_Click;
-            passwordToolStripMenuItem.Click += capNhatDuLieuToolStripMenuItemChiTiet_Click;
-            emailToolStripMenuItem.Click += capNhatDuLieuToolStripMenuItemChiTiet_Click;
-            ghiChúToolStripMenuItem.Click += capNhatDuLieuToolStripMenuItemChiTiet_Click;
-        }
-
-        private void capNhatDuLieuToolStripMenuItemChiTiet_Click(object? sender, EventArgs e)
-        {
-            CapNhatDuLieuDongDaTick();                                                         // Các mục con khác nhau nhưng hiện cùng mở một hộp sửa của đúng dòng đang tick
+            CapNhatDuLieuDongDaTick();                                                         // Menu Cập nhật dữ liệu giờ chỉ còn một dòng duy nhất và mở thẳng hộp sửa của dòng đang tick
         }
 
         private void CapNhatDuLieuDongDaTick()

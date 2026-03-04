@@ -74,11 +74,6 @@
             dọnDẹpProfileToolStripMenuItem = new ToolStripMenuItem();
             xóaCaToolStripMenuItem = new ToolStripMenuItem();
             cậpNhậtDữLiệuToolStripMenuItem = new ToolStripMenuItem();
-            uIDToolStripMenuItem = new ToolStripMenuItem();
-            tênToolStripMenuItem = new ToolStripMenuItem();
-            passwordToolStripMenuItem = new ToolStripMenuItem();
-            emailToolStripMenuItem = new ToolStripMenuItem();
-            ghiChúToolStripMenuItem = new ToolStripMenuItem();
             mởChromeMẫuToolStripMenuItem = new ToolStripMenuItem();
             nhậpDanhSáchToolStripMenuItem = new ToolStripMenuItem();
             kiểmTraTàiKhoảnToolStripMenuItem = new ToolStripMenuItem();
@@ -353,34 +348,9 @@
             // 
             // cậpNhậtDữLiệuToolStripMenuItem
             // 
-            cậpNhậtDữLiệuToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { uIDToolStripMenuItem, tênToolStripMenuItem, passwordToolStripMenuItem, emailToolStripMenuItem, ghiChúToolStripMenuItem });
             cậpNhậtDữLiệuToolStripMenuItem.Name = "cậpNhậtDữLiệuToolStripMenuItem";
             resources.ApplyResources(cậpNhậtDữLiệuToolStripMenuItem, "cậpNhậtDữLiệuToolStripMenuItem");
-            // 
-            // uIDToolStripMenuItem
-            // 
-            uIDToolStripMenuItem.Name = "uIDToolStripMenuItem";
-            resources.ApplyResources(uIDToolStripMenuItem, "uIDToolStripMenuItem");
-            // 
-            // tênToolStripMenuItem
-            // 
-            tênToolStripMenuItem.Name = "tênToolStripMenuItem";
-            resources.ApplyResources(tênToolStripMenuItem, "tênToolStripMenuItem");
-            // 
-            // passwordToolStripMenuItem
-            // 
-            passwordToolStripMenuItem.Name = "passwordToolStripMenuItem";
-            resources.ApplyResources(passwordToolStripMenuItem, "passwordToolStripMenuItem");
-            // 
-            // emailToolStripMenuItem
-            // 
-            emailToolStripMenuItem.Name = "emailToolStripMenuItem";
-            resources.ApplyResources(emailToolStripMenuItem, "emailToolStripMenuItem");
-            // 
-            // ghiChúToolStripMenuItem
-            // 
-            ghiChúToolStripMenuItem.Name = "ghiChúToolStripMenuItem";
-            resources.ApplyResources(ghiChúToolStripMenuItem, "ghiChúToolStripMenuItem");
+            cậpNhậtDữLiệuToolStripMenuItem.Click += cậpNhậtDữLiệuToolStripMenuItem_Click;
             // 
             // mởChromeMẫuToolStripMenuItem
             // 
@@ -584,11 +554,6 @@
         private ToolStripMenuItem xóaCaToolStripMenuItem;
         private ToolStripMenuItem xóaToolStripMenuItem;
         private ToolStripMenuItem cậpNhậtDữLiệuToolStripMenuItem;
-        private ToolStripMenuItem uIDToolStripMenuItem;
-        private ToolStripMenuItem tênToolStripMenuItem;
-        private ToolStripMenuItem passwordToolStripMenuItem;
-        private ToolStripMenuItem emailToolStripMenuItem;
-        private ToolStripMenuItem ghiChúToolStripMenuItem;
         private ToolStripMenuItem mởChromeMẫuToolStripMenuItem;
         private ToolStripMenuItem làmMớiToolStripMenuItem;
         private ToolTip ttMain;
