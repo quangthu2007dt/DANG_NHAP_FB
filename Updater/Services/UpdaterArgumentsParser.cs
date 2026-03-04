@@ -26,7 +26,8 @@ namespace Updater.Services
             }
 
             string appDirectory = LayGiaTriBatBuoc(thamSo, "--app-dir");
-            string manifestPath = LayGiaTriBatBuoc(thamSo, "--manifest");
+            string manifestPath = LayManifestPath(thamSo, appDirectory);
+            string? packagePath = LayPackagePathNeuCo(thamSo);
             int? processId = LayProcessIdNeuCo(thamSo);
 
             if (!Directory.Exists(appDirectory))
@@ -39,10 +40,16 @@ namespace Updater.Services
                 throw new InvalidOperationException($"Không tìm thấy manifest: {manifestPath}");
             }
 
+            if (!string.IsNullOrWhiteSpace(packagePath) && !File.Exists(packagePath))
+            {
+                throw new InvalidOperationException($"Không tìm thấy gói cập nhật: {packagePath}");
+            }
+
             return new UpdaterArguments
             {
                 AppDirectory = appDirectory,
                 ManifestPath = manifestPath,
+                PackagePath = packagePath,
                 ProcessId = processId
             };
         }
@@ -55,6 +62,26 @@ namespace Updater.Services
             }
 
             throw new InvalidOperationException($"Thiếu tham số bắt buộc: {key}");
+        }
+
+        private static string LayManifestPath(Dictionary<string, string> thamSo, string appDirectory)
+        {
+            if (thamSo.TryGetValue("--manifest", out string? value) && !string.IsNullOrWhiteSpace(value))
+            {
+                return value.Trim();
+            }
+
+            return Path.Combine(appDirectory, "manifest.json");                               // Nếu không truyền manifest thì updater tự lấy manifest nằm cạnh app để dễ test local
+        }
+
+        private static string? LayPackagePathNeuCo(Dictionary<string, string> thamSo)
+        {
+            if (thamSo.TryGetValue("--package", out string? value) && !string.IsNullOrWhiteSpace(value))
+            {
+                return value.Trim();
+            }
+
+            return null;
         }
 
         private static int? LayProcessIdNeuCo(Dictionary<string, string> thamSo)
