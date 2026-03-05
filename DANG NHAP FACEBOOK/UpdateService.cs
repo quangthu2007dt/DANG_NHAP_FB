@@ -10,6 +10,7 @@ namespace DANG_NHAP_FACEBOOK
     {
         private const string TenUpdaterExe = "Updater.exe";
         private const string TenFileDanhDauCapNhatThanhCong = "update_success_marker.json";
+        private const string TenFileDanhDauDangCapNhat = "update_pending_marker.json";
 
         internal sealed class UpdateCheckResult
         {
@@ -28,58 +29,20 @@ namespace DANG_NHAP_FACEBOOK
             public string UpdatedAt { get; set; } = string.Empty;
         }
 
+        private sealed class UpdatePendingMarker
+        {
+            public string TargetVersion { get; set; } = string.Empty;
+            public string RequestedAt { get; set; } = string.Empty;
+        }
+
         public static void HienThongBaoCapNhatThanhCongNeuCo()
         {
-            string markerPath = Path.Combine(AppPaths.TempDirectory, TenFileDanhDauCapNhatThanhCong);
-            if (!File.Exists(markerPath))
+            if (ThuDocVaThongBaoTuMarkerThanhCong())
             {
                 return;
             }
 
-            string versionDaCapNhat = string.Empty;
-
-            try
-            {
-                string json = File.ReadAllText(markerPath);
-                UpdateSuccessMarker? marker = JsonSerializer.Deserialize<UpdateSuccessMarker>(json, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-
-                if (marker != null && !string.IsNullOrWhiteSpace(marker.Version))
-                {
-                    versionDaCapNhat = marker.Version.Trim();
-                }
-            }
-            catch
-            {
-            }
-            finally
-            {
-                try
-                {
-                    File.Delete(markerPath);                                                  // Thong bao xong thi xoa marker de tranh lap lai o lan mo tiep theo
-                }
-                catch
-                {
-                }
-            }
-
-            if (string.IsNullOrWhiteSpace(versionDaCapNhat))
-            {
-                MessageBox.Show(
-                    "Da cap nhat thanh cong.",
-                    "Cap nhat thanh cong",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-                return;
-            }
-
-            MessageBox.Show(
-                $"Da cap nhat thanh cong len phien ban {versionDaCapNhat}.",
-                "Cap nhat thanh cong",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            _ = ThuDocVaThongBaoTuMarkerDangCapNhat();                                        // Fallback cho truong hop updater cu chua ghi marker thanh cong
         }
 
         public static bool ThuKichHoatCapNhatNeuCo()
@@ -162,6 +125,7 @@ namespace DANG_NHAP_FACEBOOK
             {
                 GhiNhatKyKhoiDongUpdater(ketQuaKiemTra, manifestPathChoUpdater, thamSo, null);
                 Process.Start(processStartInfo);
+                GhiDanhDauDangCapNhat(ketQuaKiemTra.VersionMoiNhat);
                 return true;
             }
             catch (Exception ex)
@@ -216,6 +180,158 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             return string.Join(" ", danhSachThamSo);
+        }
+
+        private static bool ThuDocVaThongBaoTuMarkerThanhCong()
+        {
+            string markerPath = Path.Combine(AppPaths.TempDirectory, TenFileDanhDauCapNhatThanhCong);
+            if (!File.Exists(markerPath))
+            {
+                return false;
+            }
+
+            string versionDaCapNhat = string.Empty;
+
+            try
+            {
+                string json = File.ReadAllText(markerPath);
+                UpdateSuccessMarker? marker = JsonSerializer.Deserialize<UpdateSuccessMarker>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                if (marker != null && !string.IsNullOrWhiteSpace(marker.Version))
+                {
+                    versionDaCapNhat = marker.Version.Trim();
+                }
+            }
+            catch
+            {
+            }
+            finally
+            {
+                try
+                {
+                    File.Delete(markerPath);
+                }
+                catch
+                {
+                }
+            }
+
+            HienThongBaoCapNhatThanhCong(versionDaCapNhat);
+            return true;
+        }
+
+        private static bool ThuDocVaThongBaoTuMarkerDangCapNhat()
+        {
+            string markerPath = Path.Combine(AppPaths.TempDirectory, TenFileDanhDauDangCapNhat);
+            if (!File.Exists(markerPath))
+            {
+                return false;
+            }
+
+            string versionMucTieu = string.Empty;
+
+            try
+            {
+                string json = File.ReadAllText(markerPath);
+                UpdatePendingMarker? marker = JsonSerializer.Deserialize<UpdatePendingMarker>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                if (marker != null && !string.IsNullOrWhiteSpace(marker.TargetVersion))
+                {
+                    versionMucTieu = marker.TargetVersion.Trim();
+                }
+            }
+            catch
+            {
+            }
+            finally
+            {
+                try
+                {
+                    File.Delete(markerPath);                                                  // Da xu ly marker pending o lan mo dau sau update thi xoa de tranh lap lai
+                }
+                catch
+                {
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(versionMucTieu))
+            {
+                return false;
+            }
+
+            AppVersionInfo thongTinHienTai = VersionService.DocThongTinPhienBanHienTai();
+            if (!LaVersionDaDatMucTieu(thongTinHienTai.Version, versionMucTieu))
+            {
+                return false;
+            }
+
+            HienThongBaoCapNhatThanhCong(thongTinHienTai.Version);
+            return true;
+        }
+
+        private static void GhiDanhDauDangCapNhat(string versionMoiNhat)
+        {
+            if (string.IsNullOrWhiteSpace(versionMoiNhat))
+            {
+                return;
+            }
+
+            try
+            {
+                Directory.CreateDirectory(AppPaths.TempDirectory);
+                string markerPath = Path.Combine(AppPaths.TempDirectory, TenFileDanhDauDangCapNhat);
+                var marker = new UpdatePendingMarker
+                {
+                    TargetVersion = versionMoiNhat.Trim(),
+                    RequestedAt = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                };
+
+                string json = JsonSerializer.Serialize(marker, new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
+
+                File.WriteAllText(markerPath, json, new UTF8Encoding(false));
+            }
+            catch
+            {
+            }
+        }
+
+        private static bool LaVersionDaDatMucTieu(string versionHienTai, string versionMucTieu)
+        {
+            if (TryParseReleaseVersion(versionHienTai, out Version? parsedHienTai) &&
+                TryParseReleaseVersion(versionMucTieu, out Version? parsedMucTieu))
+            {
+                return parsedHienTai >= parsedMucTieu;
+            }
+
+            return string.Equals(versionHienTai, versionMucTieu, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static void HienThongBaoCapNhatThanhCong(string versionDaCapNhat)
+        {
+            if (string.IsNullOrWhiteSpace(versionDaCapNhat))
+            {
+                MessageBox.Show(
+                    "Da cap nhat thanh cong.",
+                    "Cap nhat thanh cong",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
+
+            MessageBox.Show(
+                $"Da cap nhat thanh cong len phien ban {versionDaCapNhat}.",
+                "Cap nhat thanh cong",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
         }
 
         private static string ChuanHoaDuongDanThamSo(string path, bool boDauGachCuoi = false)

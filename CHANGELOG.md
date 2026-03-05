@@ -2,6 +2,18 @@
 
 Tat ca thay doi quan trong cua du an duoc ghi tai day.
 
+## [V2.05] - 2026-03-06
+
+### Changed
+
+- Bo sung marker `update_pending_marker.json` duoc ghi truoc khi app giao updater.
+- Lan mo dau sau update: app fallback doc marker pending de hien thong bao thanh cong ngay ca khi updater cu khong ghi marker success.
+- Giu hanh vi xoa marker sau khi xu ly de thong bao chi hien 1 lan.
+
+### Artifact
+
+- `release/stable/DANG_NHAP_FACEBOOK_V2_05.zip`
+
 ## [V2.04] - 2026-03-06
 
 ### Changed
