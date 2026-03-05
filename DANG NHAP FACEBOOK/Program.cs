@@ -11,6 +11,7 @@ namespace DANG_NHAP_FACEBOOK
             ApplicationConfiguration.Initialize();
             VersionService.KiemTraThongTinPhienBan();
             ManifestService.KiemTraManifestCucBo();
+            UpdateService.HienThongBaoCapNhatThanhCongNeuCo();                               // Lan mo dau sau update se thong bao da len ban moi, sau do marker tu xoa
 
             if (UpdateService.ThuKichHoatCapNhatNeuCo())
             {

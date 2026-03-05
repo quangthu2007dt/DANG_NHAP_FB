@@ -2,6 +2,18 @@
 
 Tat ca thay doi quan trong cua du an duoc ghi tai day.
 
+## [V2.04] - 2026-03-06
+
+### Changed
+
+- Updater ghi marker `update_success_marker.json` sau khi thay file thanh cong.
+- App doc marker o lan mo dau sau update va hien thong bao: da cap nhat thanh cong len phien ban moi.
+- Marker tu dong duoc xoa sau khi thong bao de khong lap lai.
+
+### Artifact
+
+- `release/stable/DANG_NHAP_FACEBOOK_V2_04.zip`
+
 ## [V2.03] - 2026-03-05
 
 ### Changed

@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json;
 using Updater.Services;
 
 namespace Updater
@@ -15,6 +16,7 @@ namespace Updater
                 string packagePath = PackageDownloadService.LayHoacTaiGoiCapNhat(thamSo, manifest);
                 string sourceDirectory = PackageDownloadService.GiaiNenGoiCapNhat(thamSo.AppDirectory, packagePath, manifest.LatestVersion);
                 FileReplaceService.ThayTheFileChuongTrinh(thamSo.AppDirectory, sourceDirectory);
+                GhiDanhDauCapNhatThanhCong(thamSo.AppDirectory, manifest.LatestVersion);
 
                 Console.WriteLine($"App       : {manifest.AppName}");
                 Console.WriteLine($"Channel   : {manifest.Channel}");
@@ -49,6 +51,32 @@ namespace Updater
                 noiDung.AppendLine();
 
                 File.AppendAllText(duongDanNhatKy, noiDung.ToString(), new UTF8Encoding(false));
+            }
+            catch
+            {
+            }
+        }
+
+        private static void GhiDanhDauCapNhatThanhCong(string appDirectory, string version)
+        {
+            try
+            {
+                string tempDirectory = Path.Combine(appDirectory, "temp");
+                Directory.CreateDirectory(tempDirectory);
+
+                string markerPath = Path.Combine(tempDirectory, "update_success_marker.json");
+                var marker = new
+                {
+                    Version = version,
+                    UpdatedAt = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                };
+
+                string json = JsonSerializer.Serialize(marker, new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
+
+                File.WriteAllText(markerPath, json, new UTF8Encoding(false));
             }
             catch
             {

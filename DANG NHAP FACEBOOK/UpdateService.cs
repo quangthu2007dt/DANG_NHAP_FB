@@ -9,6 +9,7 @@ namespace DANG_NHAP_FACEBOOK
     internal static class UpdateService
     {
         private const string TenUpdaterExe = "Updater.exe";
+        private const string TenFileDanhDauCapNhatThanhCong = "update_success_marker.json";
 
         internal sealed class UpdateCheckResult
         {
@@ -19,6 +20,66 @@ namespace DANG_NHAP_FACEBOOK
             public string NguonManifest { get; set; } = "Local";
             public string? PackagePath { get; set; }
             public AppReleaseManifest Manifest { get; set; } = new();
+        }
+
+        private sealed class UpdateSuccessMarker
+        {
+            public string Version { get; set; } = string.Empty;
+            public string UpdatedAt { get; set; } = string.Empty;
+        }
+
+        public static void HienThongBaoCapNhatThanhCongNeuCo()
+        {
+            string markerPath = Path.Combine(AppPaths.TempDirectory, TenFileDanhDauCapNhatThanhCong);
+            if (!File.Exists(markerPath))
+            {
+                return;
+            }
+
+            string versionDaCapNhat = string.Empty;
+
+            try
+            {
+                string json = File.ReadAllText(markerPath);
+                UpdateSuccessMarker? marker = JsonSerializer.Deserialize<UpdateSuccessMarker>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                if (marker != null && !string.IsNullOrWhiteSpace(marker.Version))
+                {
+                    versionDaCapNhat = marker.Version.Trim();
+                }
+            }
+            catch
+            {
+            }
+            finally
+            {
+                try
+                {
+                    File.Delete(markerPath);                                                  // Thong bao xong thi xoa marker de tranh lap lai o lan mo tiep theo
+                }
+                catch
+                {
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(versionDaCapNhat))
+            {
+                MessageBox.Show(
+                    "Da cap nhat thanh cong.",
+                    "Cap nhat thanh cong",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
+
+            MessageBox.Show(
+                $"Da cap nhat thanh cong len phien ban {versionDaCapNhat}.",
+                "Cap nhat thanh cong",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
         }
 
         public static bool ThuKichHoatCapNhatNeuCo()
