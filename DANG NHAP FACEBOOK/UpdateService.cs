@@ -323,7 +323,9 @@ namespace DANG_NHAP_FACEBOOK
                     "Da cap nhat thanh cong.",
                     "Cap nhat thanh cong",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1,
+                    MessageBoxOptions.DefaultDesktopOnly);
                 return;
             }
 
@@ -331,7 +333,9 @@ namespace DANG_NHAP_FACEBOOK
                 $"Da cap nhat thanh cong len phien ban {versionDaCapNhat}.",
                 "Cap nhat thanh cong",
                 MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+                MessageBoxIcon.Information,
+                MessageBoxDefaultButton.Button1,
+                MessageBoxOptions.DefaultDesktopOnly);
         }
 
         private static string ChuanHoaDuongDanThamSo(string path, bool boDauGachCuoi = false)

@@ -2,6 +2,17 @@
 
 Tat ca thay doi quan trong cua du an duoc ghi tai day.
 
+## [V2.06] - 2026-03-06
+
+### Changed
+
+- Popup "Cap nhat thanh cong" duoc hien thi voi `MessageBoxOptions.DefaultDesktopOnly` de tranh bi chim sau cua so khac.
+- Giu nguyen co che marker pending/success cua V2.05.
+
+### Artifact
+
+- `release/stable/DANG_NHAP_FACEBOOK_V2_06.zip`
+
 ## [V2.05] - 2026-03-06
 
 ### Changed
