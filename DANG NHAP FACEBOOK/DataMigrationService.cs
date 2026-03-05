@@ -12,22 +12,26 @@ namespace DANG_NHAP_FACEBOOK
 
         public static void KhoiTaoCauTrucDuLieu()
         {
-            AppPaths.EnsureCoreDirectoriesExist();                                            // Tạo sẵn toàn bộ khung thư mục chuẩn trước khi app chạy
-            Directory.CreateDirectory(AppPaths.ProfileMauPath);                               // Luôn tạo sẵn profile_mau để máy mới có thể mở Chrome mẫu cấu hình ngay
+            AppPaths.EnsureCoreDirectoriesExist();
+            Directory.CreateDirectory(AppPaths.ProfileMauPath);
+            Directory.CreateDirectory(AppPaths.SessionsRootPath);
 
-            DamBaoTapTinRongTonTai(AppPaths.DsFilePath);                                      // ds.txt phải luôn có để các chức năng đọc danh sách không bị lỗi file thiếu
-            DamBaoTapTinRongTonTai(AppPaths.UserAgentDangDungFilePath);                       // Tạo sẵn file lưu UA đang dùng để các lần ghi log sau không bị vấp đường dẫn
-            DamBaoDanhSachUserAgentMacDinh();                                                 // Nếu user_agents.txt chưa có hoặc đang rỗng thì nạp sẵn các UA mặc định
+            DiChuyenProfilesCuSangLegacyNeuCan();
+            DamBaoSessionRegistryTonTai();
+
+            DamBaoTapTinRongTonTai(AppPaths.DsFilePath);
+            DamBaoTapTinRongTonTai(AppPaths.UserAgentDangDungFilePath);
+            DamBaoDanhSachUserAgentMacDinh();
         }
 
         private static void DamBaoTapTinRongTonTai(string duongDanFile)
         {
             if (File.Exists(duongDanFile))
             {
-                return;                                                                       // File đã có sẵn thì giữ nguyên dữ liệu hiện tại
+                return;
             }
 
-            File.WriteAllText(duongDanFile, string.Empty, Encoding.UTF8);                     // Máy mới chưa có file thì tạo rỗng theo chuẩn UTF-8
+            File.WriteAllText(duongDanFile, string.Empty, Encoding.UTF8);
         }
 
         private static void DamBaoDanhSachUserAgentMacDinh()
@@ -35,16 +39,64 @@ namespace DANG_NHAP_FACEBOOK
             if (!File.Exists(AppPaths.UserAgentsFilePath))
             {
                 File.WriteAllLines(AppPaths.UserAgentsFilePath, UserAgentsMacDinh, Encoding.UTF8);
-                return;                                                                       // Chưa có file thì tạo mới luôn với danh sách mặc định
+                return;
             }
 
             bool fileDangRong = File.ReadAllLines(AppPaths.UserAgentsFilePath)
-                .All(line => string.IsNullOrWhiteSpace(line));                                // Chỉ coi là cần khởi tạo lại khi file không còn UA hợp lệ nào
+                .All(line => string.IsNullOrWhiteSpace(line));
 
             if (fileDangRong)
             {
                 File.WriteAllLines(AppPaths.UserAgentsFilePath, UserAgentsMacDinh, Encoding.UTF8);
             }
+        }
+
+        private static void DamBaoSessionRegistryTonTai()
+        {
+            if (File.Exists(AppPaths.SessionRegistryFilePath))
+            {
+                return;
+            }
+
+            File.WriteAllText(AppPaths.SessionRegistryFilePath, "[]", Encoding.UTF8);
+        }
+
+        private static void DiChuyenProfilesCuSangLegacyNeuCan()
+        {
+            if (!Directory.Exists(AppPaths.ProfilesRootPath))
+            {
+                return;
+            }
+
+            bool coDuLieuTrongProfilesCu =
+                Directory.GetDirectories(AppPaths.ProfilesRootPath).Length > 0 ||
+                Directory.GetFiles(AppPaths.ProfilesRootPath).Length > 0;
+
+            if (!coDuLieuTrongProfilesCu)
+            {
+                try
+                {
+                    Directory.Delete(AppPaths.ProfilesRootPath, true);
+                }
+                catch
+                {
+                }
+
+                Directory.CreateDirectory(AppPaths.ProfilesRootPath);
+                return;
+            }
+
+            string tenBackup = $"_legacy_profiles_backup_{DateTime.Now:yyyyMMdd_HHmmss}";
+            string duongDanBackup = Path.Combine(AppPaths.DataDirectory, tenBackup);
+            int suffix = 1;
+
+            while (Directory.Exists(duongDanBackup))
+            {
+                duongDanBackup = Path.Combine(AppPaths.DataDirectory, $"{tenBackup}_{suffix++}");
+            }
+
+            Directory.Move(AppPaths.ProfilesRootPath, duongDanBackup);
+            Directory.CreateDirectory(AppPaths.ProfilesRootPath);
         }
     }
 }
