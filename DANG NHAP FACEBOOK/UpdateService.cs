@@ -30,7 +30,10 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             DialogResult ketQua = MessageBox.Show(
-                $"Đã có bản mới {ketQuaKiemTra.VersionMoiNhat}. Bạn có muốn cập nhật ngay không?",
+                $"Phiên bản hiện tại: {ketQuaKiemTra.VersionHienTai}{Environment.NewLine}" +
+                $"Phiên bản mới nhất: {ketQuaKiemTra.VersionMoiNhat}{Environment.NewLine}" +
+                $"Nguồn manifest: {ketQuaKiemTra.NguonManifest}{Environment.NewLine}{Environment.NewLine}" +
+                "Đã có bản mới. Bạn có muốn cập nhật ngay không?",
                 "Kiểm tra cập nhật",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
@@ -40,7 +43,18 @@ namespace DANG_NHAP_FACEBOOK
                 return false;
             }
 
-            return ThuKhoiDongUpdater(ketQuaKiemTra);
+            bool daKhoiDongUpdater = ThuKhoiDongUpdater(ketQuaKiemTra);
+            if (!daKhoiDongUpdater)
+            {
+                MessageBox.Show(
+                    "Không thể khởi động updater để cập nhật." + Environment.NewLine +
+                    "Vui lòng kiểm tra logs/update_launch.log và logs/updater_error.log.",
+                    "Cập nhật thất bại",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
+
+            return daKhoiDongUpdater;
         }
 
         public static UpdateCheckResult KiemTraCapNhat()

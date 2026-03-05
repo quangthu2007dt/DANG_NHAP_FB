@@ -2,6 +2,17 @@
 
 Tat ca thay doi quan trong cua du an duoc ghi tai day.
 
+## [V2.03] - 2026-03-05
+
+### Changed
+
+- Bo sung hop thoai startup update hien thi ro: version hien tai, version moi nhat, nguon manifest.
+- Neu khoi dong updater that bai, app hien thong bao va huong dan kiem tra log thay vi im lang.
+
+### Artifact
+
+- `release/stable/DANG_NHAP_FACEBOOK_V2_03.zip`
+
 ## [V2.002] - 2026-03-05
 
 ### Changed

@@ -1,9 +1,9 @@
 {
   "appName": "DANG NHAP FACEBOOK V2",
   "channel": "stable",
-  "latestVersion": "V2.002",
+  "latestVersion": "V2.03",
   "releaseDate": "2026-03-05",
-  "packageFileName": "DANG_NHAP_FACEBOOK_V2_002.zip",
-  "packageUrl": "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/v2/session-runtime/release/stable/DANG_NHAP_FACEBOOK_V2_002.zip",
-  "notes": "Phat hanh V2.002, sua updater argument/path, sua so sanh version va on dinh cap nhat portable."
+  "packageFileName": "DANG_NHAP_FACEBOOK_V2_03.zip",
+  "packageUrl": "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/v2/session-runtime/release/stable/DANG_NHAP_FACEBOOK_V2_03.zip",
+  "notes": "Phat hanh V2.03, bo sung hop thoai startup update ro rang hon va tiep tuc kiem thu co che auto-update clean."
 }
