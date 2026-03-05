@@ -22,7 +22,7 @@ namespace DANG_NHAP_FACEBOOK
 
     internal static class ManifestService
     {
-        private const string RemoteManifestUrl = "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/main/release/stable/manifest.json";
+        private const string RemoteManifestUrl = "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/v2/session-runtime/release/stable/manifest.json";
 
         public static string ManifestFilePath => Path.Combine(AppPaths.BaseDirectory, "manifest.json");
 
