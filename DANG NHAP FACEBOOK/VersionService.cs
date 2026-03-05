@@ -1,12 +1,11 @@
-using System.Reflection;
 using System.Text.Json;
 
 namespace DANG_NHAP_FACEBOOK
 {
     internal sealed class AppVersionInfo
     {
-        public string AppName { get; set; } = "DANG NHAP FACEBOOK";
-        public string Version { get; set; } = "1.0.0";
+        public string AppName { get; set; } = "DANG NHAP FACEBOOK V2";
+        public string Version { get; set; } = "V2";
         public string ReleaseDate { get; set; } = string.Empty;
         public string Channel { get; set; } = "stable";
     }
@@ -39,12 +38,10 @@ namespace DANG_NHAP_FACEBOOK
             {
             }
 
-            Version? assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;     // Fallback an toàn khi version.json bị thiếu hoặc lỗi
-
             return new AppVersionInfo
             {
-                AppName = "DANG NHAP FACEBOOK",
-                Version = assemblyVersion?.ToString(3) ?? "1.0.0",
+                AppName = "DANG NHAP FACEBOOK V2",
+                Version = "V2",
                 ReleaseDate = DateTime.Today.ToString("yyyy-MM-dd"),
                 Channel = "stable"
             };

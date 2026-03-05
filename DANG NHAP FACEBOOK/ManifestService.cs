@@ -4,9 +4,9 @@ namespace DANG_NHAP_FACEBOOK
 {
     internal sealed class AppReleaseManifest
     {
-        public string AppName { get; set; } = "DANG NHAP FACEBOOK";
+        public string AppName { get; set; } = "DANG NHAP FACEBOOK V2";
         public string Channel { get; set; } = "stable";
-        public string LatestVersion { get; set; } = "1.0.0";
+        public string LatestVersion { get; set; } = "V2";
         public string ReleaseDate { get; set; } = string.Empty;
         public string PackageFileName { get; set; } = string.Empty;
         public string PackageUrl { get; set; } = string.Empty;
