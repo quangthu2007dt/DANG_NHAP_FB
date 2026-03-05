@@ -2,6 +2,17 @@
 
 Tat ca thay doi quan trong cua du an duoc ghi tai day.
 
+## [V2.08] - 2026-03-06
+
+### Changed
+
+- Ban test phat hanh de xac nhan luong `V2.07 -> V2.08` co tu dong mo lai app sau cap nhat.
+- Giu nguyen logic auto-restart va thong bao thanh cong cua V2.07.
+
+### Artifact
+
+- `release/stable/DANG_NHAP_FACEBOOK_V2_08.zip`
+
 ## [V2.07] - 2026-03-06
 
 ### Changed
