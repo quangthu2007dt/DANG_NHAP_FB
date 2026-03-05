@@ -53,6 +53,7 @@ namespace DANG_NHAP_FACEBOOK
             TaiDanhSachUserAgentLenCombobox();                                                 // Nạp danh sách User-Agent từ file txt lên combobox ngay khi app khởi động
             GanMenuUserAgentChoCombobox();                                                     // Gắn menu chuột phải để thêm và xóa User-Agent ngay trên app mà không phải sửa txt bằng tay
             CapNhatTrangThai("Sẵn sàng.", Color.RoyalBlue);                                    // Sau khi khởi tạo xong thì đưa app về trạng thái chờ thao tác
+            tssTime.Text = DateTime.Now.ToString("HH:mm:ss    dd/MM/yyyy");                                                                                  
         }
 
         private void GanVersionLenTieuDeForm()
@@ -1927,6 +1928,11 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                 CapNhatTrangThai("Điền UID/Password thất bại: không kết nối được phiên Chrome.", Color.Firebrick);
                 MessageBox.Show("Không thể kết nối lại phiên Chrome đang mở của dòng này.");
             }
+        }       
+        // HÀM SỰ KIỆN HIỂN THỊ TIMES
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            tssTime.Text = DateTime.Now.ToString("HH:mm:ss    dd/MM/yyyy");
         }
     }
 }

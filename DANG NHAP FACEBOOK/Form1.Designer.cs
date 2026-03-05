@@ -97,6 +97,7 @@
             ttMain = new ToolTip(components);
             btnXoa = new Button();
             lblDanhSach = new Label();
+            timer1 = new System.Windows.Forms.Timer(components);
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             cmsGirdRightClick.SuspendLayout();
             statusStrip1.SuspendLayout();
@@ -507,6 +508,12 @@
             lblDanhSach.Name = "lblDanhSach";
             ttMain.SetToolTip(lblDanhSach, resources.GetString("lblDanhSach.ToolTip"));
             // 
+            // timer1
+            // 
+            timer1.Enabled = true;
+            timer1.Interval = 1000;
+            timer1.Tick += timer1_Tick;
+            // 
             // Form1
             // 
             resources.ApplyResources(this, "$this");
@@ -600,5 +607,6 @@
         private DataGridViewTextBoxColumn colCookie;
         private Button btnXoa;
         private Label lblDanhSach;
+        private System.Windows.Forms.Timer timer1;
     }
 }

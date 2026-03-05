@@ -37,7 +37,7 @@
     </None>
   </ItemGroup>
 
-  <Target Name="BuildAndCopyUpdater" AfterTargets="Build">
+  <Target Name="BuildAndCopyUpdater" AfterTargets="Build" Condition="'$(SkipBuildAndCopyUpdater)' != 'true'">
     <MSBuild Projects="..\Updater\Updater.csproj" Targets="Build" Properties="Configuration=$(Configuration)" />
 
     <ItemGroup>

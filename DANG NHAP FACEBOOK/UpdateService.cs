@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Text;
 using System.Text.Json;
 
@@ -96,13 +98,18 @@ namespace DANG_NHAP_FACEBOOK
 
         private static bool CoBanMoiHon(string versionHienTai, string versionMoi)
         {
-            if (Version.TryParse(versionHienTai, out Version? parsedHienTai) &&
-                Version.TryParse(versionMoi, out Version? parsedMoi))
+            if (string.Equals(versionHienTai, versionMoi, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            if (TryParseReleaseVersion(versionHienTai, out Version? parsedHienTai) &&
+                TryParseReleaseVersion(versionMoi, out Version? parsedMoi))
             {
                 return parsedMoi > parsedHienTai;
             }
 
-            return !string.Equals(versionHienTai, versionMoi, StringComparison.OrdinalIgnoreCase);
+            return false;                                                                     // Khong doan "khac nhau la moi hon" de tranh goi updater sai huong (vd: V2.001 vs V2)
         }
 
         private static string? LayPackagePathNeuCo(AppReleaseManifest manifest)
@@ -118,19 +125,84 @@ namespace DANG_NHAP_FACEBOOK
 
         private static string TaoThamSoGoiUpdater(string appDirectory, string manifestPath, string? packagePath)
         {
+            string appDirDaChuanHoa = ChuanHoaDuongDanThamSo(appDirectory, boDauGachCuoi: true);
+            string manifestDaChuanHoa = ChuanHoaDuongDanThamSo(manifestPath);
+
             List<string> danhSachThamSo =
             [
-                $"--app-dir \"{appDirectory}\"",
-                $"--manifest \"{manifestPath}\"",
+                $"--app-dir \"{appDirDaChuanHoa}\"",
+                $"--manifest \"{manifestDaChuanHoa}\"",
                 $"--pid {Environment.ProcessId}"
             ];
 
             if (!string.IsNullOrWhiteSpace(packagePath))
             {
-                danhSachThamSo.Add($"--package \"{packagePath}\"");
+                danhSachThamSo.Add($"--package \"{ChuanHoaDuongDanThamSo(packagePath)}\"");
             }
 
             return string.Join(" ", danhSachThamSo);
+        }
+
+        private static string ChuanHoaDuongDanThamSo(string path, bool boDauGachCuoi = false)
+        {
+            string daChuanHoa = Path.GetFullPath(path).Trim();
+            if (boDauGachCuoi)
+            {
+                daChuanHoa = daChuanHoa.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            }
+
+            return daChuanHoa;
+        }
+
+        private static bool TryParseReleaseVersion(string value, out Version? version)
+        {
+            version = null;
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return false;
+            }
+
+            string daCat = value.Trim();
+            if (daCat.StartsWith("v", StringComparison.OrdinalIgnoreCase))
+            {
+                daCat = daCat[1..];
+            }
+
+            if (Version.TryParse(daCat, out Version? parsed))
+            {
+                version = parsed;
+                return true;
+            }
+
+            MatchCollection matches = Regex.Matches(daCat, @"\d+");
+            if (matches.Count == 0)
+            {
+                return false;
+            }
+
+            List<int> parts = new(matches.Count);
+            foreach (Match item in matches)
+            {
+                if (int.TryParse(item.Value, NumberStyles.None, CultureInfo.InvariantCulture, out int so))
+                {
+                    parts.Add(so);
+                }
+            }
+
+            if (parts.Count == 0)
+            {
+                return false;
+            }
+
+            version = parts.Count switch
+            {
+                1 => new Version(parts[0], 0),
+                2 => new Version(parts[0], parts[1]),
+                3 => new Version(parts[0], parts[1], parts[2]),
+                _ => new Version(parts[0], parts[1], parts[2], parts[3])
+            };
+
+            return true;
         }
 
         private static string TaoManifestTamChoUpdater(UpdateCheckResult ketQuaKiemTra)

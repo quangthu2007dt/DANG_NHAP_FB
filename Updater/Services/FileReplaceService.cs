@@ -1,3 +1,5 @@
+﻿using System.Diagnostics;
+
 namespace Updater.Services
 {
     internal static class FileReplaceService
@@ -19,6 +21,8 @@ namespace Updater.Services
             "Updater.pdb"
         };
 
+        private static readonly HashSet<string> TepDangDuocUpdaterNap = LayDanhSachTepDangNap();
+
         public static void ThayTheFileChuongTrinh(string appDirectory, string sourceDirectory)
         {
             foreach (string directory in Directory.GetDirectories(sourceDirectory, "*", SearchOption.AllDirectories))
@@ -26,11 +30,11 @@ namespace Updater.Services
                 string duongDanTuongDoi = Path.GetRelativePath(sourceDirectory, directory);
                 if (CanBoQua(duongDanTuongDoi))
                 {
-                    continue;                                                                 // Không đụng vào data, logs, temp, packages trong bất kỳ gói update nào
+                    continue;
                 }
 
                 string duongDanDich = Path.Combine(appDirectory, duongDanTuongDoi);
-                Directory.CreateDirectory(duongDanDich);                                      // Tạo sẵn cây thư mục đích trước khi copy file chương trình
+                Directory.CreateDirectory(duongDanDich);
             }
 
             foreach (string filePath in Directory.GetFiles(sourceDirectory, "*", SearchOption.AllDirectories))
@@ -44,7 +48,13 @@ namespace Updater.Services
                 string tenFile = Path.GetFileName(filePath);
                 if (TepUpdaterDangChayBoQua.Contains(tenFile))
                 {
-                    continue;                                                                 // Updater đang chạy thì không tự ghi đè chính nó ở nhịp đầu này
+                    continue;
+                }
+
+                // Portable updater may load runtime dlls in app directory, these files are locked.
+                if (TepDangDuocUpdaterNap.Contains(tenFile))
+                {
+                    continue;
                 }
 
                 string duongDanDich = Path.Combine(appDirectory, duongDanTuongDoi);
@@ -54,7 +64,7 @@ namespace Updater.Services
                     Directory.CreateDirectory(thuMucDich);
                 }
 
-                File.Copy(filePath, duongDanDich, true);                                      // Ghi đè file chương trình bằng bản mới trong package
+                File.Copy(filePath, duongDanDich, true);
             }
         }
 
@@ -70,7 +80,32 @@ namespace Updater.Services
                 return false;
             }
 
-            return ThuMucBoQua.Contains(segments[0]);                                         // Chỉ cần segment đầu nằm trong nhóm bảo vệ là updater bỏ qua toàn bộ nhánh đó
+            return ThuMucBoQua.Contains(segments[0]);
+        }
+
+        private static HashSet<string> LayDanhSachTepDangNap()
+        {
+            try
+            {
+                using Process process = Process.GetCurrentProcess();
+                var ketQua = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+                foreach (ProcessModule? module in process.Modules)
+                {
+                    if (module == null || string.IsNullOrWhiteSpace(module.FileName))
+                    {
+                        continue;
+                    }
+
+                    ketQua.Add(Path.GetFileName(module.FileName));
+                }
+
+                return ketQua;
+            }
+            catch
+            {
+                return new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            }
         }
     }
 }
