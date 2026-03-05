@@ -1,9 +1,9 @@
 {
   "appName": "DANG NHAP FACEBOOK",
   "channel": "stable",
-  "latestVersion": "1.0.5",
-  "releaseDate": "2026-03-04",
-  "packageFileName": "DANG_NHAP_FACEBOOK_1.0.5.zip",
-  "packageUrl": "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/main/release/stable/DANG_NHAP_FACEBOOK_1.0.5.zip",
-  "notes": "Bản tăng version để test auto-update từ 1.0.4 lên 1.0.5."
+  "latestVersion": "1.0.6",
+  "releaseDate": "2026-03-05",
+  "packageFileName": "DANG_NHAP_FACEBOOK_1.0.6.zip",
+  "packageUrl": "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/main/release/stable/DANG_NHAP_FACEBOOK_1.0.6.zip",
+  "notes": "Sửa lỗi updater dùng sai manifest local khi xác nhận cập nhật và bổ sung log lỗi updater."
 }

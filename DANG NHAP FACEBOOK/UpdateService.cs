@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Text;
+using System.Text.Json;
 
 namespace DANG_NHAP_FACEBOOK
 {
@@ -22,7 +24,7 @@ namespace DANG_NHAP_FACEBOOK
             UpdateCheckResult ketQuaKiemTra = KiemTraCapNhat();
             if (!ketQuaKiemTra.CoBanMoi || !ketQuaKiemTra.CoTheCapNhat)
             {
-                return false;                                                                 // Không có bản mới hoặc chưa đủ điều kiện updater thì app mở bình thường
+                return false;
             }
 
             DialogResult ketQua = MessageBox.Show(
@@ -33,7 +35,7 @@ namespace DANG_NHAP_FACEBOOK
 
             if (ketQua != DialogResult.Yes)
             {
-                return false;                                                                 // Người dùng từ chối thì app chạy tiếp bản hiện tại
+                return false;
             }
 
             return ThuKhoiDongUpdater(ketQuaKiemTra);
@@ -66,10 +68,11 @@ namespace DANG_NHAP_FACEBOOK
             string updaterExePath = Path.Combine(AppPaths.BaseDirectory, TenUpdaterExe);
             if (!ketQuaKiemTra.CoTheCapNhat || !File.Exists(updaterExePath))
             {
-                return false;                                                                 // Chưa đủ điều kiện chạy updater thì dừng ở đây
+                return false;
             }
 
-            string thamSo = TaoThamSoGoiUpdater(AppPaths.BaseDirectory, ManifestService.ManifestFilePath, ketQuaKiemTra.PackagePath);
+            string manifestPathChoUpdater = TaoManifestTamChoUpdater(ketQuaKiemTra);
+            string thamSo = TaoThamSoGoiUpdater(AppPaths.BaseDirectory, manifestPathChoUpdater, ketQuaKiemTra.PackagePath);
             var processStartInfo = new ProcessStartInfo
             {
                 FileName = updaterExePath,
@@ -78,8 +81,17 @@ namespace DANG_NHAP_FACEBOOK
                 WorkingDirectory = AppPaths.BaseDirectory
             };
 
-            Process.Start(processStartInfo);                                                  // Gọi Updater.exe riêng rồi thoát app chính để updater thay file
-            return true;
+            try
+            {
+                GhiNhatKyKhoiDongUpdater(ketQuaKiemTra, manifestPathChoUpdater, thamSo, null);
+                Process.Start(processStartInfo);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                GhiNhatKyKhoiDongUpdater(ketQuaKiemTra, manifestPathChoUpdater, thamSo, ex.Message);
+                return false;
+            }
         }
 
         private static bool CoBanMoiHon(string versionHienTai, string versionMoi)
@@ -101,7 +113,7 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             string packagePath = Path.Combine(AppPaths.PackagesDirectory, manifest.PackageFileName);
-            return File.Exists(packagePath) ? packagePath : null;                             // Ưu tiên package local trong packages để dễ test cập nhật trước khi có server thật
+            return File.Exists(packagePath) ? packagePath : null;
         }
 
         private static string TaoThamSoGoiUpdater(string appDirectory, string manifestPath, string? packagePath)
@@ -119,6 +131,54 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             return string.Join(" ", danhSachThamSo);
+        }
+
+        private static string TaoManifestTamChoUpdater(UpdateCheckResult ketQuaKiemTra)
+        {
+            try
+            {
+                Directory.CreateDirectory(AppPaths.TempDirectory);
+                string manifestTamPath = Path.Combine(AppPaths.TempDirectory, "manifest_runtime_update.json");
+                string json = JsonSerializer.Serialize(ketQuaKiemTra.Manifest, new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
+
+                File.WriteAllText(manifestTamPath, json, new UTF8Encoding(false));
+                return manifestTamPath;
+            }
+            catch
+            {
+                return ManifestService.ManifestFilePath;
+            }
+        }
+
+        private static void GhiNhatKyKhoiDongUpdater(UpdateCheckResult ketQuaKiemTra, string manifestPath, string thamSo, string? loi)
+        {
+            try
+            {
+                Directory.CreateDirectory(AppPaths.LogsDirectory);
+                string duongDanNhatKy = Path.Combine(AppPaths.LogsDirectory, "update_launch.log");
+                var noiDung = new StringBuilder();
+                noiDung.AppendLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}]");
+                noiDung.AppendLine($"VersionHienTai: {ketQuaKiemTra.VersionHienTai}");
+                noiDung.AppendLine($"VersionMoiNhat: {ketQuaKiemTra.VersionMoiNhat}");
+                noiDung.AppendLine($"NguonManifest: {ketQuaKiemTra.NguonManifest}");
+                noiDung.AppendLine($"ManifestPath: {manifestPath}");
+                noiDung.AppendLine($"PackagePath: {ketQuaKiemTra.PackagePath ?? "(null)"}");
+                noiDung.AppendLine($"ThamSo: {thamSo}");
+
+                if (!string.IsNullOrWhiteSpace(loi))
+                {
+                    noiDung.AppendLine($"Loi: {loi}");
+                }
+
+                noiDung.AppendLine();
+                File.AppendAllText(duongDanNhatKy, noiDung.ToString(), new UTF8Encoding(false));
+            }
+            catch
+            {
+            }
         }
     }
 }

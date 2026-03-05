@@ -1,3 +1,4 @@
+using System.Text;
 using Updater.Services;
 
 namespace Updater
@@ -8,8 +9,8 @@ namespace Updater
         {
             try
             {
-                UpdaterArguments thamSo = UpdaterArgumentsParser.Parse(args);                 // Đọc tham số dòng lệnh để updater biết app nằm ở đâu, manifest nào cần đọc và có pid nào cần chờ hay không
-                AppShutdownService.ChoAppChinhTat(thamSo.ProcessId);                          // Nếu app chính còn đang chạy thì updater chờ tắt hẳn trước khi đi tiếp
+                UpdaterArguments thamSo = UpdaterArgumentsParser.Parse(args);
+                AppShutdownService.ChoAppChinhTat(thamSo.ProcessId);
                 ReleaseManifest manifest = UpdaterManifestService.DocManifest(thamSo.ManifestPath);
                 string packagePath = PackageDownloadService.LayHoacTaiGoiCapNhat(thamSo, manifest);
                 string sourceDirectory = PackageDownloadService.GiaiNenGoiCapNhat(thamSo.AppDirectory, packagePath, manifest.LatestVersion);
@@ -27,7 +28,30 @@ namespace Updater
             catch (Exception ex)
             {
                 Console.Error.WriteLine(ex.Message);
+                GhiNhatKyLoi(ex, args);
                 return 1;
+            }
+        }
+
+        private static void GhiNhatKyLoi(Exception ex, string[] args)
+        {
+            try
+            {
+                string logsDirectory = Path.Combine(AppContext.BaseDirectory, "logs");
+                Directory.CreateDirectory(logsDirectory);
+                string duongDanNhatKy = Path.Combine(logsDirectory, "updater_error.log");
+
+                var noiDung = new StringBuilder();
+                noiDung.AppendLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}]");
+                noiDung.AppendLine($"Args: {string.Join(" ", args)}");
+                noiDung.AppendLine($"Message: {ex.Message}");
+                noiDung.AppendLine($"StackTrace: {ex.StackTrace}");
+                noiDung.AppendLine();
+
+                File.AppendAllText(duongDanNhatKy, noiDung.ToString(), new UTF8Encoding(false));
+            }
+            catch
+            {
             }
         }
     }
