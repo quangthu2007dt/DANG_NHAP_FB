@@ -1,9 +1,9 @@
 {
   "appName": "DANG NHAP FACEBOOK V2",
   "channel": "stable",
-  "latestVersion": "V2.06",
+  "latestVersion": "V2.07",
   "releaseDate": "2026-03-06",
-  "packageFileName": "DANG_NHAP_FACEBOOK_V2_06.zip",
-  "packageUrl": "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/v2/session-runtime/release/stable/DANG_NHAP_FACEBOOK_V2_06.zip",
-  "notes": "Phat hanh V2.06, ep popup cap nhat thanh cong hien thi tren desktop de tranh bi chim."
+  "packageFileName": "DANG_NHAP_FACEBOOK_V2_07.zip",
+  "packageUrl": "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/v2/session-runtime/release/stable/DANG_NHAP_FACEBOOK_V2_07.zip",
+  "notes": "Phat hanh V2.07, bo sung script chay updater roi tu dong mo lai app sau cap nhat."
 }

@@ -8,6 +8,7 @@ namespace DANG_NHAP_FACEBOOK
 {
     internal static class UpdateService
     {
+        private const string TenAppExe = "DANG NHAP FACEBOOK.exe";
         private const string TenUpdaterExe = "Updater.exe";
         private const string TenFileDanhDauCapNhatThanhCong = "update_success_marker.json";
         private const string TenFileDanhDauDangCapNhat = "update_pending_marker.json";
@@ -111,21 +112,26 @@ namespace DANG_NHAP_FACEBOOK
                 return false;
             }
 
+            string appExePath = Path.Combine(AppPaths.BaseDirectory, TenAppExe);
             string manifestPathChoUpdater = TaoManifestTamChoUpdater(ketQuaKiemTra);
             string thamSo = TaoThamSoGoiUpdater(AppPaths.BaseDirectory, manifestPathChoUpdater, ketQuaKiemTra.PackagePath);
-            var processStartInfo = new ProcessStartInfo
-            {
-                FileName = updaterExePath,
-                Arguments = thamSo,
-                UseShellExecute = true,
-                WorkingDirectory = AppPaths.BaseDirectory
-            };
 
             try
             {
-                GhiNhatKyKhoiDongUpdater(ketQuaKiemTra, manifestPathChoUpdater, thamSo, null);
-                Process.Start(processStartInfo);
                 GhiDanhDauDangCapNhat(ketQuaKiemTra.VersionMoiNhat);
+
+                string scriptPath = TaoScriptChayUpdaterVaMoLaiApp(updaterExePath, thamSo, appExePath);
+                var processStartInfo = new ProcessStartInfo
+                {
+                    FileName = "cmd.exe",
+                    Arguments = $"/c \"{scriptPath}\"",
+                    UseShellExecute = true,
+                    WorkingDirectory = AppPaths.BaseDirectory,
+                    WindowStyle = ProcessWindowStyle.Hidden
+                };
+
+                GhiNhatKyKhoiDongUpdater(ketQuaKiemTra, manifestPathChoUpdater, thamSo, null);
+                Process.Start(processStartInfo);                                              // Chay updater qua script de sau khi update xong app duoc mo lai tu dong
                 return true;
             }
             catch (Exception ex)
@@ -180,6 +186,25 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             return string.Join(" ", danhSachThamSo);
+        }
+
+        private static string TaoScriptChayUpdaterVaMoLaiApp(string updaterExePath, string thamSo, string appExePath)
+        {
+            Directory.CreateDirectory(AppPaths.TempDirectory);
+            string scriptPath = Path.Combine(AppPaths.TempDirectory, "run_updater_and_restart.cmd");
+
+            var script = new StringBuilder();
+            script.AppendLine("@echo off");
+            script.AppendLine($"\"{updaterExePath}\" {thamSo}");
+
+            if (File.Exists(appExePath))
+            {
+                script.AppendLine($"start \"\" \"{appExePath}\"");
+            }
+
+            script.AppendLine("del \"%~f0\"");
+            File.WriteAllText(scriptPath, script.ToString(), new UTF8Encoding(false));
+            return scriptPath;
         }
 
         private static bool ThuDocVaThongBaoTuMarkerThanhCong()

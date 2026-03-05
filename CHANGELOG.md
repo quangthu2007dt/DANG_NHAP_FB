@@ -2,6 +2,17 @@
 
 Tat ca thay doi quan trong cua du an duoc ghi tai day.
 
+## [V2.07] - 2026-03-06
+
+### Changed
+
+- Luong cap nhat startup dung script `run_updater_and_restart.cmd` de updater chay xong se tu mo lai app.
+- Ket hop voi marker thanh cong/pending hien co de thong bao cap nhat hien ngay khi app vua mo lai.
+
+### Artifact
+
+- `release/stable/DANG_NHAP_FACEBOOK_V2_07.zip`
+
 ## [V2.06] - 2026-03-06
 
 ### Changed
