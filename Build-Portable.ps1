@@ -61,31 +61,29 @@ if ([string]::IsNullOrWhiteSpace($packageFileName)) {
 
 $artifactsRoot = Join-Path $repoRoot "artifacts"
 $portableRoot = Join-Path $artifactsRoot "portable"
+$updaterPublishRoot = Join-Path $artifactsRoot "updater_publish"
+$legacyPackagesDirectory = Join-Path $artifactsRoot "packages"
 $portableDirectory = Join-Path $portableRoot $version
-$updaterPublishDirectory = Join-Path $artifactsRoot ("updater_publish\" + $version)
-$packagesDirectory = Join-Path $artifactsRoot "packages"
+$updaterPublishDirectory = Join-Path $updaterPublishRoot $version
 $releaseStableDirectory = Join-Path $repoRoot "release\stable"
 $releasePackagePath = Join-Path $releaseStableDirectory $packageFileName
-$artifactPackagePath = Join-Path $packagesDirectory $packageFileName
+
+foreach ($ephemeralPath in @($portableRoot, $updaterPublishRoot, $legacyPackagesDirectory)) {
+    if (Test-Path $ephemeralPath) {
+        Remove-Item -Recurse -Force $ephemeralPath                                  # Luon xoa cache build tam de tranh phong to du lieu qua cac lan phat hanh
+    }
+}
 
 New-Item -ItemType Directory -Force -Path $portableRoot | Out-Null
-New-Item -ItemType Directory -Force -Path $packagesDirectory | Out-Null
+New-Item -ItemType Directory -Force -Path $updaterPublishRoot | Out-Null
 New-Item -ItemType Directory -Force -Path $releaseStableDirectory | Out-Null
 
-if (Test-Path $portableDirectory) {
-    Remove-Item -Recurse -Force $portableDirectory
-}
-
-if (Test-Path $updaterPublishDirectory) {
-    Remove-Item -Recurse -Force $updaterPublishDirectory
-}
+Get-ChildItem $releaseStableDirectory -Filter "DANG_NHAP_FACEBOOK*.zip" -File -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -ne $packageFileName } |
+    ForEach-Object { Remove-Item -Force $_.FullName }                                # Chi giu lai 1 goi zip moi nhat trong source local
 
 if (Test-Path $releasePackagePath) {
     Remove-Item -Force $releasePackagePath
-}
-
-if (Test-Path $artifactPackagePath) {
-    Remove-Item -Force $artifactPackagePath
 }
 
 $selfContainedFlag = if ($SelfContained) { "true" } else { "false" }
@@ -117,23 +115,22 @@ Invoke-WithRetry -Description "Tao goi zip portable" -Action {
     }
 }
 
-Invoke-WithRetry -Description "Copy package vao artifacts" -Action {
-    Copy-Item -Path $releasePackagePath -Destination $artifactPackagePath -Force
-}
-
 if (-not [string]::IsNullOrWhiteSpace($CloneDirectory)) {
     if (Test-Path $CloneDirectory) {
-        $backupDirectory = "{0}_backup_{1}" -f $CloneDirectory, (Get-Date -Format "yyyyMMdd_HHmmss")
-        Move-Item -Path $CloneDirectory -Destination $backupDirectory
-        Write-Host "Da doi ten ban cu sang: $backupDirectory"
+        Remove-Item -Recurse -Force $CloneDirectory                                  # Khong tao backup de tranh sinh du lieu du thua
     }
 
-    Copy-Item -Path $portableDirectory -Destination $CloneDirectory -Recurse
+    Copy-Item -Path $portableDirectory -Destination $CloneDirectory -Recurse -Force
+}
+
+foreach ($ephemeralPath in @($portableRoot, $updaterPublishRoot, $legacyPackagesDirectory)) {
+    if (Test-Path $ephemeralPath) {
+        Remove-Item -Recurse -Force $ephemeralPath                                  # Don dep sau build, source chi giu zip moi nhat
+    }
 }
 
 Write-Host "Portable build hoan tat."
 Write-Host "Version             : $version"
 Write-Host "Portable directory  : $portableDirectory"
 Write-Host "Release package     : $releasePackagePath"
-Write-Host "Artifact package    : $artifactPackagePath"
 Write-Host "Clone directory     : $CloneDirectory"
