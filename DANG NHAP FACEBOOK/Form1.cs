@@ -995,11 +995,14 @@ namespace DANG_NHAP_FACEBOOK
             int congDebugChrome = LayCongDebugChromeTrong();
 
             Rectangle vungLamViec = Screen.PrimaryScreen?.WorkingArea ?? new Rectangle(0, 0, 1200, 900);
-            int chieuRongCuaSo = Math.Max(900, vungLamViec.Width / 2);
-            int chieuCaoCuaSo = Math.Max(700, (int)(vungLamViec.Height * 0.85));
+            int chieuRongCuaSo = Math.Min(vungLamViec.Width, Math.Max(1000, (int)(vungLamViec.Width * 0.75))); // Mở lớn hơn 2/3 màn hình để form Meta không bị bó quá hẹp
+            int chieuCaoCuaSo = Math.Min(vungLamViec.Height, Math.Max(760, (int)(vungLamViec.Height * 0.88)));
+            int viTriX = Math.Max(0, (vungLamViec.Width - chieuRongCuaSo) / 2);
+            int viTriY = Math.Max(0, (vungLamViec.Height - chieuCaoCuaSo) / 2);
 
             string thamSoChanPopupChrome = "--disable-notifications --disable-save-password-bubble --disable-session-crashed-bubble --disable-features=PasswordManagerOnboarding,Translate";
-            string arguments = $"--new-window --window-size={chieuRongCuaSo},{chieuCaoCuaSo} --window-position=0,0 --remote-debugging-port={congDebugChrome} --user-data-dir=\"{session.SessionPath}\" {thamSoUserAgent} {thamSoChanPopupChrome} {urlCanMo}".Trim();
+            string thamSoKichThuocCuaSo = $"--window-size={chieuRongCuaSo},{chieuCaoCuaSo} --window-position={viTriX},{viTriY}";
+            string arguments = $"--new-window {thamSoKichThuocCuaSo} --remote-debugging-port={congDebugChrome} --user-data-dir=\"{session.SessionPath}\" {thamSoUserAgent} {thamSoChanPopupChrome} {urlCanMo}".Trim();
 
             try
             {
