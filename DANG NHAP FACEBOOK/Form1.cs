@@ -1427,10 +1427,35 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '');
 
+  const laHopDangNhap = (container) => {
+    if (!container || !(container instanceof Element)) return false;
+
+    const coInputMatKhau = !!container.querySelector('input[type="password"], input[name="pass"], input[name="password"]');
+    if (!coInputMatKhau) return false;
+
+    const coInputTaiKhoan = !!container.querySelector('input[name="email"], input[id="email"], input[type="email"], input[autocomplete="username"], input[inputmode="email"], input[type="text"]');
+    const coNutDangNhap = !!container.querySelector('button[name="login"], input[name="login"], button[type="submit"], input[type="submit"], [aria-label*="Đăng nhập"], [aria-label*="Log in"]');
+    return coInputTaiKhoan || coNutDangNhap;
+  };
+
+  const namTrongHopDangNhap = (node) => {
+    let current = node;
+    for (let i = 0; current && i < 8; i++) {
+      if (laHopDangNhap(current)) {
+        return true;
+      }
+
+      current = current.parentElement;
+    }
+
+    return false;
+  };
+
   const clickByKeywords = (root, keywords) => {
     const nodes = Array.from(root.querySelectorAll('button, [role="button"], a, div[role="button"]'));
     for (const node of nodes) {
       if (!isVisible(node)) continue;
+      if (namTrongHopDangNhap(node)) continue;
       const text = normalizeText((node.innerText || node.textContent || node.getAttribute('aria-label') || '').trim());
       if (!text) continue;
       if (keywords.some((keyword) => text.includes(keyword))) {
@@ -1454,6 +1479,10 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     for (const selector of nutDong) {
       const node = root.querySelector(selector);
       if (isVisible(node)) {
+        if (namTrongHopDangNhap(node)) {
+          continue;                                                                   // Không được đóng popup chứa form đăng nhập (Meta/Facebook modal login)
+        }
+
         node.click();
         daXuLy = true;
       }
