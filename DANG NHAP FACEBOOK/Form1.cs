@@ -82,6 +82,39 @@ namespace DANG_NHAP_FACEBOOK
             Update();
         }
 
+        private void CapNhatTrangThaiDongTheoUid(string uid, string trangThai)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(() => CapNhatTrangThaiDongTheoUid(uid, trangThai));                // Luồng theo dõi đăng nhập chạy async nên mọi cập nhật grid phải quay về UI thread
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(uid))
+            {
+                return;
+            }
+
+            string uidCanTim = uid.Trim();
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (row.IsNewRow)
+                {
+                    continue;
+                }
+
+                string uidTrenDong = row.Cells["colUID"].Value?.ToString()?.Trim() ?? string.Empty;
+                if (!string.Equals(uidTrenDong, uidCanTim, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                row.Cells["colTrangThai"].Value = trangThai;
+                row.Cells["colTuongTacCuoi"].Value = DateTime.Now.ToString("dd/MM HH:mm:ss");
+                break;
+            }
+        }
+
         //
         //  HÀM CẬP NHẬT SỐ LƯỢNG
         //
@@ -946,6 +979,7 @@ namespace DANG_NHAP_FACEBOOK
         private void MoChromeTheoSession(SessionModel session, string uid, string password)
         {
             CapNhatTrangThai($"Đang khởi chạy Chrome cho UID {uid}...", Color.DarkGoldenrod);
+            CapNhatTrangThaiDongTheoUid(uid, "Đang mở Chrome phiên mới");
             string chromeExe = TimChromeExe();
             if (string.IsNullOrWhiteSpace(chromeExe))
             {
@@ -964,7 +998,8 @@ namespace DANG_NHAP_FACEBOOK
             int chieuRongCuaSo = Math.Max(900, vungLamViec.Width / 2);
             int chieuCaoCuaSo = Math.Max(700, (int)(vungLamViec.Height * 0.85));
 
-            string arguments = $"--new-window --window-size={chieuRongCuaSo},{chieuCaoCuaSo} --window-position=0,0 --remote-debugging-port={congDebugChrome} --user-data-dir=\"{session.SessionPath}\" {thamSoUserAgent} {urlCanMo}".Trim();
+            string thamSoChanPopupChrome = "--disable-notifications --disable-save-password-bubble --disable-session-crashed-bubble --disable-features=PasswordManagerOnboarding,Translate";
+            string arguments = $"--new-window --window-size={chieuRongCuaSo},{chieuCaoCuaSo} --window-position=0,0 --remote-debugging-port={congDebugChrome} --user-data-dir=\"{session.SessionPath}\" {thamSoUserAgent} {thamSoChanPopupChrome} {urlCanMo}".Trim();
 
             try
             {
@@ -972,12 +1007,14 @@ namespace DANG_NHAP_FACEBOOK
                 SessionRuntimeService.LaunchChromeForSession(session, chromeExe, arguments);
                 congDebugTheoUid[uid] = congDebugChrome;
                 CapNhatTrangThai($"Đang tự điền UID/Password cho {uid}...", Color.DarkGoldenrod);
+                CapNhatTrangThaiDongTheoUid(uid, "Đang tự điền UID/Password");
                 _ = TuDongDienThongTinDangNhapAsync(congDebugChrome, urlCanMo, uid, password);
             }
             catch (Exception ex)
             {
                 SessionRuntimeService.TryCloseAndCleanupSession(session.SessionId);
                 CapNhatTrangThai($"Mở Chrome thất bại cho UID {uid}.", Color.Firebrick);
+                CapNhatTrangThaiDongTheoUid(uid, "Lỗi mở Chrome");
                 MessageBox.Show($"Không thể mở Chrome cho UID {uid}.{Environment.NewLine}{ex.Message}");
             }
         }
@@ -1063,6 +1100,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
             if (string.IsNullOrWhiteSpace(uid) || string.IsNullOrWhiteSpace(password))
             {
                 CapNhatTrangThai($"Bỏ qua tự điền cho {uid}: thiếu UID hoặc Password.", Color.Firebrick);
+                CapNhatTrangThaiDongTheoUid(uid, "Thiếu UID/Password");
                 return;                                                                        // Nếu thiếu UID hoặc Password thì không tự điền được, tránh đổ nhầm dữ liệu rỗng lên form đăng nhập
             }
 
@@ -1083,7 +1121,9 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                     bool daDienThanhCong = await ThuChayScriptTuDongDienAsync(webSocketDebuggerUrl, script); // Chạy script bằng CDP, nếu ô đã hiện thì điền ngay UID và Password
                     if (daDienThanhCong)
                     {
-                        CapNhatTrangThai($"Đã tự điền UID/Password cho {uid}.", Color.ForestGreen);
+                        CapNhatTrangThai($"Đã tự điền và gửi đăng nhập cho {uid}.", Color.ForestGreen);
+                        CapNhatTrangThaiDongTheoUid(uid, "Đã gửi đăng nhập, đang chờ kết quả");
+                        _ = TheoDoiKetQuaDangNhapSauKhiSubmitAsync(congDebugChrome, uid, password);
                         return;
                     }
                 }
@@ -1095,6 +1135,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
             }
 
             CapNhatTrangThai($"Không tìm thấy ô đăng nhập để tự điền cho {uid}.", Color.Firebrick);
+            CapNhatTrangThaiDongTheoUid(uid, "Không tìm thấy ô đăng nhập");
         }
         //
         //  HÀM LẤY WEBSOCKET DEBUGGER URL CỦA TAB FACEBOOK
@@ -1205,6 +1246,129 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
             return string.Equals(trangThai, "ok", StringComparison.OrdinalIgnoreCase);
         }
         //
+        //  HÀM THEO DÕI KẾT QUẢ ĐĂNG NHẬP SAU KHI APP ĐÃ TỰ GỬI ĐĂNG NHẬP
+        //
+        private async Task TheoDoiKetQuaDangNhapSauKhiSubmitAsync(int congDebugChrome, string uid, string password)
+        {
+            const int soLanTheoDoiToiDa = 180;                                                 // Chờ tối đa 3 phút để Facebook phản hồi sau khi app đã tự gửi đăng nhập
+            bool daThuLaiLanHai = false;
+            string scriptTuDongDienVaSubmit = TaoScriptTuDongDienDangNhap(uid, password);
+
+            for (int i = 0; i < soLanTheoDoiToiDa; i++)
+            {
+                try
+                {
+                    string? webSocketDebuggerUrl = await LayWebSocketDebuggerUrlFacebookDangMoAsync(congDebugChrome);
+                    if (string.IsNullOrWhiteSpace(webSocketDebuggerUrl))
+                    {
+                        await Task.Delay(1000);
+                        continue;
+                    }
+
+                    (string trangThai, _, string lyDo) = await LayTrangThaiDangNhapSauSubmitAsync(webSocketDebuggerUrl);
+                    if (string.Equals(trangThai, "success", StringComparison.OrdinalIgnoreCase))
+                    {
+                        CapNhatTrangThaiDongTheoUid(uid, "Đăng nhập thành công");
+                        CapNhatTrangThai($"UID {uid} đã đăng nhập thành công.", Color.ForestGreen);
+                        return;
+                    }
+
+                    if (string.Equals(trangThai, "checkpoint", StringComparison.OrdinalIgnoreCase))
+                    {
+                        string dienGiaiCheckpoint = lyDo switch
+                        {
+                            "two_factor" => "cần nhập mã 2FA",
+                            "verify_identity" => "cần xác minh danh tính",
+                            "checkpoint" => "cần xác minh checkpoint",
+                            _ => "cần xác minh checkpoint/2FA"
+                        };
+
+                        CapNhatTrangThaiDongTheoUid(uid, $"Dừng: {dienGiaiCheckpoint}");
+                        CapNhatTrangThai($"UID {uid} {dienGiaiCheckpoint}.", Color.DarkOrange);
+                        return;
+                    }
+
+                    if (string.Equals(trangThai, "blocked", StringComparison.OrdinalIgnoreCase))
+                    {
+                        string dienGiaiLyDo = lyDo switch
+                        {
+                            "password_changed" => "mật khẩu đã thay đổi",
+                            "956" => "mã 956",
+                            "login_not_allowed" => "không cho phép đăng nhập",
+                            "wrong_password" => "sai mật khẩu",
+                            "account_locked" => "tài khoản bị khóa/tạm khóa",
+                            "account_disabled" => "tài khoản đã bị vô hiệu hóa",
+                            "suspicious_activity" => "hoạt động bất thường, cần xác minh",
+                            "rate_limited" => "bị giới hạn tần suất, thử lại sau",
+                            "no_account" => "không tìm thấy tài khoản",
+                            _ => "lỗi chặn đăng nhập"
+                        };
+
+                        CapNhatTrangThaiDongTheoUid(uid, $"Dừng: {dienGiaiLyDo}");
+                        CapNhatTrangThai($"UID {uid} dừng xử lý vì {dienGiaiLyDo}.", Color.Firebrick);
+                        return;
+                    }
+
+                    if (string.Equals(trangThai, "pending", StringComparison.OrdinalIgnoreCase) && !daThuLaiLanHai && i >= 8)
+                    {
+                        bool daGuiLanHai = await ThuChayScriptTuDongDienAsync(webSocketDebuggerUrl, scriptTuDongDienVaSubmit);
+                        daThuLaiLanHai = true;
+
+                        if (daGuiLanHai)
+                        {
+                            CapNhatTrangThaiDongTheoUid(uid, "Đã thử lại lần 2, chờ kết quả");
+                            CapNhatTrangThai($"UID {uid}: đã tự điền + gửi đăng nhập lần 2.", Color.DarkGoldenrod);
+                        }
+                        else
+                        {
+                            CapNhatTrangThaiDongTheoUid(uid, "Lần 2 không thấy form đăng nhập");
+                            CapNhatTrangThai($"UID {uid}: thử lần 2 nhưng không tìm thấy form đăng nhập.", Color.Firebrick);
+                        }
+                    }
+                }
+                catch
+                {
+                }
+
+                await Task.Delay(1000);
+            }
+
+            CapNhatTrangThaiDongTheoUid(uid, "Hết thời gian chờ xác nhận");
+            CapNhatTrangThai($"UID {uid} chưa có kết quả sau khi chờ 3 phút.", Color.Firebrick);
+        }
+
+        private async Task<(string TrangThai, string UrlHienTai, string LyDo)> LayTrangThaiDangNhapSauSubmitAsync(string webSocketDebuggerUrl)
+        {
+            using var webSocket = new System.Net.WebSockets.ClientWebSocket();
+            await webSocket.ConnectAsync(new Uri(webSocketDebuggerUrl), CancellationToken.None);
+
+            using JsonDocument ketQua = await GuiLenhCdpAsync(webSocket, "Runtime.evaluate", new
+            {
+                expression = TaoScriptKiemTraTrangThaiDangNhapSauSubmit(),
+                returnByValue = true
+            });
+
+            if (!ketQua.RootElement.TryGetProperty("result", out JsonElement resultElement))
+            {
+                return ("unknown", string.Empty, string.Empty);
+            }
+
+            if (!resultElement.TryGetProperty("result", out JsonElement evaluateResult))
+            {
+                return ("unknown", string.Empty, string.Empty);
+            }
+
+            if (!evaluateResult.TryGetProperty("value", out JsonElement valueElement) || valueElement.ValueKind != JsonValueKind.Object)
+            {
+                return ("unknown", string.Empty, string.Empty);
+            }
+
+            string trangThai = valueElement.TryGetProperty("state", out JsonElement stateElement) ? stateElement.GetString() ?? "unknown" : "unknown";
+            string urlHienTai = valueElement.TryGetProperty("href", out JsonElement hrefElement) ? hrefElement.GetString() ?? string.Empty : string.Empty;
+            string lyDo = valueElement.TryGetProperty("reason", out JsonElement reasonElement) ? reasonElement.GetString() ?? string.Empty : string.Empty;
+            return (trangThai, urlHienTai, lyDo);
+        }
+        //
         //  HÀM GỬI LỆNH CDP
         //
         private async Task<JsonDocument> GuiLenhCdpAsync(System.Net.WebSockets.ClientWebSocket webSocket, string method, object thamSo)
@@ -1250,12 +1414,67 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
   const password = {{passwordJson}};
 
   const isVisible = (el) => !!(el && (el.offsetWidth || el.offsetHeight || el.getClientRects().length));
-  const firstVisible = (selectors) => {
+  const firstVisibleInRoot = (root, selectors) => {
     for (const selector of selectors) {
-      const element = document.querySelector(selector);
+      const element = root.querySelector(selector);
       if (isVisible(element)) return element;
     }
     return null;
+  };
+
+  const normalizeText = (value) => (value || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+
+  const clickByKeywords = (root, keywords) => {
+    const nodes = Array.from(root.querySelectorAll('button, [role="button"], a, div[role="button"]'));
+    for (const node of nodes) {
+      if (!isVisible(node)) continue;
+      const text = normalizeText((node.innerText || node.textContent || node.getAttribute('aria-label') || '').trim());
+      if (!text) continue;
+      if (keywords.some((keyword) => text.includes(keyword))) {
+        node.click();
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  const dongPopupCanTro = (root) => {
+    let daXuLy = false;
+    const nutDong = [
+      '[aria-label="Close"]',
+      '[aria-label="Đóng"]',
+      'button[title="Close"]',
+      '[data-testid="cookie-policy-banner-close-button"]'
+    ];
+
+    for (const selector of nutDong) {
+      const node = root.querySelector(selector);
+      if (isVisible(node)) {
+        node.click();
+        daXuLy = true;
+      }
+    }
+
+    const keywordDong = [
+      'not now',
+      'close',
+      'dong',
+      'bo qua',
+      'de sau',
+      'khong luc nay',
+      'chua bay gio',
+      'allow all cookies',
+      'accept all',
+      'allow essential',
+      'chi cho phep cookie thiet yeu',
+      'cho phep tat ca cookie'
+    ];
+
+    return clickByKeywords(root, keywordDong) || daXuLy;
   };
 
   const setNativeValue = (element, value) => {
@@ -1346,17 +1565,33 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
       'input[placeholder*="mật khẩu"]'
     ]);
 
-    return { emailInput, passwordInput };
+    const loginButton = queryVisible([
+      'button[name="login"]',
+      'button[id="loginbutton"]',
+      '#loginbutton',
+      'input[name="login"]',
+      'button[type="submit"]',
+      'input[type="submit"]',
+      '[data-testid*="royal_login_button"]',
+      '[aria-label*="Đăng nhập"]',
+      '[aria-label*="Log in"]'
+    ]);
+
+    return { emailInput, passwordInput, loginButton, root };
   };
 
   let emailInput = null;
   let passwordInput = null;
+  let loginButtonTheoRoot = null;
+  let rootChuaForm = document;
 
   for (const root of contexts) {
     const found = findInputsInContext(root);
     if (found.emailInput && found.passwordInput) {
       emailInput = found.emailInput;
       passwordInput = found.passwordInput;
+      loginButtonTheoRoot = found.loginButton;
+      rootChuaForm = found.root || document;
       break;
     }
   }
@@ -1365,9 +1600,225 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     return 'wait';
   }
 
+  dongPopupCanTro(document);
+  if (rootChuaForm && rootChuaForm !== document) {
+    dongPopupCanTro(rootChuaForm);
+  }
+
+  const submitLogin = () => {
+    const loginButton = (loginButtonTheoRoot && isVisible(loginButtonTheoRoot))
+      ? loginButtonTheoRoot
+      : firstVisibleInRoot(rootChuaForm || document, [
+      'button[name="login"]',
+      'button[id="loginbutton"]',
+      '#loginbutton',
+      'input[name="login"]',
+      'button[type="submit"]',
+      'input[type="submit"]',
+      '[data-testid*="royal_login_button"]',
+      '[aria-label*="Đăng nhập"]',
+      '[aria-label*="Log in"]'
+    ]) || firstVisibleInRoot(document, [
+      'button[name="login"]',
+      'button[id="loginbutton"]',
+      '#loginbutton',
+      'input[name="login"]',
+      'button[type="submit"]',
+      'input[type="submit"]',
+      '[data-testid*="royal_login_button"]',
+      '[aria-label*="Đăng nhập"]',
+      '[aria-label*="Log in"]'
+    ]);
+
+    if (loginButton && !loginButton.disabled) {
+      loginButton.scrollIntoView({ block: 'center', inline: 'center' });
+      loginButton.click();
+      return true;
+    }
+
+    const enterEvent = {
+      key: 'Enter',
+      code: 'Enter',
+      keyCode: 13,
+      which: 13,
+      bubbles: true
+    };
+
+    passwordInput.focus();
+    passwordInput.dispatchEvent(new KeyboardEvent('keydown', enterEvent));
+    passwordInput.dispatchEvent(new KeyboardEvent('keypress', enterEvent));
+    passwordInput.dispatchEvent(new KeyboardEvent('keyup', enterEvent));
+
+    const form = passwordInput.form || emailInput.form;
+    if (form && typeof form.requestSubmit === 'function') {
+      form.requestSubmit();
+      return true;
+    }
+
+    if (form) {
+      form.submit();
+      return true;
+    }
+
+    return true;
+  };
+
   setNativeValue(emailInput, uid);
   setNativeValue(passwordInput, password);
+  dongPopupCanTro(document);
+  if (rootChuaForm && rootChuaForm !== document) {
+    dongPopupCanTro(rootChuaForm);
+  }
+  submitLogin();
   return 'ok';
+})();
+""";
+        }
+
+        private string TaoScriptKiemTraTrangThaiDangNhapSauSubmit()
+        {
+            return """
+(() => {
+  const href = String(window.location.href || '');
+  const lowerHref = href.toLowerCase();
+  const bodyText = String(document.body?.innerText || '');
+  const normalizedBodyText = bodyText
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+  const includesAny = (needles) => needles.some((needle) => normalizedBodyText.includes(needle));
+
+  const hasPasswordInput = !!document.querySelector('input[type="password"], input[name="pass"], input[name="password"]');
+  const hasLoginButton = !!document.querySelector('button[name="login"], input[name="login"], button[type="submit"], input[type="submit"]');
+
+  const isPasswordChanged = includesAny([
+                            'mat khau cua ban da thay doi',
+                            'password has been changed',
+                            'your password was changed'
+                          ]) || lowerHref.includes('update-password');
+  if (isPasswordChanged) {
+    return { state: 'blocked', href, reason: 'password_changed' };
+  }
+
+  const has956Code = /(^|\D)956(\D|$)/.test(normalizedBodyText);
+  if (has956Code) {
+    return { state: 'blocked', href, reason: '956' };
+  }
+
+  const isWrongPassword = includesAny([
+    'sai mat khau',
+    'mat khau ban da nhap khong chinh xac',
+    'the password you entered is incorrect',
+    "the password that you've entered is incorrect",
+    'incorrect password'
+  ]);
+  if (isWrongPassword) {
+    return { state: 'blocked', href, reason: 'wrong_password' };
+  }
+
+  const isNoAccount = includesAny([
+    'khong tim thay tai khoan',
+    'tai khoan khong ton tai',
+    "isn't connected to an account",
+    "is not connected to an account",
+    "we couldn't find your account"
+  ]);
+  if (isNoAccount) {
+    return { state: 'blocked', href, reason: 'no_account' };
+  }
+
+  const isAccountDisabled = includesAny([
+    'tai khoan cua ban da bi vo hieu hoa',
+    'tai khoan da bi vo hieu hoa',
+    'account disabled',
+    'disabled for violating'
+  ]);
+  if (isAccountDisabled) {
+    return { state: 'blocked', href, reason: 'account_disabled' };
+  }
+
+  const isAccountLocked = includesAny([
+    'tai khoan cua ban da bi khoa',
+    'tai khoan cua ban tam thoi bi khoa',
+    'your account has been locked',
+    'account locked',
+    'temporarily blocked'
+  ]);
+  if (isAccountLocked) {
+    return { state: 'blocked', href, reason: 'account_locked' };
+  }
+
+  const isRateLimited = includesAny([
+    'we limit how often',
+    'try again later',
+    'ban da thao tac qua nhanh',
+    'thu lai sau',
+    'qua nhieu lan'
+  ]);
+  if (isRateLimited) {
+    return { state: 'blocked', href, reason: 'rate_limited' };
+  }
+
+  const isSuspiciousActivity = includesAny([
+    'hoat dong dang ngo',
+    'dang nhap bat thuong',
+    'suspicious activity',
+    'unusual login attempt',
+    'help us confirm'
+  ]);
+  if (isSuspiciousActivity) {
+    return { state: 'blocked', href, reason: 'suspicious_activity' };
+  }
+
+  const isLoginNotAllowed = includesAny([
+                            'khong cho phep dang nhap',
+                            'not allowed to log in',
+                            'ban bi han che dang nhap'
+                          ]);
+  if (isLoginNotAllowed) {
+    return { state: 'blocked', href, reason: 'login_not_allowed' };
+  }
+
+  const isTwoFactor = lowerHref.includes('two_factor') ||
+                      includesAny([
+                        'ma xac thuc',
+                        'security code',
+                        'authentication code',
+                        'two-factor'
+                      ]);
+  if (isTwoFactor) {
+    return { state: 'checkpoint', href, reason: 'two_factor' };
+  }
+
+  const isVerifyIdentity = includesAny([
+    'xac nhan danh tinh',
+    'confirm your identity',
+    'verify your identity',
+    'upload your id',
+    'chung minh danh tinh'
+  ]);
+  if (isVerifyIdentity) {
+    return { state: 'checkpoint', href, reason: 'verify_identity' };
+  }
+
+  const isCheckpoint = lowerHref.includes('checkpoint') ||
+                       lowerHref.includes('approvals') ||
+                       lowerHref.includes('challenge');
+
+  if (isCheckpoint) {
+    return { state: 'checkpoint', href, reason: 'checkpoint' };
+  }
+
+  const isLoginLikePage = lowerHref.includes('/login') ||
+                          lowerHref.includes('recover') ||
+                          lowerHref.includes('device-based') ||
+                          lowerHref.includes('facebook.com/?sk=welcome');
+
+  if (hasPasswordInput || hasLoginButton || isLoginLikePage) {
+    return { state: 'pending', href };
+  }
+
+  return { state: 'success', href };
 })();
 """;
         }
