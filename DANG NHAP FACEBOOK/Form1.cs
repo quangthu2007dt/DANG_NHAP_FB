@@ -354,6 +354,38 @@ namespace DANG_NHAP_FACEBOOK
             return true;
         }
 
+        private static bool TryTachUidVaPasswordTuDongDs(string line, out string uid, out string password, out string phanDuSauPassword)
+        {
+            uid = string.Empty;
+            password = string.Empty;
+            phanDuSauPassword = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                return false;
+            }
+
+            string lineDaCat = line.Trim();
+            int viTriGachDauTien = lineDaCat.IndexOf('|');
+            if (viTriGachDauTien <= 0)
+            {
+                return false;                                                                 // Dong khong co UID hop le truoc dau | dau tien
+            }
+
+            int viTriGachThuHai = lineDaCat.IndexOf('|', viTriGachDauTien + 1);
+            uid = lineDaCat[..viTriGachDauTien].Trim();
+
+            if (viTriGachThuHai < 0)
+            {
+                password = lineDaCat[(viTriGachDauTien + 1)..].Trim();                       // Truong hop chi co 1 dau | thi toan bo phia sau la password
+                return !string.IsNullOrWhiteSpace(uid) && !string.IsNullOrWhiteSpace(password);
+            }
+
+            password = lineDaCat[(viTriGachDauTien + 1)..viTriGachThuHai].Trim();            // Co nhieu cot phu thi chi lay password tai giua 2 dau | dau tien
+            phanDuSauPassword = lineDaCat[viTriGachThuHai..];                                 // Giu nguyen phan du de khi cap nhat co the bao toan du lieu bo sung
+            return !string.IsNullOrWhiteSpace(uid) && !string.IsNullOrWhiteSpace(password);
+        }
+
         private void CapNhatTaiKhoanTrongDsTxt(string uidCu, string uidMoi, string passwordMoi)
         {
             List<string> dsSauCapNhat = new();
@@ -369,10 +401,10 @@ namespace DANG_NHAP_FACEBOOK
                         continue;
                     }
 
-                    string[] parts = lineDaCat.Split('|');
-                    if (parts.Length == 2 && string.Equals(parts[0].Trim(), uidCu, StringComparison.OrdinalIgnoreCase))
+                    if (TryTachUidVaPasswordTuDongDs(lineDaCat, out string uidTrenDong, out _, out string phanDuSauPassword) &&
+                        string.Equals(uidTrenDong, uidCu, StringComparison.OrdinalIgnoreCase))
                     {
-                        dsSauCapNhat.Add($"{uidMoi}|{passwordMoi}");
+                        dsSauCapNhat.Add($"{uidMoi}|{passwordMoi}{phanDuSauPassword}");
                         daCapNhat = true;
                         continue;
                     }
@@ -533,16 +565,11 @@ namespace DANG_NHAP_FACEBOOK
                     continue;
                 }
 
-                string[] parts = line.Split('|');                                             // Tách dòng thành UID và Password bằng dấu |
-
-                if (parts.Length != 2)                                                        // Chỉ chấp nhận đúng 1 dấu | để ra 2 phần tử
+                if (!TryTachUidVaPasswordTuDongDs(line, out string uidTam, out string passwordTam, out _))
                 {
                     MessageBox.Show($"Dòng {i + 1} lỗi.");
                     continue;
                 }
-
-                string uidTam = parts[0].Trim();                                              // Lấy UID tạm từ phần tử đầu tiên
-                string passwordTam = parts[1].Trim();                                         // Lấy Password tạm từ phần tử thứ hai
 
                 if (string.IsNullOrWhiteSpace(uidTam) || string.IsNullOrWhiteSpace(passwordTam)) // Nếu UID hoặc Password bị trống thì xem là dòng lỗi
                 {
@@ -1536,9 +1563,8 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                     continue;
                 }
 
-                string[] parts = lineDaCat.Split('|');                                         // Tách UID và Password để so đúng UID cần xóa
-
-                if (parts.Length == 2 && string.Equals(parts[0].Trim(), uidCanXoa, StringComparison.OrdinalIgnoreCase))
+                if (TryTachUidVaPasswordTuDongDs(lineDaCat, out string uidTrenDong, out _, out _) &&
+                    string.Equals(uidTrenDong, uidCanXoa, StringComparison.OrdinalIgnoreCase))
                 {
                     continue;                                                                   // Bỏ qua đúng dòng thuộc UID cần xóa để nó không còn trong ds.txt
                 }

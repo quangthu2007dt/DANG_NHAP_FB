@@ -2,6 +2,18 @@
 
 Tat ca thay doi quan trong cua du an duoc ghi tai day.
 
+## [V2.09] - 2026-03-06
+
+### Changed
+
+- Chap nhan dong `ds.txt` co nhieu cot phu, app chi lay UID va PASS o 2 dau `|` dau tien.
+- Ap dung parser moi cho ca 3 luong: Next, Cap nhat ds.txt, Xoa UID khoi ds.txt.
+- Neu cap nhat UID/PASS trong ds.txt, app giu nguyen phan du sau dau `|` thu hai.
+
+### Artifact
+
+- `release/stable/DANG_NHAP_FACEBOOK_V2_09.zip`
+
 ## [V2.08] - 2026-03-06
 
 ### Changed

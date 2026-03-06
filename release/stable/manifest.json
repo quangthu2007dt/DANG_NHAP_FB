@@ -1,9 +1,9 @@
 {
   "appName": "DANG NHAP FACEBOOK V2",
   "channel": "stable",
-  "latestVersion": "V2.08",
+  "latestVersion": "V2.09",
   "releaseDate": "2026-03-06",
-  "packageFileName": "DANG_NHAP_FACEBOOK_V2_08.zip",
-  "packageUrl": "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/v2/session-runtime/release/stable/DANG_NHAP_FACEBOOK_V2_08.zip",
-  "notes": "Phat hanh V2.08 de kiem tra luong auto-restart sau cap nhat tren nen V2.07."
+  "packageFileName": "DANG_NHAP_FACEBOOK_V2_09.zip",
+  "packageUrl": "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/v2/session-runtime/release/stable/DANG_NHAP_FACEBOOK_V2_09.zip",
+  "notes": "Phat hanh V2.09, chap nhan dong ds.txt nhieu cot va chi lay UID|PASS o 2 dau | dau tien."
 }
