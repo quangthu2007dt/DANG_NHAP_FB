@@ -38,11 +38,7 @@ namespace DANG_NHAP_FACEBOOK
 
         public static void HienThongBaoCapNhatThanhCongNeuCo()
         {
-            if (ThuDocVaThongBaoTuMarkerThanhCong())
-            {
-                return;
-            }
-
+            _ = ThuDocVaThongBaoTuMarkerThanhCong();                                          // Chi don marker sau update, khong hien thong bao khi app mo lai
             _ = ThuDocVaThongBaoTuMarkerDangCapNhat();                                        // Fallback cho truong hop updater cu chua ghi marker thanh cong
         }
 
@@ -215,36 +211,14 @@ namespace DANG_NHAP_FACEBOOK
                 return false;
             }
 
-            string versionDaCapNhat = string.Empty;
-
             try
             {
-                string json = File.ReadAllText(markerPath);
-                UpdateSuccessMarker? marker = JsonSerializer.Deserialize<UpdateSuccessMarker>(json, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-
-                if (marker != null && !string.IsNullOrWhiteSpace(marker.Version))
-                {
-                    versionDaCapNhat = marker.Version.Trim();
-                }
+                File.Delete(markerPath);
             }
             catch
             {
             }
-            finally
-            {
-                try
-                {
-                    File.Delete(markerPath);
-                }
-                catch
-                {
-                }
-            }
 
-            HienThongBaoCapNhatThanhCong(versionDaCapNhat);
             return true;
         }
 
@@ -296,7 +270,6 @@ namespace DANG_NHAP_FACEBOOK
                 return false;
             }
 
-            HienThongBaoCapNhatThanhCong(thongTinHienTai.Version);
             return true;
         }
 
@@ -338,29 +311,6 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             return string.Equals(versionHienTai, versionMucTieu, StringComparison.OrdinalIgnoreCase);
-        }
-
-        private static void HienThongBaoCapNhatThanhCong(string versionDaCapNhat)
-        {
-            if (string.IsNullOrWhiteSpace(versionDaCapNhat))
-            {
-                MessageBox.Show(
-                    "Da cap nhat thanh cong.",
-                    "Cap nhat thanh cong",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information,
-                    MessageBoxDefaultButton.Button1,
-                    MessageBoxOptions.DefaultDesktopOnly);
-                return;
-            }
-
-            MessageBox.Show(
-                $"Da cap nhat thanh cong len phien ban {versionDaCapNhat}.",
-                "Cap nhat thanh cong",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information,
-                MessageBoxDefaultButton.Button1,
-                MessageBoxOptions.DefaultDesktopOnly);
         }
 
         private static string ChuanHoaDuongDanThamSo(string path, bool boDauGachCuoi = false)

@@ -115,6 +115,51 @@ namespace DANG_NHAP_FACEBOOK
             }
         }
 
+        private void XoaUidMatKhauDaThayDoiVaChayTiep(string uid)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(() => XoaUidMatKhauDaThayDoiVaChayTiep(uid));                      // Nhánh này thường được gọi từ luồng theo dõi async nên cần quay về UI thread
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(uid))
+            {
+                return;
+            }
+
+            string uidCanXuLy = uid.Trim();
+            CapNhatTrangThai($"UID {uidCanXuLy} có mật khẩu đã thay đổi. Đang xóa dòng và chuyển sang tài khoản kế tiếp...", Color.DarkOrange);
+
+            SessionRuntimeService.TryCloseAndCleanupSessionsByUid(uidCanXuLy);
+            congDebugTheoUid.Remove(uidCanXuLy);
+            XoaUidKhoiDsTxt(uidCanXuLy);
+
+            DataGridViewRow? rowCanXoa = null;
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (row.IsNewRow)
+                {
+                    continue;
+                }
+
+                string uidTrenDong = row.Cells["colUID"].Value?.ToString()?.Trim() ?? string.Empty;
+                if (string.Equals(uidTrenDong, uidCanXuLy, StringComparison.OrdinalIgnoreCase))
+                {
+                    rowCanXoa = row;
+                    break;
+                }
+            }
+
+            if (rowCanXoa != null)
+            {
+                dataGridView1.Rows.Remove(rowCanXoa);
+                CapNhatLaiSTT();
+            }
+
+            BeginInvoke(XuLyNutNext);                                                          // Sau khi dọn xong UID lỗi thì nhảy ngay sang tài khoản kế tiếp như thao tác bấm Next
+        }
+
         //
         //  HÀM CẬP NHẬT SỐ LƯỢNG
         //
@@ -1297,6 +1342,12 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
 
                     if (string.Equals(trangThai, "blocked", StringComparison.OrdinalIgnoreCase))
                     {
+                        if (string.Equals(lyDo, "password_changed", StringComparison.OrdinalIgnoreCase))
+                        {
+                            XoaUidMatKhauDaThayDoiVaChayTiep(uid);
+                            return;
+                        }
+
                         string dienGiaiLyDo = lyDo switch
                         {
                             "password_changed" => "mật khẩu đã thay đổi",
