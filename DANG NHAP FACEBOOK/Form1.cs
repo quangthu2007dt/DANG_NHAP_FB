@@ -1065,7 +1065,7 @@ namespace DANG_NHAP_FACEBOOK
             Rectangle vungLamViec = Screen.PrimaryScreen?.WorkingArea ?? new Rectangle(0, 0, 1200, 900);
             int chieuRongCuaSo = Math.Min(vungLamViec.Width, Math.Max(1000, (int)(vungLamViec.Width * 0.75))); // Mở lớn hơn 2/3 màn hình để form Meta không bị bó quá hẹp
             int chieuCaoCuaSo = Math.Min(vungLamViec.Height, Math.Max(760, (int)(vungLamViec.Height * 0.88)));
-            int viTriX = Math.Max(0, (vungLamViec.Width - chieuRongCuaSo) / 2);
+            int viTriX = vungLamViec.Left;                                                   // Neo sát mép trái màn hình để chừa khoảng trống bên phải cho người dùng theo dõi app
             int viTriY = Math.Max(0, (vungLamViec.Height - chieuCaoCuaSo) / 2);
 
             string thamSoChanPopupChrome = "--disable-notifications --disable-save-password-bubble --disable-session-crashed-bubble --disable-features=PasswordManagerOnboarding,Translate";
