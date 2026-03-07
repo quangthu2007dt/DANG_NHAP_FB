@@ -16,6 +16,8 @@ namespace DANG_NHAP_FACEBOOK
         private const string mobileUserAgentMacDinh = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36";
         private const string metaDesktopUserAgentMacDinh = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36";
         private const int soGiayChoMoPhienMoi = 5;
+        private const int khoangNghiTruocKhiDongChromeMs = 700;
+        private const int khoangNghiSauKhiDongChromeMs = 500;
         private int maDieuKhienTuDong;
         private string uidPhienDangXuLy = string.Empty;
         private string sessionIdPhienDangXuLy = string.Empty;
@@ -242,7 +244,7 @@ namespace DANG_NHAP_FACEBOOK
             BeginInvoke(XuLyNutNext);                                                          // Giữ đúng luồng Next hiện có để không nhân bản thêm một đường mở phiên khác
         }
 
-        private void HoanTatPhienVaChoMoTiep(string uid, string thongBao, Color mauChu)
+        private async void HoanTatPhienVaChoMoTiep(string uid, string thongBao, Color mauChu)
         {
             if (InvokeRequired)
             {
@@ -250,7 +252,12 @@ namespace DANG_NHAP_FACEBOOK
                 return;
             }
 
-            DongVaDonDepPhienDangXuLy(uid);
+            CapNhatTrangThai(thongBao, mauChu);                                               // Đẩy trạng thái kết quả ra UI ngay trước khi bắt đầu đóng Chrome
+            await Task.Delay(khoangNghiTruocKhiDongChromeMs);                                 // Chừa một nhịp ngắn để người dùng nhìn rõ kết quả phiên vừa lấy được
+
+            await Task.Run(() => DongVaDonDepPhienDangXuLy(uid));
+            await Task.Delay(khoangNghiSauKhiDongChromeMs);                                   // Sau khi Chrome đã đóng, nghỉ thêm một nhịp để tách phiên cũ và phiên mới
+
             if (CoYeuCauDungThuCong())
             {
                 return;                                                                        // Stop được bấm trong lúc kết thúc phiên thì chỉ dọn Chrome, không tự Next nữa
@@ -260,7 +267,7 @@ namespace DANG_NHAP_FACEBOOK
             _ = ChoMoPhienMoiSau5GiayAsync(thongBao, mauChu, maDieuKhien);
         }
 
-        private void XoaUidMatKhauDaThayDoiVaChayTiep(string uid)
+        private async void XoaUidMatKhauDaThayDoiVaChayTiep(string uid)
         {
             if (InvokeRequired)
             {
@@ -276,7 +283,12 @@ namespace DANG_NHAP_FACEBOOK
             string uidCanXuLy = uid.Trim();
             string thongBao = $"UID {uidCanXuLy} có mật khẩu đã thay đổi.";
 
-            DongVaDonDepPhienDangXuLy(uidCanXuLy);
+            CapNhatTrangThai($"{thongBao} Đang đóng phiên hiện tại...", Color.DarkOrange);
+            await Task.Delay(khoangNghiTruocKhiDongChromeMs);                                 // Cho UI kịp hiện kết quả trước khi dọn Chrome và xóa dòng
+
+            await Task.Run(() => DongVaDonDepPhienDangXuLy(uidCanXuLy));
+            await Task.Delay(khoangNghiSauKhiDongChromeMs);                                   // Tách nhịp giữa lúc đóng xong phiên cũ và lúc app đẩy Next
+
             XoaUidKhoiDsTxt(uidCanXuLy);
 
             DataGridViewRow? rowCanXoa = null;
