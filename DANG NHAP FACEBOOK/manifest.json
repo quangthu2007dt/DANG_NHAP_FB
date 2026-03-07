@@ -1,9 +1,9 @@
 {
     "appName":  "DANG NHAP FACEBOOK V2",
     "channel":  "stable",
-    "latestVersion":  "V2.24",
+    "latestVersion":  "V2.25",
     "releaseDate":  "2026-03-07",
-    "packageFileName":  "DANG_NHAP_FACEBOOK_V2_24.zip",
-    "packageUrl":  "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/v2/session-runtime/release/stable/DANG_NHAP_FACEBOOK_V2_24.zip",
-    "notes":  "Phat hanh V2.24 tu script 1-click."
+    "packageFileName":  "DANG_NHAP_FACEBOOK_V2_25.zip",
+    "packageUrl":  "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/v2/session-runtime/release/stable/DANG_NHAP_FACEBOOK_V2_25.zip",
+    "notes":  "Phat hanh V2.25 tu script 1-click."
 }
