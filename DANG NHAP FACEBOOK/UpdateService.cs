@@ -10,6 +10,10 @@ namespace DANG_NHAP_FACEBOOK
     {
         private const string TenAppExe = "DANG NHAP FACEBOOK.exe";
         private const string TenUpdaterExe = "Updater.exe";
+        private const string TenUpdaterDll = "Updater.dll";
+        private const string TenUpdaterDeps = "Updater.deps.json";
+        private const string TenUpdaterRuntimeConfig = "Updater.runtimeconfig.json";
+        private const string TenUpdaterPdb = "Updater.pdb";
         private const string TenFileDanhDauCapNhatThanhCong = "update_success_marker.json";
         private const string TenFileDanhDauDangCapNhat = "update_pending_marker.json";
 
@@ -116,7 +120,8 @@ namespace DANG_NHAP_FACEBOOK
             {
                 GhiDanhDauDangCapNhat(ketQuaKiemTra.VersionMoiNhat);
 
-                string scriptPath = TaoScriptChayUpdaterVaMoLaiApp(updaterExePath, thamSo, appExePath);
+                string updaterTamExePath = TaoBanSaoUpdaterTam();
+                string scriptPath = TaoScriptChayUpdaterVaMoLaiApp(updaterTamExePath, thamSo, appExePath);
                 var processStartInfo = new ProcessStartInfo
                 {
                     FileName = "cmd.exe",
@@ -201,6 +206,42 @@ namespace DANG_NHAP_FACEBOOK
             script.AppendLine("del \"%~f0\"");
             File.WriteAllText(scriptPath, script.ToString(), new UTF8Encoding(false));
             return scriptPath;
+        }
+
+        private static string TaoBanSaoUpdaterTam()
+        {
+            Directory.CreateDirectory(AppPaths.TempDirectory);
+            string thuMucUpdaterTam = Path.Combine(AppPaths.TempDirectory, $"updater_runtime_{DateTime.Now:yyyyMMdd_HHmmss}");
+            Directory.CreateDirectory(thuMucUpdaterTam);
+
+            foreach (string tenFile in LayDanhSachTepUpdaterCanChep())
+            {
+                string nguon = Path.Combine(AppPaths.BaseDirectory, tenFile);
+                if (!File.Exists(nguon))
+                {
+                    continue;
+                }
+
+                string dich = Path.Combine(thuMucUpdaterTam, tenFile);
+                File.Copy(nguon, dich, true);
+            }
+
+            string updaterTamExePath = Path.Combine(thuMucUpdaterTam, TenUpdaterExe);
+            if (!File.Exists(updaterTamExePath))
+            {
+                throw new InvalidOperationException("Khong tao duoc ban sao tam cua Updater.exe.");
+            }
+
+            return updaterTamExePath;
+        }
+
+        private static IEnumerable<string> LayDanhSachTepUpdaterCanChep()
+        {
+            yield return TenUpdaterExe;
+            yield return TenUpdaterDll;
+            yield return TenUpdaterDeps;
+            yield return TenUpdaterRuntimeConfig;
+            yield return TenUpdaterPdb;
         }
 
         private static bool ThuDocVaThongBaoTuMarkerThanhCong()

@@ -4,11 +4,11 @@ namespace Updater.Services
 {
     internal static class AppShutdownService
     {
-        public static void ChoAppChinhTat(int? processId)
+        public static void ChoAppChinhTat(int? processId, Action<UpdateProgressInfo>? baoTienTrinh = null)
         {
             if (processId == null)
             {
-                return;                                                                       // Không có pid thì updater không cần chờ app chính
+                return;
             }
 
             try
@@ -16,18 +16,23 @@ namespace Updater.Services
                 using Process process = Process.GetProcessById(processId.Value);
                 if (process.HasExited)
                 {
-                    return;                                                                   // App chính đã tắt rồi thì đi tiếp ngay
+                    return;
                 }
 
-                process.WaitForExit(30000);                                                   // Chờ tối đa 30 giây để app chính đóng hẳn trước khi updater đi tiếp
+                baoTienTrinh?.Invoke(new UpdateProgressInfo
+                {
+                    Message = "Dang cho app chinh tat..."
+                });
+
+                process.WaitForExit(30000);
                 if (!process.HasExited)
                 {
-                    throw new InvalidOperationException("App chính vẫn chưa tắt sau 30 giây.");
+                    throw new InvalidOperationException("App chinh van chua tat sau 30 giay.");
                 }
             }
             catch (ArgumentException)
             {
-                return;                                                                       // Không còn tìm thấy pid thì coi như app chính đã tắt
+                return;
             }
         }
     }

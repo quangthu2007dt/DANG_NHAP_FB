@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace Updater.Services
 {
@@ -12,19 +12,15 @@ namespace Updater.Services
             "packages"
         };
 
-        private static readonly HashSet<string> TepUpdaterDangChayBoQua = new(StringComparer.OrdinalIgnoreCase)
-        {
-            "Updater.exe",
-            "Updater.dll",
-            "Updater.deps.json",
-            "Updater.runtimeconfig.json",
-            "Updater.pdb"
-        };
-
         private static readonly HashSet<string> TepDangDuocUpdaterNap = LayDanhSachTepDangNap();
 
-        public static void ThayTheFileChuongTrinh(string appDirectory, string sourceDirectory)
+        public static void ThayTheFileChuongTrinh(string appDirectory, string sourceDirectory, Action<UpdateProgressInfo>? baoTienTrinh = null)
         {
+            baoTienTrinh?.Invoke(new UpdateProgressInfo
+            {
+                Message = "Dang tao cau truc thu muc moi..."
+            });
+
             foreach (string directory in Directory.GetDirectories(sourceDirectory, "*", SearchOption.AllDirectories))
             {
                 string duongDanTuongDoi = Path.GetRelativePath(sourceDirectory, directory);
@@ -45,19 +41,13 @@ namespace Updater.Services
                     continue;
                 }
 
-                string tenFile = Path.GetFileName(filePath);
-                if (TepUpdaterDangChayBoQua.Contains(tenFile))
-                {
-                    continue;
-                }
-
-                // Portable updater may load runtime dlls in app directory, these files are locked.
-                if (TepDangDuocUpdaterNap.Contains(tenFile))
-                {
-                    continue;
-                }
-
                 string duongDanDich = Path.Combine(appDirectory, duongDanTuongDoi);
+                string duongDanDichChuanHoa = Path.GetFullPath(duongDanDich);
+                if (TepDangDuocUpdaterNap.Contains(duongDanDichChuanHoa))
+                {
+                    continue;
+                }
+
                 string? thuMucDich = Path.GetDirectoryName(duongDanDich);
                 if (!string.IsNullOrWhiteSpace(thuMucDich))
                 {
@@ -97,7 +87,7 @@ namespace Updater.Services
                         continue;
                     }
 
-                    ketQua.Add(Path.GetFileName(module.FileName));
+                    ketQua.Add(Path.GetFullPath(module.FileName));
                 }
 
                 return ketQua;

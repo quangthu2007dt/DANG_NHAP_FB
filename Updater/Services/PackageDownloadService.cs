@@ -4,11 +4,18 @@ namespace Updater.Services
 {
     internal static class PackageDownloadService
     {
-        public static string LayHoacTaiGoiCapNhat(UpdaterArguments thamSo, ReleaseManifest manifest)
+        private static readonly TimeSpan ThoiGianToiDaTaiGoi = TimeSpan.FromMinutes(30);
+
+        public static string LayHoacTaiGoiCapNhat(UpdaterArguments thamSo, ReleaseManifest manifest, Action<UpdateProgressInfo>? baoTienTrinh = null)
         {
             if (!string.IsNullOrWhiteSpace(thamSo.PackagePath))
             {
-                return thamSo.PackagePath;                                                    // Khi test local có thể truyền thẳng zip vào updater mà không cần tải
+                baoTienTrinh?.Invoke(new UpdateProgressInfo
+                {
+                    Message = "Dang dung goi cap nhat da duoc chi dinh san."
+                });
+
+                return thamSo.PackagePath;
             }
 
             string packagesDirectory = Path.Combine(thamSo.AppDirectory, "packages");
@@ -19,26 +26,41 @@ namespace Updater.Services
 
             if (File.Exists(packagePath))
             {
-                return packagePath;                                                           // Nếu gói đã có sẵn trong packages thì dùng luôn để tiết kiệm thời gian
+                baoTienTrinh?.Invoke(new UpdateProgressInfo
+                {
+                    Message = "Da tim thay goi cap nhat trong thu muc packages.",
+                    Percent = 100
+                });
+
+                return packagePath;
             }
 
             if (string.IsNullOrWhiteSpace(manifest.PackageUrl))
             {
-                throw new InvalidOperationException($"Không tìm thấy gói cập nhật tại {packagePath} và manifest chưa có packageUrl.");
+                throw new InvalidOperationException($"Khong tim thay goi cap nhat tai {packagePath} va manifest chua co packageUrl.");
             }
 
             Uri packageUri = TaoUriGoiCapNhat(thamSo, manifest);
-            using HttpClient httpClient = new();
-            using HttpResponseMessage response = httpClient.GetAsync(packageUri).GetAwaiter().GetResult();
+            using HttpClient httpClient = new()
+            {
+                Timeout = ThoiGianToiDaTaiGoi
+            };
+
+            baoTienTrinh?.Invoke(new UpdateProgressInfo
+            {
+                Message = "Dang tai goi cap nhat tu GitHub..."
+            });
+
+            using HttpResponseMessage response = httpClient.GetAsync(packageUri, HttpCompletionOption.ResponseHeadersRead).GetAwaiter().GetResult();
             response.EnsureSuccessStatusCode();
 
             using Stream remoteStream = response.Content.ReadAsStreamAsync().GetAwaiter().GetResult();
             using FileStream fileStream = File.Create(packagePath);
-            remoteStream.CopyTo(fileStream);                                                  // Tải gói update về packages để updater xử lý theo luồng thống nhất
+            SaoChepStreamCoTienTrinh(remoteStream, fileStream, response.Content.Headers.ContentLength, baoTienTrinh);
             return packagePath;
         }
 
-        public static string GiaiNenGoiCapNhat(string appDirectory, string packagePath, string version)
+        public static string GiaiNenGoiCapNhat(string appDirectory, string packagePath, string version, Action<UpdateProgressInfo>? baoTienTrinh = null)
         {
             string tempDirectory = Path.Combine(appDirectory, "temp");
             Directory.CreateDirectory(tempDirectory);
@@ -52,17 +74,77 @@ namespace Updater.Services
             }
 
             Directory.CreateDirectory(duongDanGiaiNen);
-            ZipFile.ExtractToDirectory(packagePath, duongDanGiaiNen, true);                   // Giải nén toàn bộ package ra thư mục tạm để chuẩn bị thay file
+            baoTienTrinh?.Invoke(new UpdateProgressInfo
+            {
+                Message = "Dang giai nen goi cap nhat..."
+            });
+
+            ZipFile.ExtractToDirectory(packagePath, duongDanGiaiNen, true);
 
             string[] thuMucCon = Directory.GetDirectories(duongDanGiaiNen);
             string[] fileCon = Directory.GetFiles(duongDanGiaiNen);
 
             if (thuMucCon.Length == 1 && fileCon.Length == 0)
             {
-                return thuMucCon[0];                                                          // Nếu zip bọc thêm một thư mục gốc thì dùng luôn thư mục con đó làm nguồn thay file
+                return thuMucCon[0];
             }
 
             return duongDanGiaiNen;
+        }
+
+        private static void SaoChepStreamCoTienTrinh(Stream remoteStream, Stream fileStream, long? tongSoByte, Action<UpdateProgressInfo>? baoTienTrinh)
+        {
+            byte[] buffer = new byte[256 * 1024];
+            long daTai = 0;
+            int? phanTramCuoi = null;
+
+            while (true)
+            {
+                int soByteDoc = remoteStream.Read(buffer, 0, buffer.Length);
+                if (soByteDoc <= 0)
+                {
+                    break;
+                }
+
+                fileStream.Write(buffer, 0, soByteDoc);
+                daTai += soByteDoc;
+
+                if (tongSoByte.HasValue && tongSoByte.Value > 0)
+                {
+                    int phanTram = (int)Math.Min(100, daTai * 100L / tongSoByte.Value);
+                    if (phanTramCuoi != phanTram)
+                    {
+                        phanTramCuoi = phanTram;
+                        baoTienTrinh?.Invoke(new UpdateProgressInfo
+                        {
+                            Message = $"Dang tai goi cap nhat... {DinhDangDungLuong(daTai)} / {DinhDangDungLuong(tongSoByte.Value)}",
+                            Percent = phanTram
+                        });
+                    }
+                }
+                else
+                {
+                    baoTienTrinh?.Invoke(new UpdateProgressInfo
+                    {
+                        Message = $"Dang tai goi cap nhat... {DinhDangDungLuong(daTai)}"
+                    });
+                }
+            }
+        }
+
+        private static string DinhDangDungLuong(long soByte)
+        {
+            string[] donVi = ["B", "KB", "MB", "GB"];
+            double giaTri = soByte;
+            int chiSo = 0;
+
+            while (giaTri >= 1024 && chiSo < donVi.Length - 1)
+            {
+                giaTri /= 1024;
+                chiSo++;
+            }
+
+            return $"{giaTri:0.##} {donVi[chiSo]}";
         }
 
         private static string LayTenGoiCapNhat(ReleaseManifest manifest)
@@ -72,7 +154,7 @@ namespace Updater.Services
                 return manifest.PackageFileName.Trim();
             }
 
-            throw new InvalidOperationException("Manifest chưa có packageFileName hợp lệ.");
+            throw new InvalidOperationException("Manifest chua co packageFileName hop le.");
         }
 
         private static Uri TaoUriGoiCapNhat(UpdaterArguments thamSo, ReleaseManifest manifest)
@@ -82,7 +164,7 @@ namespace Updater.Services
                 return uriTuyetDoi;
             }
 
-            string duongDanLocal = Path.Combine(thamSo.AppDirectory, manifest.PackageUrl);    // Cho phép manifest local dùng đường dẫn tương đối để test trước khi có server thật
+            string duongDanLocal = Path.Combine(thamSo.AppDirectory, manifest.PackageUrl);
             return new Uri(duongDanLocal);
         }
     }

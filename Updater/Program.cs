@@ -6,32 +6,65 @@ namespace Updater
 {
     internal static class Program
     {
-        static int Main(string[] args)
+        [STAThread]
+        static void Main(string[] args)
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            using var form = new UpdaterProgressForm();
+            form.Shown += async (_, _) => await ChayCapNhatAsync(form, args);
+            Application.Run(form);
+        }
+
+        private static async Task ChayCapNhatAsync(UpdaterProgressForm form, string[] args)
         {
             try
             {
+                void BaoTienTrinh(UpdateProgressInfo thongTin) => form.CapNhatTienTrinh(thongTin);
+
+                BaoTienTrinh(new UpdateProgressInfo
+                {
+                    Message = "Dang doc tham so cap nhat..."
+                });
+
                 UpdaterArguments thamSo = UpdaterArgumentsParser.Parse(args);
-                AppShutdownService.ChoAppChinhTat(thamSo.ProcessId);
                 ReleaseManifest manifest = UpdaterManifestService.DocManifest(thamSo.ManifestPath);
-                string packagePath = PackageDownloadService.LayHoacTaiGoiCapNhat(thamSo, manifest);
-                string sourceDirectory = PackageDownloadService.GiaiNenGoiCapNhat(thamSo.AppDirectory, packagePath, manifest.LatestVersion);
-                FileReplaceService.ThayTheFileChuongTrinh(thamSo.AppDirectory, sourceDirectory);
+                AppShutdownService.ChoAppChinhTat(thamSo.ProcessId, BaoTienTrinh);
+                string packagePath = PackageDownloadService.LayHoacTaiGoiCapNhat(thamSo, manifest, BaoTienTrinh);
+                string sourceDirectory = PackageDownloadService.GiaiNenGoiCapNhat(thamSo.AppDirectory, packagePath, manifest.LatestVersion, BaoTienTrinh);
+
+                BaoTienTrinh(new UpdateProgressInfo
+                {
+                    Message = "Dang thay file chuong trinh...",
+                    Percent = 100
+                });
+
+                FileReplaceService.ThayTheFileChuongTrinh(thamSo.AppDirectory, sourceDirectory, BaoTienTrinh);
                 GhiDanhDauCapNhatThanhCong(thamSo.AppDirectory, manifest.LatestVersion);
 
-                Console.WriteLine($"App       : {manifest.AppName}");
-                Console.WriteLine($"Channel   : {manifest.Channel}");
-                Console.WriteLine($"Version   : {manifest.LatestVersion}");
-                Console.WriteLine($"Release   : {manifest.ReleaseDate}");
-                Console.WriteLine($"Package   : {packagePath}");
-                Console.WriteLine($"App Dir   : {thamSo.AppDirectory}");
-                Console.WriteLine("Updater đã giải nén gói và thay file chương trình thành công.");
-                return 0;
+                BaoTienTrinh(new UpdateProgressInfo
+                {
+                    Message = $"Cap nhat xong {manifest.LatestVersion}. Dang mo lai app...",
+                    Percent = 100
+                });
+
+                await Task.Delay(1200);
+                Environment.ExitCode = 0;
+                form.Close();
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex.Message);
+                form.CapNhatTienTrinh(new UpdateProgressInfo
+                {
+                    Message = $"Cap nhat that bai: {ex.Message}",
+                    IsError = true
+                });
+
                 GhiNhatKyLoi(ex, args);
-                return 1;
+                Environment.ExitCode = 1;
+                await Task.Delay(2500);
+                form.Close();
             }
         }
 
