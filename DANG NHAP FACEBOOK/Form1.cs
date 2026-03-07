@@ -1256,6 +1256,8 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
             const int soLanTheoDoiToiDa = 180;                                                 // Chờ tối đa 3 phút để Facebook phản hồi sau khi app đã tự gửi đăng nhập
             bool daThuLaiLanHai = false;
             string scriptTuDongDienVaSubmit = TaoScriptTuDongDienDangNhap(uid, password);
+            string chiTietCuoi = string.Empty;
+            string urlCuoi = string.Empty;
 
             for (int i = 0; i < soLanTheoDoiToiDa; i++)
             {
@@ -1268,7 +1270,9 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                         continue;
                     }
 
-                    (string trangThai, _, string lyDo) = await LayTrangThaiDangNhapSauSubmitAsync(webSocketDebuggerUrl);
+                    (string trangThai, string urlHienTai, string lyDo, string chiTiet) = await LayTrangThaiDangNhapSauSubmitAsync(webSocketDebuggerUrl);
+                    urlCuoi = urlHienTai;
+                    chiTietCuoi = chiTiet;
                     if (string.Equals(trangThai, "success", StringComparison.OrdinalIgnoreCase))
                     {
                         CapNhatTrangThaiDongTheoUid(uid, "Đăng nhập thành công");
@@ -1337,10 +1341,21 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
             }
 
             CapNhatTrangThaiDongTheoUid(uid, "Hết thời gian chờ xác nhận");
-            CapNhatTrangThai($"UID {uid} chưa có kết quả sau khi chờ 3 phút.", Color.Firebrick);
+            string thongTinBoSung = string.IsNullOrWhiteSpace(chiTietCuoi)
+                ? urlCuoi
+                : chiTietCuoi;
+            if (!string.IsNullOrWhiteSpace(thongTinBoSung) && thongTinBoSung.Length > 140)
+            {
+                thongTinBoSung = thongTinBoSung[..140] + "...";
+            }
+
+            string noiDungTimeout = string.IsNullOrWhiteSpace(thongTinBoSung)
+                ? $"UID {uid} chưa có kết quả sau khi chờ 3 phút."
+                : $"UID {uid} chưa có kết quả sau khi chờ 3 phút. Dấu hiệu cuối: {thongTinBoSung}";
+            CapNhatTrangThai(noiDungTimeout, Color.Firebrick);
         }
 
-        private async Task<(string TrangThai, string UrlHienTai, string LyDo)> LayTrangThaiDangNhapSauSubmitAsync(string webSocketDebuggerUrl)
+        private async Task<(string TrangThai, string UrlHienTai, string LyDo, string ChiTiet)> LayTrangThaiDangNhapSauSubmitAsync(string webSocketDebuggerUrl)
         {
             using var webSocket = new System.Net.WebSockets.ClientWebSocket();
             await webSocket.ConnectAsync(new Uri(webSocketDebuggerUrl), CancellationToken.None);
@@ -1353,23 +1368,24 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
 
             if (!ketQua.RootElement.TryGetProperty("result", out JsonElement resultElement))
             {
-                return ("unknown", string.Empty, string.Empty);
+                return ("unknown", string.Empty, string.Empty, string.Empty);
             }
 
             if (!resultElement.TryGetProperty("result", out JsonElement evaluateResult))
             {
-                return ("unknown", string.Empty, string.Empty);
+                return ("unknown", string.Empty, string.Empty, string.Empty);
             }
 
             if (!evaluateResult.TryGetProperty("value", out JsonElement valueElement) || valueElement.ValueKind != JsonValueKind.Object)
             {
-                return ("unknown", string.Empty, string.Empty);
+                return ("unknown", string.Empty, string.Empty, string.Empty);
             }
 
             string trangThai = valueElement.TryGetProperty("state", out JsonElement stateElement) ? stateElement.GetString() ?? "unknown" : "unknown";
             string urlHienTai = valueElement.TryGetProperty("href", out JsonElement hrefElement) ? hrefElement.GetString() ?? string.Empty : string.Empty;
             string lyDo = valueElement.TryGetProperty("reason", out JsonElement reasonElement) ? reasonElement.GetString() ?? string.Empty : string.Empty;
-            return (trangThai, urlHienTai, lyDo);
+            string chiTiet = valueElement.TryGetProperty("detail", out JsonElement detailElement) ? detailElement.GetString() ?? string.Empty : string.Empty;
+            return (trangThai, urlHienTai, lyDo, chiTiet);
         }
         //
         //  HÀM GỬI LỆNH CDP
@@ -1711,146 +1727,236 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         {
             return """
 (() => {
-  const href = String(window.location.href || '');
-  const lowerHref = href.toLowerCase();
-  const bodyText = String(document.body?.innerText || '');
-  const normalizedBodyText = bodyText
+  const normalizeText = (value) => (value || '')
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '');
-  const includesAny = (needles) => needles.some((needle) => normalizedBodyText.includes(needle));
 
-  const hasPasswordInput = !!document.querySelector('input[type="password"], input[name="pass"], input[name="password"]');
-  const hasLoginButton = !!document.querySelector('button[name="login"], input[name="login"], button[type="submit"], input[type="submit"]');
-
-  const isPasswordChanged = includesAny([
-                            'mat khau cua ban da thay doi',
-                            'password has been changed',
-                            'your password was changed'
-                          ]) || lowerHref.includes('update-password');
-  if (isPasswordChanged) {
-    return { state: 'blocked', href, reason: 'password_changed' };
+  const documents = [document];
+  for (const frame of Array.from(document.querySelectorAll('iframe'))) {
+    try {
+      if (frame.contentDocument) {
+        documents.push(frame.contentDocument);
+      }
+    } catch {
+    }
   }
 
-  const has956Code = /(^|\D)956(\D|$)/.test(normalizedBodyText);
-  if (has956Code) {
-    return { state: 'blocked', href, reason: '956' };
+  const hrefs = documents.map((doc) => {
+    try {
+      return String(doc.location?.href || '');
+    } catch {
+      return '';
+    }
+  }).filter(Boolean);
+
+  const titles = documents.map((doc) => {
+    try {
+      return String(doc.title || '');
+    } catch {
+      return '';
+    }
+  }).filter(Boolean);
+
+  const rawTexts = documents.map((doc) => {
+    try {
+      return [
+        String(doc.title || ''),
+        String(doc.body?.innerText || ''),
+        String(doc.documentElement?.innerText || '')
+      ].join('\n');
+    } catch {
+      return '';
+    }
+  }).filter(Boolean);
+
+  const href = hrefs[0] || String(window.location.href || '');
+  const allLowerHrefs = hrefs.join('\n').toLowerCase();
+  const compactRawText = rawTexts.join('\n').replace(/\s+/g, ' ').trim();
+  const normalizedBodyText = normalizeText(compactRawText);
+  const titleText = titles.join(' | ').replace(/\s+/g, ' ').trim();
+
+  const includesAny = (needles) => needles.some((needle) => normalizedBodyText.includes(needle) || allLowerHrefs.includes(needle));
+  const firstMatch = (needles) => needles.find((needle) => normalizedBodyText.includes(needle) || allLowerHrefs.includes(needle)) || '';
+  const makeResult = (state, reason = '', detail = '') => ({
+    state,
+    href,
+    reason,
+    detail: (detail || titleText || compactRawText || href).replace(/\s+/g, ' ').trim().slice(0, 220)
+  });
+
+  const hasPasswordInput = documents.some((doc) => {
+    try {
+      return !!doc.querySelector('input[type="password"], input[name="pass"], input[name="password"]');
+    } catch {
+      return false;
+    }
+  });
+
+  const hasLoginButton = documents.some((doc) => {
+    try {
+      return !!doc.querySelector('button[name="login"], input[name="login"], button[type="submit"], input[type="submit"]');
+    } catch {
+      return false;
+    }
+  });
+
+  const passwordChangedNeedles = [
+    'mat khau cua ban da bi thay doi',
+    'mat khau cua ban da duoc thay doi',
+    'mat khau cua ban da thay doi',
+    'ban da thay doi mat khau',
+    'do mat khau cua ban da thay doi',
+    'mat khau cua ban vua duoc thay doi',
+    'your password was changed',
+    'your password has been changed',
+    'because your password was changed',
+    'you changed your password',
+    'password changed'
+  ];
+
+  const passwordChangedUrlHints = [
+    'update-password',
+    'change-password',
+    'change_password',
+    'password/reset',
+    'recover/password',
+    'login/device-based/update-password'
+  ];
+
+  const hasNewPasswordFlow = documents.some((doc) => {
+    try {
+      const text = normalizeText([
+        String(doc.title || ''),
+        String(doc.body?.innerText || ''),
+        String(doc.documentElement?.innerText || '')
+      ].join(' '));
+      return text.includes('mat khau moi') ||
+        text.includes('tao mat khau moi') ||
+        text.includes('new password') ||
+        text.includes('create a new password');
+    } catch {
+      return false;
+    }
+  });
+
+  if (includesAny(passwordChangedNeedles) || passwordChangedUrlHints.some((hint) => allLowerHrefs.includes(hint)) || hasNewPasswordFlow) {
+    return makeResult('blocked', 'password_changed', firstMatch(passwordChangedNeedles) || titleText || href);
   }
 
-  const isWrongPassword = includesAny([
+  if (/(^|\D)956(\D|$)/.test(normalizedBodyText)) {
+    return makeResult('blocked', '956', '956');
+  }
+
+  const wrongPasswordNeedles = [
     'sai mat khau',
     'mat khau ban da nhap khong chinh xac',
     'the password you entered is incorrect',
     "the password that you've entered is incorrect",
     'incorrect password'
-  ]);
-  if (isWrongPassword) {
-    return { state: 'blocked', href, reason: 'wrong_password' };
+  ];
+  if (includesAny(wrongPasswordNeedles)) {
+    return makeResult('blocked', 'wrong_password', firstMatch(wrongPasswordNeedles));
   }
 
-  const isNoAccount = includesAny([
+  const noAccountNeedles = [
     'khong tim thay tai khoan',
     'tai khoan khong ton tai',
     "isn't connected to an account",
     "is not connected to an account",
     "we couldn't find your account"
-  ]);
-  if (isNoAccount) {
-    return { state: 'blocked', href, reason: 'no_account' };
+  ];
+  if (includesAny(noAccountNeedles)) {
+    return makeResult('blocked', 'no_account', firstMatch(noAccountNeedles));
   }
 
-  const isAccountDisabled = includesAny([
+  const disabledNeedles = [
     'tai khoan cua ban da bi vo hieu hoa',
     'tai khoan da bi vo hieu hoa',
     'account disabled',
     'disabled for violating'
-  ]);
-  if (isAccountDisabled) {
-    return { state: 'blocked', href, reason: 'account_disabled' };
+  ];
+  if (includesAny(disabledNeedles)) {
+    return makeResult('blocked', 'account_disabled', firstMatch(disabledNeedles));
   }
 
-  const isAccountLocked = includesAny([
+  const lockedNeedles = [
     'tai khoan cua ban da bi khoa',
     'tai khoan cua ban tam thoi bi khoa',
     'your account has been locked',
     'account locked',
     'temporarily blocked'
-  ]);
-  if (isAccountLocked) {
-    return { state: 'blocked', href, reason: 'account_locked' };
+  ];
+  if (includesAny(lockedNeedles)) {
+    return makeResult('blocked', 'account_locked', firstMatch(lockedNeedles));
   }
 
-  const isRateLimited = includesAny([
+  const rateLimitedNeedles = [
     'we limit how often',
     'try again later',
     'ban da thao tac qua nhanh',
     'thu lai sau',
     'qua nhieu lan'
-  ]);
-  if (isRateLimited) {
-    return { state: 'blocked', href, reason: 'rate_limited' };
+  ];
+  if (includesAny(rateLimitedNeedles)) {
+    return makeResult('blocked', 'rate_limited', firstMatch(rateLimitedNeedles));
   }
 
-  const isSuspiciousActivity = includesAny([
+  const suspiciousNeedles = [
     'hoat dong dang ngo',
     'dang nhap bat thuong',
     'suspicious activity',
     'unusual login attempt',
     'help us confirm'
-  ]);
-  if (isSuspiciousActivity) {
-    return { state: 'blocked', href, reason: 'suspicious_activity' };
+  ];
+  if (includesAny(suspiciousNeedles)) {
+    return makeResult('blocked', 'suspicious_activity', firstMatch(suspiciousNeedles));
   }
 
-  const isLoginNotAllowed = includesAny([
-                            'khong cho phep dang nhap',
-                            'not allowed to log in',
-                            'ban bi han che dang nhap'
-                          ]);
-  if (isLoginNotAllowed) {
-    return { state: 'blocked', href, reason: 'login_not_allowed' };
+  const notAllowedNeedles = [
+    'khong cho phep dang nhap',
+    'not allowed to log in',
+    'ban bi han che dang nhap'
+  ];
+  if (includesAny(notAllowedNeedles)) {
+    return makeResult('blocked', 'login_not_allowed', firstMatch(notAllowedNeedles));
   }
 
-  const isTwoFactor = lowerHref.includes('two_factor') ||
-                      includesAny([
-                        'ma xac thuc',
-                        'security code',
-                        'authentication code',
-                        'two-factor'
-                      ]);
-  if (isTwoFactor) {
-    return { state: 'checkpoint', href, reason: 'two_factor' };
+  const twoFactorNeedles = [
+    'ma xac thuc',
+    'security code',
+    'authentication code',
+    'two-factor'
+  ];
+  if (allLowerHrefs.includes('two_factor') || includesAny(twoFactorNeedles)) {
+    return makeResult('checkpoint', 'two_factor', firstMatch(twoFactorNeedles) || titleText);
   }
 
-  const isVerifyIdentity = includesAny([
+  const verifyIdentityNeedles = [
     'xac nhan danh tinh',
     'confirm your identity',
     'verify your identity',
     'upload your id',
     'chung minh danh tinh'
-  ]);
-  if (isVerifyIdentity) {
-    return { state: 'checkpoint', href, reason: 'verify_identity' };
+  ];
+  if (includesAny(verifyIdentityNeedles)) {
+    return makeResult('checkpoint', 'verify_identity', firstMatch(verifyIdentityNeedles));
   }
 
-  const isCheckpoint = lowerHref.includes('checkpoint') ||
-                       lowerHref.includes('approvals') ||
-                       lowerHref.includes('challenge');
-
-  if (isCheckpoint) {
-    return { state: 'checkpoint', href, reason: 'checkpoint' };
+  if (allLowerHrefs.includes('checkpoint') || allLowerHrefs.includes('approvals') || allLowerHrefs.includes('challenge')) {
+    return makeResult('checkpoint', 'checkpoint', titleText || href);
   }
 
-  const isLoginLikePage = lowerHref.includes('/login') ||
-                          lowerHref.includes('recover') ||
-                          lowerHref.includes('device-based') ||
-                          lowerHref.includes('facebook.com/?sk=welcome');
+  const isLoginLikePage = allLowerHrefs.includes('/login') ||
+                          allLowerHrefs.includes('recover') ||
+                          allLowerHrefs.includes('device-based') ||
+                          allLowerHrefs.includes('facebook.com/?sk=welcome');
 
   if (hasPasswordInput || hasLoginButton || isLoginLikePage) {
-    return { state: 'pending', href };
+    return makeResult('pending', '', titleText || href);
   }
 
-  return { state: 'success', href };
+  return makeResult('success', '', titleText || href);
 })();
 """;
         }
