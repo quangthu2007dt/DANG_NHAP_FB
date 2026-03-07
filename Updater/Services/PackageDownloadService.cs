@@ -23,16 +23,22 @@ namespace Updater.Services
 
             string packageFileName = LayTenGoiCapNhat(manifest);
             string packagePath = Path.Combine(packagesDirectory, packageFileName);
+            string packageTamPath = packagePath + ".download";
 
             if (File.Exists(packagePath))
             {
-                baoTienTrinh?.Invoke(new UpdateProgressInfo
+                if (LaGoiZipHopLe(packagePath))
                 {
-                    Message = "Da tim thay goi cap nhat trong thu muc packages.",
-                    Percent = 100
-                });
+                    baoTienTrinh?.Invoke(new UpdateProgressInfo
+                    {
+                        Message = "Da tim thay goi cap nhat hop le trong thu muc packages.",
+                        Percent = 100
+                    });
 
-                return packagePath;
+                    return packagePath;
+                }
+
+                File.Delete(packagePath);                                                    // Goi cu da hong thi phai xoa di de updater tai lai tu dau, tranh lap vo han
             }
 
             if (string.IsNullOrWhiteSpace(manifest.PackageUrl))
@@ -54,9 +60,39 @@ namespace Updater.Services
             using HttpResponseMessage response = httpClient.GetAsync(packageUri, HttpCompletionOption.ResponseHeadersRead).GetAwaiter().GetResult();
             response.EnsureSuccessStatusCode();
 
-            using Stream remoteStream = response.Content.ReadAsStreamAsync().GetAwaiter().GetResult();
-            using FileStream fileStream = File.Create(packagePath);
-            SaoChepStreamCoTienTrinh(remoteStream, fileStream, response.Content.Headers.ContentLength, baoTienTrinh);
+            if (File.Exists(packageTamPath))
+            {
+                File.Delete(packageTamPath);
+            }
+
+            try
+            {
+                using Stream remoteStream = response.Content.ReadAsStreamAsync().GetAwaiter().GetResult();
+                using FileStream fileStream = File.Create(packageTamPath);
+                SaoChepStreamCoTienTrinh(remoteStream, fileStream, response.Content.Headers.ContentLength, baoTienTrinh);
+            }
+            catch
+            {
+                if (File.Exists(packageTamPath))
+                {
+                    File.Delete(packageTamPath);
+                }
+
+                throw;
+            }
+
+            if (!LaGoiZipHopLe(packageTamPath))
+            {
+                File.Delete(packageTamPath);
+                throw new InvalidOperationException("Goi cap nhat vua tai xong khong hop le.");
+            }
+
+            if (File.Exists(packagePath))
+            {
+                File.Delete(packagePath);
+            }
+
+            File.Move(packageTamPath, packagePath);
             return packagePath;
         }
 
@@ -145,6 +181,19 @@ namespace Updater.Services
             }
 
             return $"{giaTri:0.##} {donVi[chiSo]}";
+        }
+
+        private static bool LaGoiZipHopLe(string packagePath)
+        {
+            try
+            {
+                using ZipArchive zip = ZipFile.OpenRead(packagePath);
+                return zip.Entries.Count > 0;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private static string LayTenGoiCapNhat(ReleaseManifest manifest)
