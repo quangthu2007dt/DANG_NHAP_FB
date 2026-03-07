@@ -53,7 +53,7 @@ namespace DANG_NHAP_FACEBOOK
             TaiDanhSachUserAgentLenCombobox();                                                 // Nạp danh sách User-Agent từ file txt lên combobox ngay khi app khởi động
             GanMenuUserAgentChoCombobox();                                                     // Gắn menu chuột phải để thêm và xóa User-Agent ngay trên app mà không phải sửa txt bằng tay
             CapNhatTrangThai("Sẵn sàng.", Color.RoyalBlue);                                    // Sau khi khởi tạo xong thì đưa app về trạng thái chờ thao tác
-            tssTime.Text = DateTime.Now.ToString("HH:mm:ss    dd/MM/yyyy");                                                                                  
+            tssTime.Text = DateTime.Now.ToString("HH:mm:ss    dd/MM/yyyy");
         }
 
         private void GanVersionLenTieuDeForm()
@@ -195,7 +195,7 @@ namespace DANG_NHAP_FACEBOOK
                     .Count(line => !string.IsNullOrWhiteSpace(line));                         // Chỉ tính các dòng còn dữ liệu thực trong ds.txt
             }
 
-            lblDanhSach.Text = $"Số lượng DS.txt : {soLuongDsTxtConLai}";                     // Label Danh Sách phản ánh số dòng còn lại trong ds.txt
+            lblDanhSach.Text = $"Số lượng DS : {soLuongDsTxtConLai}";                     // Label Danh Sách phản ánh số dòng còn lại trong ds.txt
             tssTong.Text = $"Tổng : {dataGridView1.Rows.Count}";                               // Thanh trạng thái Tổng phản ánh số dòng hiện đang có trên grid
         }
 
@@ -1065,7 +1065,7 @@ namespace DANG_NHAP_FACEBOOK
             Rectangle vungLamViec = Screen.PrimaryScreen?.WorkingArea ?? new Rectangle(0, 0, 1200, 900);
             int chieuRongCuaSo = Math.Min(vungLamViec.Width, Math.Max(1000, (int)(vungLamViec.Width * 0.75))); // Mở lớn hơn 2/3 màn hình để form Meta không bị bó quá hẹp
             int chieuCaoCuaSo = Math.Min(vungLamViec.Height, Math.Max(760, (int)(vungLamViec.Height * 0.88)));
-            int viTriX = vungLamViec.Left;                                                   // Neo sát mép trái màn hình để chừa khoảng trống bên phải cho người dùng theo dõi app
+            int viTriX = Math.Max(0, (vungLamViec.Width - chieuRongCuaSo) / 2);
             int viTriY = Math.Max(0, (vungLamViec.Height - chieuCaoCuaSo) / 2);
 
             string thamSoChanPopupChrome = "--disable-notifications --disable-save-password-bubble --disable-session-crashed-bubble --disable-features=PasswordManagerOnboarding,Translate";
@@ -1352,7 +1352,6 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                     {
                         string dienGiaiCheckpoint = lyDo switch
                         {
-                            "captcha" => "cần xác thực captcha",
                             "two_factor" => "cần nhập mã 2FA",
                             "verify_identity" => "cần xác minh danh tính",
                             "checkpoint" => "cần xác minh checkpoint",
@@ -1883,22 +1882,6 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     }
   });
 
-  const hasCaptchaImage = documents.some((doc) => {
-    try {
-      return !!doc.querySelector('img[src*="/captcha/tfbimage/"], img[src*="captcha/tfbimage"]');
-    } catch {
-      return false;
-    }
-  });
-
-  const hasCaptchaTextInput = documents.some((doc) => {
-    try {
-      return !!doc.querySelector('input[type="text"][autocomplete="off"], input[type="text"][aria-describedby], input[aria-describedby][type="text"]');
-    } catch {
-      return false;
-    }
-  });
-
   const actionHints = documents.flatMap((doc) => {
     try {
       return Array.from(doc.querySelectorAll('a[role="button"], button, [role="button"]')).map((node) => ({
@@ -2089,10 +2072,6 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
   ];
   if (includesAny(notAllowedNeedles)) {
     return makeResult('blocked', 'login_not_allowed', firstMatch(notAllowedNeedles));
-  }
-
-  if (hasCaptchaImage && hasCaptchaTextInput) {
-    return makeResult('checkpoint', 'captcha', 'captcha/tfbimage');
   }
 
   const twoFactorNeedles = [
@@ -2716,11 +2695,16 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                 CapNhatTrangThai("Điền UID/Password thất bại: không kết nối được phiên Chrome.", Color.Firebrick);
                 MessageBox.Show("Không thể kết nối lại phiên Chrome đang mở của dòng này.");
             }
-        }       
+        }
         // HÀM SỰ KIỆN HIỂN THỊ TIMES
         private void timer1_Tick(object sender, EventArgs e)
         {
             tssTime.Text = DateTime.Now.ToString("HH:mm:ss    dd/MM/yyyy");
+        }
+
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

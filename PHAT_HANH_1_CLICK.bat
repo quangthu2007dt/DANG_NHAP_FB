@@ -13,12 +13,12 @@ if not exist "%PS_SCRIPT%" (
 powershell -NoProfile -ExecutionPolicy Bypass -File "%PS_SCRIPT%"
 if errorlevel 1 (
   echo.
-  echo PHAT HANH THAT BAI. Xem loi o cua so tren.
+  echo PHAT HANH HOAC PUSH GITHUB THAT BAI. Xem loi o cua so tren.
   pause
   exit /b 1
 )
 
 echo.
-echo PHAT HANH HOAN TAT.
+echo PHAT HANH VA DONG BO GITHUB HOAN TAT.
 pause
 exit /b 0

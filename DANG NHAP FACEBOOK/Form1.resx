@@ -184,9 +184,6 @@
   <data name="colTuongTacCuoi.HeaderText" xml:space="preserve">
     <value>Tương Tác Cuối</value>
   </data>
-  <data name="colTuongTacCuoi.Width" type="System.Int32, mscorlib">
-    <value>120</value>
-  </data>
   <metadata name="colTrangThai.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -429,7 +426,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;dataGridView1.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>12</value>
   </data>
   <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
@@ -444,7 +441,7 @@
     <value>Segoe UI, 9pt, style=Bold</value>
   </data>
   <data name="tssTrangThai.Size" type="System.Drawing.Size, System.Drawing">
-    <value>570, 17</value>
+    <value>601, 17</value>
   </data>
   <data name="tssTrangThai.Text" xml:space="preserve">
     <value>Trạng Thái</value>
@@ -519,7 +516,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;statusStrip1.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="lblTieuDe.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -549,7 +546,11 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;lblTieuDe.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="btnDangNhap.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
   </data>
   <data name="btnDangNhap.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9pt, style=Bold</value>
@@ -582,12 +583,14 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btnDangNhap.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
+  </data>
+  <data name="btnTiepTuc.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
   </data>
   <data name="btnTiepTuc.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9pt, style=Bold</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="btnTiepTuc.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -616,7 +619,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btnTiepTuc.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="lblUserAgent.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -643,7 +646,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;lblUserAgent.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="cboUserAgent.Location" type="System.Drawing.Point, System.Drawing">
     <value>118, 109</value>
@@ -667,7 +670,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;cboUserAgent.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="lblChonGiaoDien.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -697,7 +700,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;lblChonGiaoDien.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="cboUrl.Items" xml:space="preserve">
     <value>Facebook.com/meta</value>
@@ -727,7 +730,10 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;cboUrl.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
+  </data>
+  <data name="btnXoa.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
   </data>
   <data name="btnXoa.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9pt, style=Bold</value>
@@ -757,7 +763,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btnXoa.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="lblDanhSach.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9pt</value>
@@ -787,11 +793,41 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;lblDanhSach.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>373, 17</value>
   </metadata>
+  <data name="btnStop.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnStop.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 9pt, style=Bold</value>
+  </data>
+  <data name="btnStop.Location" type="System.Drawing.Point, System.Drawing">
+    <value>731, 57</value>
+  </data>
+  <data name="btnStop.Size" type="System.Drawing.Size, System.Drawing">
+    <value>90, 35</value>
+  </data>
+  <data name="btnStop.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="btnStop.Text" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="&gt;&gt;btnStop.Name" xml:space="preserve">
+    <value>btnStop</value>
+  </data>
+  <data name="&gt;&gt;btnStop.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnStop.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnStop.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>

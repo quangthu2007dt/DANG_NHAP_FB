@@ -98,6 +98,7 @@
             btnXoa = new Button();
             lblDanhSach = new Label();
             timer1 = new System.Windows.Forms.Timer(components);
+            btnStop = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             cmsGirdRightClick.SuspendLayout();
             statusStrip1.SuspendLayout();
@@ -514,11 +515,21 @@
             timer1.Interval = 1000;
             timer1.Tick += timer1_Tick;
             // 
+            // btnStop
+            // 
+            btnStop.BackColor = Color.FromArgb(192, 192, 255);
+            resources.ApplyResources(btnStop, "btnStop");
+            btnStop.ForeColor = Color.Fuchsia;
+            btnStop.Name = "btnStop";
+            btnStop.UseVisualStyleBackColor = false;
+            btnStop.Click += btnStop_Click;
+            // 
             // Form1
             // 
             resources.ApplyResources(this, "$this");
             AutoScaleMode = AutoScaleMode.Font;
             ContextMenuStrip = cmsGirdRightClick;
+            Controls.Add(btnStop);
             Controls.Add(lblDanhSach);
             Controls.Add(btnXoa);
             Controls.Add(cboUrl);
@@ -594,6 +605,10 @@
         private ToolStripMenuItem checkWallToolStripMenuItem;
         private ToolStripMenuItem checkÌnorToolStripMenuItem;
         private ToolStripMenuItem mởToolStripMenuItem;
+        private Button btnXoa;
+        private Label lblDanhSach;
+        private System.Windows.Forms.Timer timer1;
+        private Button btnStop;
         private DataGridViewTextBoxColumn colSTT;
         private DataGridViewCheckBoxColumn colChon;
         private DataGridViewTextBoxColumn colUID;
@@ -605,8 +620,5 @@
         private DataGridViewTextBoxColumn colTuongTacCuoi;
         private DataGridViewTextBoxColumn colTrangThai;
         private DataGridViewTextBoxColumn colCookie;
-        private Button btnXoa;
-        private Label lblDanhSach;
-        private System.Windows.Forms.Timer timer1;
     }
 }
