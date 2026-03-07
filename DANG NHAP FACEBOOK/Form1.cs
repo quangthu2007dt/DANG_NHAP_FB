@@ -1801,6 +1801,17 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     }
   });
 
+  const actionHints = documents.flatMap((doc) => {
+    try {
+      return Array.from(doc.querySelectorAll('a[role="button"], button, [role="button"]')).map((node) => ({
+        text: normalizeText(String(node.innerText || node.textContent || node.getAttribute('aria-label') || '')),
+        href: normalizeText(String(node.getAttribute('href') || ''))
+      }));
+    } catch {
+      return [];
+    }
+  });
+
   const passwordChangedNeedles = [
     'mat khau cua ban da bi thay doi',
     'mat khau cua ban da duoc thay doi',
@@ -1821,7 +1832,16 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     'change_password',
     'password/reset',
     'recover/password',
-    'login/device-based/update-password'
+    'login/device-based/update-password',
+    '/recover/initiate/',
+    '/recover/initiate/?s=14&hacked=1'
+  ];
+
+  const passwordChangedActionTexts = [
+    'bao ve tai khoan cua toi',
+    'dat lai mat khau cua toi',
+    'secure my account',
+    'reset my password'
   ];
 
   const hasNewPasswordFlow = documents.some((doc) => {
@@ -1840,8 +1860,19 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     }
   });
 
-  if (includesAny(passwordChangedNeedles) || passwordChangedUrlHints.some((hint) => allLowerHrefs.includes(hint)) || hasNewPasswordFlow) {
-    return makeResult('blocked', 'password_changed', firstMatch(passwordChangedNeedles) || titleText || href);
+  const matchedPasswordChangedAction = actionHints.find((action) =>
+    passwordChangedUrlHints.some((hint) => action.href.includes(hint)) ||
+    passwordChangedActionTexts.some((text) => action.text.includes(text))
+  );
+
+  if (includesAny(passwordChangedNeedles) || passwordChangedUrlHints.some((hint) => allLowerHrefs.includes(hint)) || hasNewPasswordFlow || matchedPasswordChangedAction) {
+    const chiTietPasswordChanged =
+      matchedPasswordChangedAction?.text ||
+      matchedPasswordChangedAction?.href ||
+      firstMatch(passwordChangedNeedles) ||
+      titleText ||
+      href;
+    return makeResult('blocked', 'password_changed', chiTietPasswordChanged);
   }
 
   if (/(^|\D)956(\D|$)/.test(normalizedBodyText)) {
