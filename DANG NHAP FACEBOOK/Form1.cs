@@ -160,6 +160,29 @@ namespace DANG_NHAP_FACEBOOK
             BeginInvoke(XuLyNutNext);                                                          // Sau khi dọn xong UID lỗi thì nhảy ngay sang tài khoản kế tiếp như thao tác bấm Next
         }
 
+        private void DanhDauUidCanCaptchaVaChayTiep(string uid)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(() => DanhDauUidCanCaptchaVaChayTiep(uid));                        // Nhánh captcha cũng thường đi ra từ luồng theo dõi async nên phải quay về UI thread
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(uid))
+            {
+                return;
+            }
+
+            string uidCanXuLy = uid.Trim();
+            CapNhatTrangThaiDongTheoUid(uidCanXuLy, "Dừng: cần nhập captcha");
+            CapNhatTrangThai($"UID {uidCanXuLy} gặp captcha. Đang dọn phiên hiện tại và chuyển sang tài khoản kế tiếp...", Color.DarkOrange);
+
+            SessionRuntimeService.TryCloseAndCleanupSessionsByUid(uidCanXuLy);
+            congDebugTheoUid.Remove(uidCanXuLy);
+
+            BeginInvoke(XuLyNutNext);                                                          // Captcha là nhánh cần bỏ qua tạm thời nên app tự nhảy sang tài khoản kế tiếp
+        }
+
         //
         //  HÀM CẬP NHẬT SỐ LƯỢNG
         //
@@ -1348,9 +1371,16 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                             return;
                         }
 
+                        if (string.Equals(lyDo, "captcha", StringComparison.OrdinalIgnoreCase))
+                        {
+                            DanhDauUidCanCaptchaVaChayTiep(uid);
+                            return;
+                        }
+
                         string dienGiaiLyDo = lyDo switch
                         {
                             "password_changed" => "mật khẩu đã thay đổi",
+                            "captcha" => "cần nhập captcha",
                             "956" => "mã 956",
                             "login_not_allowed" => "không cho phép đăng nhập",
                             "wrong_password" => "sai mật khẩu",
@@ -1924,6 +1954,46 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
       titleText ||
       href;
     return makeResult('blocked', 'password_changed', chiTietPasswordChanged);
+  }
+
+  const captchaNeedles = [
+    'captcha',
+    'security check',
+    'kiem tra bao mat',
+    'nhap cac ky tu ban nhin thay',
+    'nhap cac ky tu ma ban nhin thay',
+    'nhap ma ban thay trong anh',
+    'enter the characters you see',
+    'enter the characters shown',
+    'type the text you see in the image',
+    'prove you are not a robot',
+    'are you a real person'
+  ];
+
+  const hasCaptchaElement = documents.some((doc) => {
+    try {
+      return !!doc.querySelector(
+        'input[name*="captcha" i], input[id*="captcha" i], img[src*="captcha" i], img[alt*="captcha" i], iframe[src*="captcha" i], iframe[src*="recaptcha" i], iframe[src*="hcaptcha" i], [id*="captcha" i], [class*="captcha" i]'
+      );
+    } catch {
+      return false;
+    }
+  });
+
+  const hasContinueAction = actionHints.some((action) =>
+    action.text === 'tiep tuc' ||
+    action.text.includes('tiep tuc') ||
+    action.text === 'continue' ||
+    action.text.includes('continue')
+  );
+
+  if (includesAny(captchaNeedles) || allLowerHrefs.includes('captcha') || (hasCaptchaElement && hasContinueAction)) {
+    const chiTietCaptcha =
+      hasContinueAction ? 'tiep tuc' :
+      firstMatch(captchaNeedles) ||
+      titleText ||
+      href;
+    return makeResult('blocked', 'captcha', chiTietCaptcha);
   }
 
   if (/(^|\D)956(\D|$)/.test(normalizedBodyText)) {
