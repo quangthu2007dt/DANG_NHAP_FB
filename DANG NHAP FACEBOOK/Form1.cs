@@ -1352,6 +1352,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                     {
                         string dienGiaiCheckpoint = lyDo switch
                         {
+                            "captcha" => "cần xác thực captcha",
                             "two_factor" => "cần nhập mã 2FA",
                             "verify_identity" => "cần xác minh danh tính",
                             "checkpoint" => "cần xác minh checkpoint",
@@ -1882,6 +1883,22 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     }
   });
 
+  const hasCaptchaImage = documents.some((doc) => {
+    try {
+      return !!doc.querySelector('img[src*="/captcha/tfbimage/"], img[src*="captcha/tfbimage"]');
+    } catch {
+      return false;
+    }
+  });
+
+  const hasCaptchaTextInput = documents.some((doc) => {
+    try {
+      return !!doc.querySelector('input[type="text"][autocomplete="off"], input[type="text"][aria-describedby], input[aria-describedby][type="text"]');
+    } catch {
+      return false;
+    }
+  });
+
   const actionHints = documents.flatMap((doc) => {
     try {
       return Array.from(doc.querySelectorAll('a[role="button"], button, [role="button"]')).map((node) => ({
@@ -2072,6 +2089,10 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
   ];
   if (includesAny(notAllowedNeedles)) {
     return makeResult('blocked', 'login_not_allowed', firstMatch(notAllowedNeedles));
+  }
+
+  if (hasCaptchaImage && hasCaptchaTextInput) {
+    return makeResult('checkpoint', 'captcha', 'captcha/tfbimage');
   }
 
   const twoFactorNeedles = [
