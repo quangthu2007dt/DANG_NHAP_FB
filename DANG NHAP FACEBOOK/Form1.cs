@@ -18,6 +18,7 @@ namespace DANG_NHAP_FACEBOOK
         private const int soGiayChoMoPhienMoi = 5;
         private const int khoangNghiTruocKhiDongChromeMs = 700;
         private const int khoangNghiSauKhiDongChromeMs = 500;
+        private const int khoangNghiNhinKetQuaMatKhauDoiMs = 5000;
         private int maDieuKhienTuDong;
         private string uidPhienDangXuLy = string.Empty;
         private string sessionIdPhienDangXuLy = string.Empty;
@@ -223,7 +224,7 @@ namespace DANG_NHAP_FACEBOOK
             }
         }
 
-        private async Task ChoMoPhienMoiSau5GiayAsync(string thongBao, Color mauChu, int maDieuKhien)
+        private async Task ChoMoPhienMoiSau5GiayAsync(int maDieuKhien)
         {
             for (int soGiayConLai = soGiayChoMoPhienMoi; soGiayConLai >= 1; soGiayConLai--)
             {
@@ -232,7 +233,7 @@ namespace DANG_NHAP_FACEBOOK
                     return;
                 }
 
-                CapNhatTrangThai($"{thongBao} Mở phiên mới sau {soGiayConLai} giây...", mauChu);
+                CapNhatTrangThai($"Đang mở phiên mới sau {soGiayConLai} giây...", Color.DarkGoldenrod); // Bắt đầu phiên mới thì chỉ báo đúng luồng mở phiên mới, không nhắc lại kết quả phiên cũ
                 await Task.Delay(1000);
             }
 
@@ -264,7 +265,7 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             int maDieuKhien = TaoMaDieuKhienTuDongMoi();
-            _ = ChoMoPhienMoiSau5GiayAsync(thongBao, mauChu, maDieuKhien);
+            _ = ChoMoPhienMoiSau5GiayAsync(maDieuKhien);
         }
 
         private async void XoaUidMatKhauDaThayDoiVaChayTiep(string uid)
@@ -283,8 +284,10 @@ namespace DANG_NHAP_FACEBOOK
             string uidCanXuLy = uid.Trim();
             string thongBao = $"UID {uidCanXuLy} có mật khẩu đã thay đổi.";
 
+            CapNhatTrangThai(thongBao, Color.DarkOrange);                                     // Giữ nguyên kết quả mật khẩu đổi trên màn hình để người dùng còn nhìn thấy trước khi app đóng Chrome
+            await Task.Delay(khoangNghiNhinKetQuaMatKhauDoiMs);                               // Case mật khẩu đổi cần chừa đủ lâu để người dùng nhìn rõ kết quả thực tế trên trình duyệt
             CapNhatTrangThai($"{thongBao} Đang đóng phiên hiện tại...", Color.DarkOrange);
-            await Task.Delay(khoangNghiTruocKhiDongChromeMs);                                 // Cho UI kịp hiện kết quả trước khi dọn Chrome và xóa dòng
+            await Task.Delay(khoangNghiTruocKhiDongChromeMs);                                 // Sau khi đã cho nhìn kết quả xong, nghỉ thêm một nhịp ngắn trước lúc thật sự gọi đóng Chrome
 
             await Task.Run(() => DongVaDonDepPhienDangXuLy(uidCanXuLy));
             await Task.Delay(khoangNghiSauKhiDongChromeMs);                                   // Tách nhịp giữa lúc đóng xong phiên cũ và lúc app đẩy Next
@@ -319,7 +322,7 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             int maDieuKhien = TaoMaDieuKhienTuDongMoi();
-            _ = ChoMoPhienMoiSau5GiayAsync(thongBao, Color.DarkOrange, maDieuKhien);          // Không nhảy ngay lập tức để người dùng còn nhìn thấy app chuẩn bị mở phiên kế tiếp
+            _ = ChoMoPhienMoiSau5GiayAsync(maDieuKhien);                                      // Không nhảy ngay lập tức để người dùng còn nhìn thấy app chuẩn bị mở phiên kế tiếp
         }
 
         private void DanhDauUidCanCaptchaVaChayTiep(string uid)
