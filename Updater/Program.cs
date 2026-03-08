@@ -28,24 +28,28 @@ namespace Updater
                     Message = "Dang doc tham so cap nhat..."
                 });
 
-                UpdaterArguments thamSo = UpdaterArgumentsParser.Parse(args);
-                ReleaseManifest manifest = UpdaterManifestService.DocManifest(thamSo.ManifestPath);
-                AppShutdownService.ChoAppChinhTat(thamSo.ProcessId, BaoTienTrinh);
-                string packagePath = PackageDownloadService.LayHoacTaiGoiCapNhat(thamSo, manifest, BaoTienTrinh);
-                string sourceDirectory = PackageDownloadService.GiaiNenGoiCapNhat(thamSo.AppDirectory, packagePath, manifest.LatestVersion, BaoTienTrinh);
-
-                BaoTienTrinh(new UpdateProgressInfo
+                string thongBaoHoanTat = await Task.Run(() =>
                 {
-                    Message = "Dang thay file chuong trinh...",
-                    Percent = 100
+                    UpdaterArguments thamSo = UpdaterArgumentsParser.Parse(args);
+                    ReleaseManifest manifest = UpdaterManifestService.DocManifest(thamSo.ManifestPath);
+                    AppShutdownService.ChoAppChinhTat(thamSo.ProcessId, BaoTienTrinh);
+                    string packagePath = PackageDownloadService.LayHoacTaiGoiCapNhat(thamSo, manifest, BaoTienTrinh);
+                    string sourceDirectory = PackageDownloadService.GiaiNenGoiCapNhat(thamSo.AppDirectory, packagePath, manifest.LatestVersion, BaoTienTrinh);
+
+                    BaoTienTrinh(new UpdateProgressInfo
+                    {
+                        Message = "Dang thay file chuong trinh...",
+                        Percent = 100
+                    });
+
+                    FileReplaceService.ThayTheFileChuongTrinh(thamSo.AppDirectory, sourceDirectory, BaoTienTrinh);
+                    GhiDanhDauCapNhatThanhCong(thamSo.AppDirectory, manifest.LatestVersion);
+                    return $"Cap nhat xong {manifest.LatestVersion}. Dang mo lai app...";
                 });
 
-                FileReplaceService.ThayTheFileChuongTrinh(thamSo.AppDirectory, sourceDirectory, BaoTienTrinh);
-                GhiDanhDauCapNhatThanhCong(thamSo.AppDirectory, manifest.LatestVersion);
-
                 BaoTienTrinh(new UpdateProgressInfo
                 {
-                    Message = $"Cap nhat xong {manifest.LatestVersion}. Dang mo lai app...",
+                    Message = thongBaoHoanTat,
                     Percent = 100
                 });
 
