@@ -10,10 +10,6 @@ namespace DANG_NHAP_FACEBOOK
     {
         private const string TenAppExe = "DANG NHAP FACEBOOK.exe";
         private const string TenUpdaterExe = "Updater.exe";
-        private const string TenUpdaterDll = "Updater.dll";
-        private const string TenUpdaterDeps = "Updater.deps.json";
-        private const string TenUpdaterRuntimeConfig = "Updater.runtimeconfig.json";
-        private const string TenUpdaterPdb = "Updater.pdb";
         private const string TenFileDanhDauCapNhatThanhCong = "update_success_marker.json";
         private const string TenFileDanhDauDangCapNhat = "update_pending_marker.json";
 
@@ -214,16 +210,11 @@ namespace DANG_NHAP_FACEBOOK
             string thuMucUpdaterTam = Path.Combine(AppPaths.TempDirectory, $"updater_runtime_{DateTime.Now:yyyyMMdd_HHmmss}");
             Directory.CreateDirectory(thuMucUpdaterTam);
 
-            foreach (string tenFile in LayDanhSachTepUpdaterCanChep())
+            foreach (string duongDanNguon in LayDanhSachTepCanChepChoUpdaterTam())
             {
-                string nguon = Path.Combine(AppPaths.BaseDirectory, tenFile);
-                if (!File.Exists(nguon))
-                {
-                    continue;
-                }
-
+                string tenFile = Path.GetFileName(duongDanNguon);
                 string dich = Path.Combine(thuMucUpdaterTam, tenFile);
-                File.Copy(nguon, dich, true);
+                File.Copy(duongDanNguon, dich, true);                                        // Updater chạy từ thư mục tạm phải mang theo cả runtime gốc, không chỉ riêng 5 file Updater.*
             }
 
             string updaterTamExePath = Path.Combine(thuMucUpdaterTam, TenUpdaterExe);
@@ -235,13 +226,12 @@ namespace DANG_NHAP_FACEBOOK
             return updaterTamExePath;
         }
 
-        private static IEnumerable<string> LayDanhSachTepUpdaterCanChep()
+        private static IEnumerable<string> LayDanhSachTepCanChepChoUpdaterTam()
         {
-            yield return TenUpdaterExe;
-            yield return TenUpdaterDll;
-            yield return TenUpdaterDeps;
-            yield return TenUpdaterRuntimeConfig;
-            yield return TenUpdaterPdb;
+            foreach (string duongDanNguon in Directory.GetFiles(AppPaths.BaseDirectory, "*", SearchOption.TopDirectoryOnly))
+            {
+                yield return duongDanNguon;
+            }
         }
 
         private static bool ThuDocVaThongBaoTuMarkerThanhCong()
