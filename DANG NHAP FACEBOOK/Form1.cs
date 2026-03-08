@@ -2152,7 +2152,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     'password/reset',
     'recover/password',
     'login/device-based/update-password',
-    '/recover/initiate/',
+    'hacked=1',
     '/recover/initiate/?s=14&hacked=1'
   ];
 
@@ -2181,6 +2181,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
 
   const matchedPasswordChangedAction = actionHints.find((action) =>
     passwordChangedUrlHints.some((hint) => action.href.includes(hint)) ||
+    (action.href.includes('/recover/initiate/') && passwordChangedActionTexts.some((text) => action.text.includes(text))) ||
     passwordChangedActionTexts.some((text) => action.text.includes(text))
   );
 
