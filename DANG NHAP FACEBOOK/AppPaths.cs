@@ -13,6 +13,7 @@ namespace DANG_NHAP_FACEBOOK
         public static string ProfilesRootPath => Path.Combine(DataDirectory, "profiles");
         public static string SessionsRootPath => Path.Combine(DataDirectory, "sessions");
         public static string SessionRegistryFilePath => Path.Combine(DataDirectory, "session_registry.json");
+        public static string GridFilePath => Path.Combine(DataDirectory, "grid.json");
 
         public static string DsFilePath => Path.Combine(DataDirectory, "ds.txt");
         public static string UserAgentsFilePath => Path.Combine(DataDirectory, "user_agents.txt");

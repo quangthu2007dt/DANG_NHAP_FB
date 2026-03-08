@@ -6,6 +6,7 @@ namespace DANG_NHAP_FACEBOOK
     public partial class Form1 : Form
     {
         private readonly string dsFilePath;
+        private readonly string gridFilePath;
         private readonly string profileMauPath;
         private readonly string profileRanhPath;
         private readonly string userAgentDangDungFilePath;
@@ -18,6 +19,7 @@ namespace DANG_NHAP_FACEBOOK
         private const int soGiayChoMoPhienMoi = 5;
         private const int khoangNghiSauKhiDongChromeMs = 500;
         private const int khoangNghiNhinKetQuaTruocKhiDongChromeMs = 5000;
+        private bool dangNapGridTuFile;
         private int maDieuKhienTuDong;
         private string uidPhienDangXuLy = string.Empty;
         private string sessionIdPhienDangXuLy = string.Empty;
@@ -32,6 +34,19 @@ namespace DANG_NHAP_FACEBOOK
             public string GhiChu { get; set; } = string.Empty;
         }
 
+        private sealed class DuLieuDongGrid
+        {
+            public string Uid { get; set; } = string.Empty;
+            public string Password { get; set; } = string.Empty;
+            public string NgayTao { get; set; } = string.Empty;
+            public string Ten { get; set; } = string.Empty;
+            public string Email { get; set; } = string.Empty;
+            public string GhiChu { get; set; } = string.Empty;
+            public string TuongTacCuoi { get; set; } = string.Empty;
+            public string TrangThai { get; set; } = string.Empty;
+            public string Cookie { get; set; } = string.Empty;
+        }
+
         public Form1()
         {
             InitializeComponent();
@@ -40,6 +55,7 @@ namespace DANG_NHAP_FACEBOOK
             userAgentsFilePath = AppPaths.UserAgentsFilePath;                                 // Danh sách User-Agent chính thức nằm trong data\
             userAgentDangDungFilePath = AppPaths.UserAgentDangDungFilePath;                   // File log User-Agent đang dùng cũng đi theo data\
             dsFilePath = AppPaths.DsFilePath;                                                 // ds.txt chính thức nằm trong data\
+            gridFilePath = AppPaths.GridFilePath;                                             // grid.json dùng để giữ lại đúng danh sách đang có trên bảng
             profileMauPath = AppPaths.ProfileMauPath;                                         // Profile mẫu chính thức nằm trong data\
             profileRanhPath = AppPaths.ProfileRanhPath;                                       // Profile rảnh chính thức nằm trong data\
             LoadDuLieuLenGridKhiMoApp();                                                      // Khi app vừa mở thì khởi tạo grid cho mô hình phiên tạm
@@ -119,6 +135,7 @@ namespace DANG_NHAP_FACEBOOK
 
                 row.Cells["colTrangThai"].Value = trangThai;
                 row.Cells["colTuongTacCuoi"].Value = DateTime.Now.ToString("dd/MM HH:mm:ss");
+                LuuDuLieuGridRaFile();
                 break;
             }
         }
@@ -334,6 +351,8 @@ namespace DANG_NHAP_FACEBOOK
                 dataGridView1.Rows.Remove(rowCanXoa);
                 CapNhatLaiSTT();
             }
+
+            LuuDuLieuGridRaFile();
 
             if (CoYeuCauDungThuCong())
             {
@@ -597,6 +616,7 @@ namespace DANG_NHAP_FACEBOOK
             row.Cells["colEmail"].Value = duLieuMoi.Email;
             row.Cells["colGhiChu"].Value = duLieuMoi.GhiChu;
 
+            LuuDuLieuGridRaFile();
             CapNhatThongTinSoLuong();
             CapNhatTrangThai($"Đã cập nhật dữ liệu dòng {duLieuMoi.Uid}.", Color.ForestGreen);
         }
@@ -911,6 +931,7 @@ namespace DANG_NHAP_FACEBOOK
             dataGridView1.ClearSelection();                                                   // Bỏ toàn bộ lựa chọn cũ để chỉ giữ đúng dòng mới
             row.Selected = true;                                                              // Tự chọn ngay dòng vừa được thêm
             dataGridView1.CurrentCell = row.Cells["colUID"];                                  // Đưa con trỏ hiện tại về cột UID của dòng mới
+            LuuDuLieuGridRaFile();
         }
         //
         //   HÀM XỬ LÝ SỰ KIỆN NÚT TIẾP TỤC
@@ -2525,6 +2546,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
             XoaUidKhoiDsTxt(uid);                                                              // Xóa UID tương ứng ra khỏi ds.txt để dữ liệu file và grid luôn đồng bộ
             dataGridView1.Rows.Remove(row);                                                    // Bỏ dòng đã xóa ra khỏi grid
             CapNhatLaiSTT();                                                                   // Đánh lại số thứ tự để bảng không bị lệch sau khi xóa
+            LuuDuLieuGridRaFile();
             CapNhatTrangThai($"Đã xóa xong dòng {uid}.", Color.ForestGreen);
         }
         //
@@ -2570,6 +2592,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
             }
 
             CapNhatLaiSTT();                                                                   // Đánh lại STT sau khi xóa hàng loạt
+            LuuDuLieuGridRaFile();
             CapNhatTrangThai($"Đã xóa xong {dsUidCanXoa.Count} dòng đã tick.", Color.ForestGreen);
         }
         //
@@ -2861,7 +2884,113 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         private void LoadDuLieuLenGridKhiMoApp()
         {
             dataGridView1.Rows.Clear();
-            CapNhatTrangThai("Đã nạp xong dữ liệu phiên tạm (grid sẽ tạo dòng khi bấm Next).", Color.ForestGreen);
+            dangNapGridTuFile = true;
+
+            try
+            {
+                if (!File.Exists(gridFilePath))
+                {
+                    CapNhatTrangThai("Chưa có grid.json, bảng sẽ bắt đầu rỗng.", Color.ForestGreen);
+                    return;
+                }
+
+                string json = File.ReadAllText(gridFilePath, Encoding.UTF8);
+                if (string.IsNullOrWhiteSpace(json))
+                {
+                    CapNhatTrangThai("grid.json đang rỗng, bảng sẽ bắt đầu rỗng.", Color.ForestGreen);
+                    return;
+                }
+
+                List<DuLieuDongGrid> dsDongGrid = JsonSerializer.Deserialize<List<DuLieuDongGrid>>(json) ?? [];
+                int stt = 1;
+
+                foreach (DuLieuDongGrid dong in dsDongGrid)
+                {
+                    if (string.IsNullOrWhiteSpace(dong.Uid))
+                    {
+                        continue;                                                               // Bỏ qua dòng lỗi để không nạp UID rỗng lên grid
+                    }
+
+                    int rowIndex = dataGridView1.Rows.Add();
+                    DataGridViewRow row = dataGridView1.Rows[rowIndex];
+                    row.Cells["colSTT"].Value = stt++;
+                    row.Cells["colChon"].Value = false;
+                    row.Cells["colUID"].Value = dong.Uid;
+                    row.Cells["colPass"].Value = dong.Password;
+                    row.Cells["colNgayTao"].Value = dong.NgayTao;
+                    row.Cells["colTen"].Value = dong.Ten;
+                    row.Cells["colEmail"].Value = dong.Email;
+                    row.Cells["colGhiChu"].Value = dong.GhiChu;
+                    row.Cells["colTuongTacCuoi"].Value = dong.TuongTacCuoi;
+                    row.Cells["colTrangThai"].Value = dong.TrangThai;
+                    row.Cells["colCookie"].Value = dong.Cookie;
+                }
+
+                dataGridView1.ClearSelection();
+                CapNhatTrangThai($"Đã nạp {dataGridView1.Rows.Count} dòng từ grid.json.", Color.ForestGreen);
+            }
+            catch
+            {
+                CapNhatTrangThai("Không đọc được grid.json, bảng sẽ bắt đầu rỗng.", Color.Firebrick);
+            }
+            finally
+            {
+                dangNapGridTuFile = false;
+            }
+        }
+
+        private void LuuDuLieuGridRaFile()
+        {
+            if (dangNapGridTuFile)
+            {
+                return;                                                                        // Đang nạp lại từ file thì không ghi ngược vào grid.json
+            }
+
+            try
+            {
+                List<DuLieuDongGrid> dsDongGrid = new();
+
+                foreach (DataGridViewRow row in dataGridView1.Rows)
+                {
+                    if (row.IsNewRow)
+                    {
+                        continue;
+                    }
+
+                    string uid = row.Cells["colUID"].Value?.ToString()?.Trim() ?? string.Empty;
+                    if (string.IsNullOrWhiteSpace(uid))
+                    {
+                        continue;                                                               // Chỉ lưu các dòng có UID thật để file grid luôn gọn và đúng nghiệp vụ
+                    }
+
+                    dsDongGrid.Add(new DuLieuDongGrid
+                    {
+                        Uid = uid,
+                        Password = row.Cells["colPass"].Value?.ToString()?.Trim() ?? string.Empty,
+                        NgayTao = row.Cells["colNgayTao"].Value?.ToString()?.Trim() ?? string.Empty,
+                        Ten = row.Cells["colTen"].Value?.ToString()?.Trim() ?? string.Empty,
+                        Email = row.Cells["colEmail"].Value?.ToString()?.Trim() ?? string.Empty,
+                        GhiChu = row.Cells["colGhiChu"].Value?.ToString()?.Trim() ?? string.Empty,
+                        TuongTacCuoi = row.Cells["colTuongTacCuoi"].Value?.ToString()?.Trim() ?? string.Empty,
+                        TrangThai = row.Cells["colTrangThai"].Value?.ToString()?.Trim() ?? string.Empty,
+                        Cookie = row.Cells["colCookie"].Value?.ToString()?.Trim() ?? string.Empty
+                    });
+                }
+
+                string json = JsonSerializer.Serialize(dsDongGrid, new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
+
+                string tempPath = $"{gridFilePath}.tmp";
+                File.WriteAllText(tempPath, json, new UTF8Encoding(false));
+                File.Copy(tempPath, gridFilePath, true);
+                File.Delete(tempPath);
+            }
+            catch (Exception ex)
+            {
+                CapNhatTrangThai($"Không thể lưu grid.json: {ex.Message}", Color.Firebrick);
+            }
         }
         //
         //  HÀM TẠO PROFILE RẢNH NẾU CHƯA CÓ

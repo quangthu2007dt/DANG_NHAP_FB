@@ -18,6 +18,7 @@ namespace DANG_NHAP_FACEBOOK
 
             DiChuyenProfilesCuSangLegacyNeuCan();
             DamBaoSessionRegistryTonTai();
+            DamBaoGridJsonTonTai();
 
             DamBaoTapTinRongTonTai(AppPaths.DsFilePath);
             DamBaoTapTinRongTonTai(AppPaths.UserAgentDangDungFilePath);
@@ -59,6 +60,16 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             File.WriteAllText(AppPaths.SessionRegistryFilePath, "[]", Encoding.UTF8);
+        }
+
+        private static void DamBaoGridJsonTonTai()
+        {
+            if (File.Exists(AppPaths.GridFilePath))
+            {
+                return;
+            }
+
+            File.WriteAllText(AppPaths.GridFilePath, "[]", Encoding.UTF8);
         }
 
         private static void DiChuyenProfilesCuSangLegacyNeuCan()
