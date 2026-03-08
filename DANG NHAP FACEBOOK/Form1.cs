@@ -2138,11 +2138,17 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     'ban da thay doi mat khau',
     'do mat khau cua ban da thay doi',
     'mat khau cua ban vua duoc thay doi',
+    'ban da nhap mat khau cu',
+    'mat khau ban vua nhap la mat khau cu',
+    'mat khau cu',
     'your password was changed',
     'your password has been changed',
     'because your password was changed',
     'you changed your password',
-    'password changed'
+    'password changed',
+    'you entered an old password',
+    'you entered your old password',
+    'the password you entered is old'
   ];
 
   const passwordChangedUrlHints = [
@@ -2154,6 +2160,12 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     'login/device-based/update-password',
     'hacked=1',
     '/recover/initiate/?s=14&hacked=1'
+  ];
+
+  const passwordChangedHelpUrlHints = [
+    '/login/help.php?st=opw',
+    'login/help.php?st=opw',
+    'st=opw'
   ];
 
   const passwordChangedActionTexts = [
@@ -2185,10 +2197,21 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     passwordChangedActionTexts.some((text) => action.text.includes(text))
   );
 
-  if (includesAny(passwordChangedNeedles) || passwordChangedUrlHints.some((hint) => allLowerHrefs.includes(hint)) || hasNewPasswordFlow || matchedPasswordChangedAction) {
+  const matchedPasswordChangedHelp = actionHints.find((action) =>
+    passwordChangedHelpUrlHints.some((hint) => action.href.includes(hint))
+  );
+
+  if (includesAny(passwordChangedNeedles) ||
+      passwordChangedUrlHints.some((hint) => allLowerHrefs.includes(hint)) ||
+      passwordChangedHelpUrlHints.some((hint) => allLowerHrefs.includes(hint)) ||
+      hasNewPasswordFlow ||
+      matchedPasswordChangedAction ||
+      matchedPasswordChangedHelp) {
     const chiTietPasswordChanged =
       matchedPasswordChangedAction?.text ||
       matchedPasswordChangedAction?.href ||
+      matchedPasswordChangedHelp?.text ||
+      matchedPasswordChangedHelp?.href ||
       firstMatch(passwordChangedNeedles) ||
       titleText ||
       href;
