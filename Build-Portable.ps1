@@ -2,7 +2,7 @@ param(
     [string]$Configuration = "Release",
     [string]$RuntimeIdentifier = "win-x64",
     [switch]$SelfContained = $true,
-    [string]$CloneDirectory = "D:\DANG NHAP FB CLEAN V2"
+    [string]$CloneDirectory = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -133,4 +133,4 @@ Write-Host "Portable build hoan tat."
 Write-Host "Version             : $version"
 Write-Host "Portable directory  : $portableDirectory"
 Write-Host "Release package     : $releasePackagePath"
-Write-Host "Clone directory     : $CloneDirectory"
+Write-Host "Clone directory     : $(if ([string]::IsNullOrWhiteSpace($CloneDirectory)) { '(bo qua)' } else { $CloneDirectory })"

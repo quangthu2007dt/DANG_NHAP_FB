@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace Updater
 {
@@ -10,7 +10,7 @@ namespace Updater
 
         public UpdaterProgressForm()
         {
-            Text = "Dang cap nhat ung dung";
+            Text = "Đang cập nhật ứng dụng";
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
@@ -24,7 +24,7 @@ namespace Updater
                 AutoSize = false,
                 Location = new Point(20, 20),
                 Size = new Size(480, 44),
-                Text = "Dang khoi tao updater..."
+                Text = "Đang khởi tạo update..."
             };
 
             progressBar = new ProgressBar

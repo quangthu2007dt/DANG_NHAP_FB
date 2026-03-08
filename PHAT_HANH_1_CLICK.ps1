@@ -2,7 +2,7 @@ param(
     [string]$Configuration = "Release",
     [string]$RuntimeIdentifier = "win-x64",
     [switch]$SelfContained = $true,
-    [string]$CloneDirectory = "E:\PHAT_HANH_FB_V2_MAU",
+    [string]$CloneDirectory = "",
     [string]$Notes = "",
     [string]$CommitMessage = "",
     [string]$RemoteName = "origin",
@@ -219,7 +219,7 @@ Write-Host "Current version : $currentVersion"
 Write-Host "Next version    : $nextVersion"
 Write-Host "Release date    : $releaseDate"
 Write-Host "Package file    : $packageFileName"
-Write-Host "Sample output   : $CloneDirectory"
+Write-Host "Sample output   : $(if ([string]::IsNullOrWhiteSpace($CloneDirectory)) { '(bo qua)' } else { $CloneDirectory })"
 if (-not $SkipGitPublish) {
     Write-Host "Git branch      : $gitBranch"
     Write-Host "Git remote      : $RemoteName"
@@ -259,7 +259,7 @@ if (-not $SkipGitPublish) {
 Write-Host ""
 Write-Host "PHAT HANH THANH CONG"
 Write-Host "Version moi      : $nextVersion"
-Write-Host "Thu muc mau sach : $CloneDirectory"
+Write-Host "Thu muc mau sach : $(if ([string]::IsNullOrWhiteSpace($CloneDirectory)) { '(bo qua)' } else { $CloneDirectory })"
 if (-not $SkipGitPublish) {
     Write-Host "Da day len Git   : $RemoteName/$gitBranch"
 }
