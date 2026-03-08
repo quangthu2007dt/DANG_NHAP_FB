@@ -268,11 +268,27 @@ namespace DANG_NHAP_FACEBOOK
             _ = ChoMoPhienMoiSau5GiayAsync(maDieuKhien);
         }
 
-        private async void XoaUidMatKhauDaThayDoiVaChayTiep(string uid)
+        private void CapNhatKetQuaTheoCheDo(string uid, string trangThaiDong, string thongBao, Color mauChu, bool tuDongDongVaChayTiep)
+        {
+            if (!string.IsNullOrWhiteSpace(trangThaiDong))
+            {
+                CapNhatTrangThaiDongTheoUid(uid, trangThaiDong);                               // Grid luôn phải được cập nhật trước để người dùng nhìn thấy kết quả ngay trên dòng đang xử lý
+            }
+
+            if (tuDongDongVaChayTiep)
+            {
+                HoanTatPhienVaChoMoTiep(uid, thongBao, mauChu);                                 // Luồng auto chính giữ nguyên cơ chế đóng Chrome rồi mới chạy tiếp dòng khác
+                return;
+            }
+
+            CapNhatTrangThai(thongBao, mauChu);                                                 // Luồng mở thủ công chỉ cập nhật trạng thái rồi dừng lại, không đóng Chrome và không gọi Next
+        }
+
+        private async void XoaUidMatKhauDaThayDoiVaChayTiep(string uid, bool tuDongDongVaChayTiep)
         {
             if (InvokeRequired)
             {
-                BeginInvoke(() => XoaUidMatKhauDaThayDoiVaChayTiep(uid));                      // Nhánh này thường được gọi từ luồng theo dõi async nên cần quay về UI thread
+                BeginInvoke(() => XoaUidMatKhauDaThayDoiVaChayTiep(uid, tuDongDongVaChayTiep)); // Nhánh này thường được gọi từ luồng theo dõi async nên cần quay về UI thread
                 return;
             }
 
@@ -283,6 +299,12 @@ namespace DANG_NHAP_FACEBOOK
 
             string uidCanXuLy = uid.Trim();
             string thongBao = $"UID {uidCanXuLy} có mật khẩu đã thay đổi.";
+
+            if (!tuDongDongVaChayTiep)
+            {
+                CapNhatKetQuaTheoCheDo(uidCanXuLy, "Dừng: mật khẩu đã thay đổi", thongBao, Color.DarkOrange, false);
+                return;                                                                        // Mở thủ công chỉ ghi nhận trạng thái, không xóa dòng và không đóng Chrome
+            }
 
             CapNhatTrangThai(thongBao, Color.DarkOrange);                                     // Giữ nguyên kết quả mật khẩu đổi trên màn hình để người dùng còn nhìn thấy trước khi app đóng Chrome
             await Task.Delay(khoangNghiNhinKetQuaMatKhauDoiMs);                               // Case mật khẩu đổi cần chừa đủ lâu để người dùng nhìn rõ kết quả thực tế trên trình duyệt
@@ -325,11 +347,11 @@ namespace DANG_NHAP_FACEBOOK
             _ = ChoMoPhienMoiSau5GiayAsync(maDieuKhien);                                      // Không nhảy ngay lập tức để người dùng còn nhìn thấy app chuẩn bị mở phiên kế tiếp
         }
 
-        private void DanhDauUidCanCaptchaVaChayTiep(string uid)
+        private void DanhDauUidCanCaptchaVaChayTiep(string uid, bool tuDongDongVaChayTiep)
         {
             if (InvokeRequired)
             {
-                BeginInvoke(() => DanhDauUidCanCaptchaVaChayTiep(uid));                        // Nhánh captcha cũng thường đi ra từ luồng theo dõi async nên phải quay về UI thread
+                BeginInvoke(() => DanhDauUidCanCaptchaVaChayTiep(uid, tuDongDongVaChayTiep)); // Nhánh captcha cũng thường đi ra từ luồng theo dõi async nên phải quay về UI thread
                 return;
             }
 
@@ -339,8 +361,7 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             string uidCanXuLy = uid.Trim();
-            CapNhatTrangThaiDongTheoUid(uidCanXuLy, "Dừng: cần nhập captcha");
-            HoanTatPhienVaChoMoTiep(uidCanXuLy, $"UID {uidCanXuLy} gặp captcha.", Color.DarkOrange);
+            CapNhatKetQuaTheoCheDo(uidCanXuLy, "Dừng: cần nhập captcha", $"UID {uidCanXuLy} gặp captcha.", Color.DarkOrange, tuDongDongVaChayTiep);
         }
 
         //
@@ -1154,7 +1175,7 @@ namespace DANG_NHAP_FACEBOOK
             CapNhatTrangThai($"Đang thêm dòng mới {uid} lên grid...", Color.DarkGoldenrod);
             ThemDongMoiLenGrid(uid, password);
             CapNhatTrangThai($"Đang mở phiên mới cho UID {uid}...", Color.DarkGoldenrod);
-            MoChromeTheoSession(session, uid, password);
+            MoChromeTheoSession(session, uid, password, true);
         }
         //
         //   HÀM MỞ CHROME MẪU
@@ -1214,13 +1235,13 @@ namespace DANG_NHAP_FACEBOOK
                 return;
             }
 
-            CapNhatTrangThai($"Đang mở phiên mới cho UID {uid}...", Color.DarkGoldenrod);
-            MoChromeTheoSession(session, uid, password);
+            CapNhatTrangThai($"Đang mở phiên đăng nhập thủ công cho UID {uid}...", Color.DarkGoldenrod);
+            MoChromeTheoSession(session, uid, password, false);
         }
         //
         //  HÀM MỞ CHROME THEO PROFILE
         //
-        private void MoChromeTheoSession(SessionModel session, string uid, string password)
+        private void MoChromeTheoSession(SessionModel session, string uid, string password, bool tuDongDongVaChayTiep)
         {
             if (CoYeuCauDungThuCong())
             {
@@ -1264,7 +1285,7 @@ namespace DANG_NHAP_FACEBOOK
                 congDebugTheoUid[uid] = congDebugChrome;
                 CapNhatTrangThai($"Đang tự điền UID/Password cho {uid}...", Color.DarkGoldenrod);
                 CapNhatTrangThaiDongTheoUid(uid, "Đang tự điền UID/Password");
-                _ = TuDongDienThongTinDangNhapAsync(congDebugChrome, urlCanMo, uid, password);
+                _ = TuDongDienThongTinDangNhapAsync(congDebugChrome, urlCanMo, uid, password, tuDongDongVaChayTiep);
             }
             catch (Exception ex)
             {
@@ -1352,7 +1373,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         //
         //  HÀM TỰ ĐIỀN THÔNG TIN ĐĂNG NHẬP
         //
-        private async Task TuDongDienThongTinDangNhapAsync(int congDebugChrome, string urlCanMo, string uid, string password)
+        private async Task TuDongDienThongTinDangNhapAsync(int congDebugChrome, string urlCanMo, string uid, string password, bool tuDongDongVaChayTiep)
         {
             if (CoYeuCauDungThuCong())
             {
@@ -1390,7 +1411,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                     {
                         CapNhatTrangThai($"Đã tự điền và gửi đăng nhập cho {uid}.", Color.ForestGreen);
                         CapNhatTrangThaiDongTheoUid(uid, "Đã gửi đăng nhập, đang chờ kết quả");
-                        _ = TheoDoiKetQuaDangNhapSauKhiSubmitAsync(congDebugChrome, uid, password);
+                        _ = TheoDoiKetQuaDangNhapSauKhiSubmitAsync(congDebugChrome, uid, password, urlCanMo, tuDongDongVaChayTiep);
                         return;
                     }
                 }
@@ -1520,13 +1541,14 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         //
         //  HÀM THEO DÕI KẾT QUẢ ĐĂNG NHẬP SAU KHI APP ĐÃ TỰ GỬI ĐĂNG NHẬP
         //
-        private async Task TheoDoiKetQuaDangNhapSauKhiSubmitAsync(int congDebugChrome, string uid, string password)
+        private async Task TheoDoiKetQuaDangNhapSauKhiSubmitAsync(int congDebugChrome, string uid, string password, string urlCanMo, bool tuDongDongVaChayTiep)
         {
             const int soLanTheoDoiToiDa = 180;                                                 // Chờ tối đa 3 phút để Facebook phản hồi sau khi app đã tự gửi đăng nhập
             bool daThuLaiLanHai = false;
             string scriptTuDongDienVaSubmit = TaoScriptTuDongDienDangNhap(uid, password);
             string chiTietCuoi = string.Empty;
             string urlCuoi = string.Empty;
+            bool laFacebookThuong = urlCanMo.Equals("https://facebook.com/", StringComparison.OrdinalIgnoreCase);
 
             for (int i = 0; i < soLanTheoDoiToiDa; i++)
             {
@@ -1549,8 +1571,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                     chiTietCuoi = chiTiet;
                     if (string.Equals(trangThai, "success", StringComparison.OrdinalIgnoreCase))
                     {
-                        CapNhatTrangThaiDongTheoUid(uid, "Đăng nhập thành công");
-                        HoanTatPhienVaChoMoTiep(uid, $"UID {uid} đã đăng nhập thành công.", Color.ForestGreen);
+                        CapNhatKetQuaTheoCheDo(uid, "Đăng nhập thành công", $"UID {uid} đã đăng nhập thành công.", Color.ForestGreen, tuDongDongVaChayTiep);
                         return;
                     }
 
@@ -1564,8 +1585,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                             _ => "cần xác minh checkpoint/2FA"
                         };
 
-                        CapNhatTrangThaiDongTheoUid(uid, $"Dừng: {dienGiaiCheckpoint}");
-                        HoanTatPhienVaChoMoTiep(uid, $"UID {uid} {dienGiaiCheckpoint}.", Color.DarkOrange);
+                        CapNhatKetQuaTheoCheDo(uid, $"Dừng: {dienGiaiCheckpoint}", $"UID {uid} {dienGiaiCheckpoint}.", Color.DarkOrange, tuDongDongVaChayTiep);
                         return;
                     }
 
@@ -1573,13 +1593,13 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                     {
                         if (string.Equals(lyDo, "password_changed", StringComparison.OrdinalIgnoreCase))
                         {
-                            XoaUidMatKhauDaThayDoiVaChayTiep(uid);
+                            XoaUidMatKhauDaThayDoiVaChayTiep(uid, tuDongDongVaChayTiep);
                             return;
                         }
 
                         if (string.Equals(lyDo, "captcha", StringComparison.OrdinalIgnoreCase))
                         {
-                            DanhDauUidCanCaptchaVaChayTiep(uid);
+                            DanhDauUidCanCaptchaVaChayTiep(uid, tuDongDongVaChayTiep);
                             return;
                         }
 
@@ -1598,8 +1618,16 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                             _ => "lỗi chặn đăng nhập"
                         };
 
-                        CapNhatTrangThaiDongTheoUid(uid, $"Dừng: {dienGiaiLyDo}");
-                        HoanTatPhienVaChoMoTiep(uid, $"UID {uid} dừng xử lý vì {dienGiaiLyDo}.", Color.Firebrick);
+                        CapNhatKetQuaTheoCheDo(uid, $"Dừng: {dienGiaiLyDo}", $"UID {uid} dừng xử lý vì {dienGiaiLyDo}.", Color.Firebrick, tuDongDongVaChayTiep);
+                        return;
+                    }
+
+                    if (string.Equals(trangThai, "pending", StringComparison.OrdinalIgnoreCase) &&
+                        string.Equals(lyDo, "login_identify", StringComparison.OrdinalIgnoreCase) &&
+                        laFacebookThuong &&
+                        daThuLaiLanHai)
+                    {
+                        CapNhatKetQuaTheoCheDo(uid, "Dừng: sai tài khoản/mật khẩu", $"UID {uid} vẫn rơi vào trang tìm tài khoản sau 2 lần đăng nhập. Kết luận: sai tài khoản/mật khẩu.", Color.Firebrick, tuDongDongVaChayTiep);
                         return;
                     }
 
@@ -1632,7 +1660,6 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                 return;
             }
 
-            CapNhatTrangThaiDongTheoUid(uid, "Hết thời gian chờ xác nhận");
             string thongTinBoSung = string.IsNullOrWhiteSpace(chiTietCuoi)
                 ? urlCuoi
                 : chiTietCuoi;
@@ -1644,7 +1671,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
             string noiDungTimeout = string.IsNullOrWhiteSpace(thongTinBoSung)
                 ? $"UID {uid} chưa có kết quả sau khi chờ 3 phút."
                 : $"UID {uid} chưa có kết quả sau khi chờ 3 phút. Dấu hiệu cuối: {thongTinBoSung}";
-            HoanTatPhienVaChoMoTiep(uid, noiDungTimeout, Color.Firebrick);
+            CapNhatKetQuaTheoCheDo(uid, "Hết thời gian chờ xác nhận", noiDungTimeout, Color.Firebrick, tuDongDongVaChayTiep);
         }
 
         private async Task<(string TrangThai, string UrlHienTai, string LyDo, string ChiTiet)> LayTrangThaiDangNhapSauSubmitAsync(string webSocketDebuggerUrl)
@@ -2231,6 +2258,28 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
   ];
   if (includesAny(noAccountNeedles)) {
     return makeResult('blocked', 'no_account', firstMatch(noAccountNeedles));
+  }
+
+  const loginIdentifyNeedles = [
+    'hay tim tai khoan cua ban va dang nhap',
+    'find your account and log in',
+    'find your account and login'
+  ];
+  const loginIdentifyAction = actionHints.find((action) =>
+    action.href.includes('facebook.com/login/identify') ||
+    action.href.includes('/login/identify/') ||
+    loginIdentifyNeedles.some((needle) => action.text.includes(needle))
+  );
+  if (allLowerHrefs.includes('facebook.com/login/identify') ||
+      allLowerHrefs.includes('/login/identify/') ||
+      includesAny(loginIdentifyNeedles) ||
+      loginIdentifyAction) {
+    const chiTietLoginIdentify =
+      loginIdentifyAction?.text ||
+      loginIdentifyAction?.href ||
+      firstMatch(loginIdentifyNeedles) ||
+      href;
+    return makeResult('pending', 'login_identify', chiTietLoginIdentify);
   }
 
   const disabledNeedles = [
