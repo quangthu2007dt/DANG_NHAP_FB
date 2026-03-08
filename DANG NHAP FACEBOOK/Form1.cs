@@ -2122,9 +2122,9 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
 
   const actionHints = documents.flatMap((doc) => {
     try {
-      return Array.from(doc.querySelectorAll('a[role="button"], button, [role="button"]')).map((node) => ({
-        text: normalizeText(String(node.innerText || node.textContent || node.getAttribute('aria-label') || '')),
-        href: normalizeText(String(node.getAttribute('href') || ''))
+      return Array.from(doc.querySelectorAll('a[href], a[role="link"], a[role="button"], button, [role="button"], [role="link"], form[action]')).map((node) => ({
+        text: normalizeText(String(node.innerText || node.textContent || node.getAttribute('aria-label') || node.getAttribute('value') || '')),
+        href: normalizeText(String(node.getAttribute('href') || node.getAttribute('action') || ''))
       }));
     } catch {
       return [];
@@ -2262,15 +2262,24 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
 
   const loginIdentifyNeedles = [
     'hay tim tai khoan cua ban va dang nhap',
+    'hay tim tai khoan cua ban',
+    'tim tai khoan cua ban va dang nhap',
     'find your account and log in',
-    'find your account and login'
+    'find your account and login',
+    'find your account'
   ];
   const loginIdentifyAction = actionHints.find((action) =>
     action.href.includes('facebook.com/login/identify') ||
+    action.href.includes('https://facebook.com/login/identify/') ||
+    action.href.includes('https://www.facebook.com/login/identify/') ||
+    action.href.includes('/login/identify') ||
     action.href.includes('/login/identify/') ||
     loginIdentifyNeedles.some((needle) => action.text.includes(needle))
   );
   if (allLowerHrefs.includes('facebook.com/login/identify') ||
+      allLowerHrefs.includes('https://facebook.com/login/identify/') ||
+      allLowerHrefs.includes('https://www.facebook.com/login/identify/') ||
+      allLowerHrefs.includes('/login/identify') ||
       allLowerHrefs.includes('/login/identify/') ||
       includesAny(loginIdentifyNeedles) ||
       loginIdentifyAction) {
