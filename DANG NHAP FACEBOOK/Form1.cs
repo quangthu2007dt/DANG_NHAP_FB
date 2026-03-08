@@ -16,9 +16,8 @@ namespace DANG_NHAP_FACEBOOK
         private const string mobileUserAgentMacDinh = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36";
         private const string metaDesktopUserAgentMacDinh = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36";
         private const int soGiayChoMoPhienMoi = 5;
-        private const int khoangNghiTruocKhiDongChromeMs = 700;
         private const int khoangNghiSauKhiDongChromeMs = 500;
-        private const int khoangNghiNhinKetQuaMatKhauDoiMs = 5000;
+        private const int khoangNghiNhinKetQuaTruocKhiDongChromeMs = 5000;
         private int maDieuKhienTuDong;
         private string uidPhienDangXuLy = string.Empty;
         private string sessionIdPhienDangXuLy = string.Empty;
@@ -254,7 +253,7 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             CapNhatTrangThai(thongBao, mauChu);                                               // Đẩy trạng thái kết quả ra UI ngay trước khi bắt đầu đóng Chrome
-            await Task.Delay(khoangNghiTruocKhiDongChromeMs);                                 // Chừa một nhịp ngắn để người dùng nhìn rõ kết quả phiên vừa lấy được
+            await Task.Delay(khoangNghiNhinKetQuaTruocKhiDongChromeMs);                       // Mọi kết quả auto đều phải dừng 5 giây để người dùng kịp nhìn trước khi app tự đóng Chrome
 
             await Task.Run(() => DongVaDonDepPhienDangXuLy(uid));
             await Task.Delay(khoangNghiSauKhiDongChromeMs);                                   // Sau khi Chrome đã đóng, nghỉ thêm một nhịp để tách phiên cũ và phiên mới
@@ -307,10 +306,8 @@ namespace DANG_NHAP_FACEBOOK
             }
 
             CapNhatTrangThai(thongBao, Color.DarkOrange);                                     // Giữ nguyên kết quả mật khẩu đổi trên màn hình để người dùng còn nhìn thấy trước khi app đóng Chrome
-            await Task.Delay(khoangNghiNhinKetQuaMatKhauDoiMs);                               // Case mật khẩu đổi cần chừa đủ lâu để người dùng nhìn rõ kết quả thực tế trên trình duyệt
+            await Task.Delay(khoangNghiNhinKetQuaTruocKhiDongChromeMs);                       // Giữ nguyên quy ước chung: mọi kết quả auto đều phải cho người dùng nhìn 5 giây trước khi đóng Chrome
             CapNhatTrangThai($"{thongBao} Đang đóng phiên hiện tại...", Color.DarkOrange);
-            await Task.Delay(khoangNghiTruocKhiDongChromeMs);                                 // Sau khi đã cho nhìn kết quả xong, nghỉ thêm một nhịp ngắn trước lúc thật sự gọi đóng Chrome
-
             await Task.Run(() => DongVaDonDepPhienDangXuLy(uidCanXuLy));
             await Task.Delay(khoangNghiSauKhiDongChromeMs);                                   // Tách nhịp giữa lúc đóng xong phiên cũ và lúc app đẩy Next
 
