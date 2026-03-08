@@ -18,7 +18,7 @@ namespace Updater.Services
         {
             baoTienTrinh?.Invoke(new UpdateProgressInfo
             {
-                Message = "Dang tao cau truc thu muc moi..."
+                Message = "Đang tạo cấu trúc thư mục mới..."
             });
 
             foreach (string directory in Directory.GetDirectories(sourceDirectory, "*", SearchOption.AllDirectories))

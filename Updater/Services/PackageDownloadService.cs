@@ -12,7 +12,7 @@ namespace Updater.Services
             {
                 baoTienTrinh?.Invoke(new UpdateProgressInfo
                 {
-                    Message = "Dang dung goi cap nhat da duoc chi dinh san."
+                    Message = "Đang dùng gói cập nhật đã được chỉ định sẵn."
                 });
 
                 return thamSo.PackagePath;
@@ -31,7 +31,7 @@ namespace Updater.Services
                 {
                     baoTienTrinh?.Invoke(new UpdateProgressInfo
                     {
-                        Message = "Da tim thay goi cap nhat hop le trong thu muc packages.",
+                        Message = "Đã tìm thấy gói cập nhật hợp lệ trong thư mục packages.",
                         Percent = 100
                     });
 
@@ -54,7 +54,7 @@ namespace Updater.Services
 
             baoTienTrinh?.Invoke(new UpdateProgressInfo
             {
-                Message = "Dang tai goi cap nhat tu GitHub..."
+                Message = "Đang tải gói cập nhật từ GitHub..."
             });
 
             using HttpResponseMessage response = httpClient.GetAsync(packageUri, HttpCompletionOption.ResponseHeadersRead).GetAwaiter().GetResult();
@@ -112,7 +112,7 @@ namespace Updater.Services
             Directory.CreateDirectory(duongDanGiaiNen);
             baoTienTrinh?.Invoke(new UpdateProgressInfo
             {
-                Message = "Dang giai nen goi cap nhat..."
+                Message = "Đang giải nén gói cập nhật..."
             });
 
             ZipFile.ExtractToDirectory(packagePath, duongDanGiaiNen, true);
@@ -153,7 +153,7 @@ namespace Updater.Services
                         phanTramCuoi = phanTram;
                         baoTienTrinh?.Invoke(new UpdateProgressInfo
                         {
-                            Message = $"Dang tai goi cap nhat... {DinhDangDungLuong(daTai)} / {DinhDangDungLuong(tongSoByte.Value)}",
+                            Message = $"Đang tải gói cập nhật... {DinhDangDungLuong(daTai)} / {DinhDangDungLuong(tongSoByte.Value)}",
                             Percent = phanTram
                         });
                     }
@@ -162,7 +162,7 @@ namespace Updater.Services
                 {
                     baoTienTrinh?.Invoke(new UpdateProgressInfo
                     {
-                        Message = $"Dang tai goi cap nhat... {DinhDangDungLuong(daTai)}"
+                        Message = $"Đang tải gói cập nhật... {DinhDangDungLuong(daTai)}"
                     });
                 }
             }

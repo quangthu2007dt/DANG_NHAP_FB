@@ -25,7 +25,7 @@ namespace Updater
 
                 BaoTienTrinh(new UpdateProgressInfo
                 {
-                    Message = "Dang doc tham so cap nhat..."
+                    Message = "Đang đọc tham số cập nhật..."
                 });
 
                 string thongBaoHoanTat = await Task.Run(() =>
@@ -38,13 +38,13 @@ namespace Updater
 
                     BaoTienTrinh(new UpdateProgressInfo
                     {
-                        Message = "Dang thay file chuong trinh...",
+                        Message = "Đang thay thế file chương trình...",
                         Percent = 100
                     });
 
                     FileReplaceService.ThayTheFileChuongTrinh(thamSo.AppDirectory, sourceDirectory, BaoTienTrinh);
                     GhiDanhDauCapNhatThanhCong(thamSo.AppDirectory, manifest.LatestVersion);
-                    return $"Cap nhat xong {manifest.LatestVersion}. Dang mo lai app...";
+                    return $"Cập nhật xong {manifest.LatestVersion}. Đang mở lại app...";
                 });
 
                 BaoTienTrinh(new UpdateProgressInfo
@@ -61,7 +61,7 @@ namespace Updater
             {
                 form.CapNhatTienTrinh(new UpdateProgressInfo
                 {
-                    Message = $"Cap nhat that bai: {ex.Message}",
+                    Message = $"Cập nhật thất bại: {ex.Message}",
                     IsError = true
                 });
 

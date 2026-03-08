@@ -24,7 +24,7 @@ namespace Updater
                 AutoSize = false,
                 Location = new Point(20, 20),
                 Size = new Size(480, 44),
-                Text = "Đang khởi tạo update..."
+                Text = "Đang khởi tạo cập nhật..."
             };
 
             progressBar = new ProgressBar

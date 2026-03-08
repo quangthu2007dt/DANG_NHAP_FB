@@ -21,7 +21,7 @@ namespace Updater.Services
 
                 baoTienTrinh?.Invoke(new UpdateProgressInfo
                 {
-                    Message = "Dang cho app chinh tat..."
+                    Message = "Đang chờ app chính tắt..."
                 });
 
                 process.WaitForExit(30000);
