@@ -1,9 +1,9 @@
 {
     "appName":  "DANG NHAP FACEBOOK V2",
     "channel":  "stable",
-    "latestVersion":  "V2.49",
+    "latestVersion":  "V2.50",
     "releaseDate":  "2026-03-09",
-    "packageFileName":  "DANG_NHAP_FACEBOOK_V2_49.zip",
-    "packageUrl":  "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/v2/session-runtime/release/stable/DANG_NHAP_FACEBOOK_V2_49.zip",
-    "notes":  "Phat hanh V2.49 bo sung nhan dien sai mat khau Viet Anh tren meta va facebook."
+    "packageFileName":  "DANG_NHAP_FACEBOOK_V2_50.zip",
+    "packageUrl":  "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/v2/session-runtime/release/stable/DANG_NHAP_FACEBOOK_V2_50.zip",
+    "notes":  "Phat hanh V2.50 bo tick dong da xu ly khi batch cac dong da chon."
 }

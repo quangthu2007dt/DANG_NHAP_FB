@@ -497,6 +497,8 @@ namespace DANG_NHAP_FACEBOOK
                 CapNhatTrangThaiDongTheoUid(uid, trangThaiDong);                               // Grid luôn phải được cập nhật trước để người dùng nhìn thấy kết quả ngay trên dòng đang xử lý
             }
 
+            DanhDauDongDaXuLyTrongBatch(uid, cheDo);                                           // Batch tick phải bỏ check ngay khi dòng đã có kết quả cuối để lần sau không chạy lại dòng cũ
+
             if (LaCheDoCanChayTiepSauKetQua(cheDo) || LaCheDoCanDongChromeSauKetQua(cheDo))
             {
                 HoanTatPhienVaChoMoTiep(uid, thongBao, mauChu, cheDo);                         // Mọi chế độ batch đều đi qua một nơi điều phối chung để không lệch hành vi
@@ -528,6 +530,7 @@ namespace DANG_NHAP_FACEBOOK
                 return;                                                                        // Các chế độ giữ Chrome mở chỉ ghi nhận trạng thái rồi tự điều phối theo mode, không xóa dòng
             }
 
+            DanhDauDongDaXuLyTrongBatch(uidCanXuLy, cheDo);                                    // Nhánh tự xóa dòng cũng nên bỏ tick trước để người dùng không thấy dòng cũ còn được chọn
             CapNhatTrangThai(thongBao, Color.DarkOrange);                                     // Giữ nguyên kết quả mật khẩu đổi trên màn hình để người dùng còn nhìn thấy trước khi app đóng Chrome
             await Task.Delay(khoangNghiNhinKetQuaTruocKhiDongChromeMs);                       // Giữ nguyên quy ước chung: mọi kết quả auto đều phải cho người dùng nhìn 5 giây trước khi đóng Chrome
             CapNhatTrangThai($"{thongBao} Đang đóng phiên hiện tại...", Color.DarkOrange);
@@ -1581,6 +1584,7 @@ namespace DANG_NHAP_FACEBOOK
             if (!TaoSessionTuProfileMau(uid, out SessionModel session))
             {
                 CapNhatTrangThaiDongTheoUid(uid, "Lỗi tạo phiên");
+                DanhDauDongDaXuLyTrongBatch(uid, cheDo);                                      // Không tạo được phiên thì coi như dòng này đã xử lý xong và bỏ tick để batch đi tiếp
                 CapNhatTrangThai($"Bỏ qua UID {uid}: không tạo được phiên tạm.", Color.Firebrick);
                 DieuPhoiBuocTiepTheoSauKetQua(cheDo);
                 return;
@@ -2946,6 +2950,34 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
             }
 
             return null;
+        }
+
+        private void BoTickDongTheoUid(string uid)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(() => BoTickDongTheoUid(uid));                                    // Luồng theo dõi đăng nhập chạy async nên mọi thay đổi checkbox phải quay về UI thread
+                return;
+            }
+
+            DataGridViewRow? row = TimDongTheoUid(uid);
+            if (row == null)
+            {
+                return;
+            }
+
+            row.Cells["colChon"].Value = false;                                               // Dòng đã có kết quả cuối thì bỏ tick để batch không lẫn với các dòng chưa xử lý
+            LuuDuLieuGridRaFile();
+        }
+
+        private void DanhDauDongDaXuLyTrongBatch(string uid, CheDoDieuPhoiPhien cheDo)
+        {
+            if (!LaCheDoChayTiepTheoDanhSachDaTick(cheDo) || string.IsNullOrWhiteSpace(uid))
+            {
+                return;                                                                        // Chỉ batch các dòng đã tick mới cần tự bỏ check khi hoàn tất một dòng
+            }
+
+            BoTickDongTheoUid(uid);
         }
         //
         //  HÀM LẤY DANH SÁCH DÒNG ĐÃ TICK
