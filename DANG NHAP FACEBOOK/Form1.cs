@@ -2581,7 +2581,11 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     'enter the characters shown',
     'type the text you see in the image',
     'prove you are not a robot',
-    'are you a real person'
+    'are you a real person',
+    'toi khong phai la nguoi may',
+    "i'm not a robot",
+    'i am not a robot',
+    'recaptcha'
   ];
 
   const captchaAudioNeedles = [
@@ -2595,7 +2599,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
   const hasCaptchaImage = documents.some((doc) => {
     try {
       return !!doc.querySelector(
-        'img[src*="captcha/tfbimage" i], img[src*="/captcha/" i], img[src*="captcha" i], img[alt*="captcha" i], iframe[src*="captcha" i], iframe[src*="recaptcha" i], iframe[src*="hcaptcha" i]'
+        'img[src*="captcha/tfbimage" i], img[src*="/captcha/" i], img[src*="captcha" i], img[alt*="captcha" i], iframe[src*="captcha" i], iframe[src*="recaptcha" i], iframe[src*="hcaptcha" i], [id*="recaptcha" i], [class*="recaptcha" i], [id*="hcaptcha" i], [class*="hcaptcha" i], .g-recaptcha, .h-captcha'
       );
     } catch {
       return false;
@@ -2605,7 +2609,17 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
   const hasCaptchaInput = documents.some((doc) => {
     try {
       return !!doc.querySelector(
-        'input[name*="captcha" i], input[id*="captcha" i], input[aria-label*="captcha" i], input[type="text"], input[inputmode="text"]'
+        'input[name*="captcha" i], input[id*="captcha" i], input[aria-label*="captcha" i], input[id*="recaptcha" i], textarea[id*="g-recaptcha-response" i], textarea[name*="g-recaptcha-response" i], textarea[id*="h-captcha-response" i], textarea[name*="h-captcha-response" i], [id="recaptcha-anchor"], [aria-labelledby*="recaptcha" i], input[type="text"], input[inputmode="text"]'
+      );
+    } catch {
+      return false;
+    }
+  });
+
+  const hasRecaptchaAnchor = documents.some((doc) => {
+    try {
+      return !!doc.querySelector(
+        '#recaptcha-anchor, #recaptcha-anchor-label, [id*="recaptcha-anchor" i], [aria-labelledby*="recaptcha-anchor-label" i], [class*="rc-anchor" i]'
       );
     } catch {
       return false;
@@ -2627,17 +2641,20 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
   const hasStrongCaptchaHref = allLowerHrefs.includes('captcha/tfbimage') || allLowerHrefs.includes('/captcha/');
   const duDauHieuCaptcha =
     hasCaptchaImage ||
+    hasRecaptchaAnchor ||
     !!matchedCaptchaAudioAction ||
     hasStrongCaptchaText ||
     hasStrongCaptchaHref;
 
   const duDauHieuNhapCaptcha =
     hasCaptchaInput ||
+    hasRecaptchaAnchor ||
     hasContinueAction ||
     hasCaptchaImage;
 
   if (duDauHieuCaptcha && duDauHieuNhapCaptcha) {
     const chiTietCaptcha =
+      (hasRecaptchaAnchor ? 'recaptcha-anchor' : '') ||
       matchedCaptchaAudioAction?.text ||
       (hasCaptchaImage ? 'captcha/tfbimage' : '') ||
       firstMatch(captchaNeedles) ||
