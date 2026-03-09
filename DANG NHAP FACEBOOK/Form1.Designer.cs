@@ -376,6 +376,7 @@
             // 
             nhậpDanhSáchToolStripMenuItem.Name = "nhậpDanhSáchToolStripMenuItem";
             resources.ApplyResources(nhậpDanhSáchToolStripMenuItem, "nhậpDanhSáchToolStripMenuItem");
+            nhậpDanhSáchToolStripMenuItem.Click += nhậpDanhSáchToolStripMenuItem_Click;
             // 
             // kiểmTraTàiKhoảnToolStripMenuItem
             // 

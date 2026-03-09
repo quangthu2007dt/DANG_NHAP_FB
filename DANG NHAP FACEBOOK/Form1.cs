@@ -659,6 +659,12 @@ namespace DANG_NHAP_FACEBOOK
 
         private void cậpNhậtDữLiệuToolStripMenuItem_Click(object? sender, EventArgs e)
         {
+            if (sender is ToolStripMenuItem menuItem && (menuItem.Text ?? string.Empty).Contains("danh sách", StringComparison.CurrentCultureIgnoreCase))
+            {
+                MoDsTxtBangNotepadDeNhapThem();                                               // Nếu menu này đang được dùng như "Cập nhật danh sách" thì mở thẳng ds.txt như nghiệp vụ mới
+                return;
+            }
+
             CapNhatDuLieuDongDaTick();                                                         // Menu Cập nhật dữ liệu giờ chỉ còn một dòng duy nhất và mở thẳng hộp sửa của dòng đang tick
         }
 
@@ -939,6 +945,71 @@ namespace DANG_NHAP_FACEBOOK
             return facebookDesktopUserAgentMacDinh;                                           // Nếu chưa có User-Agent nào được chọn thì dùng UA desktop mặc định để đảm bảo facebook.com luôn có UA hợp lệ để test
         }
 
+        private void MoDsTxtBangNotepadDeNhapThem()
+        {
+            try
+            {
+                string? thuMucDs = Path.GetDirectoryName(dsFilePath);
+                if (!string.IsNullOrWhiteSpace(thuMucDs))
+                {
+                    Directory.CreateDirectory(thuMucDs);                                      // Đảm bảo thư mục data luôn tồn tại trước khi mở ds.txt để nhập thêm
+                }
+
+                if (!File.Exists(dsFilePath))
+                {
+                    File.WriteAllText(dsFilePath, string.Empty, Encoding.UTF8);               // Nếu ds.txt chưa có thì tạo sẵn file rỗng để người dùng nhập ngay
+                }
+
+                System.Diagnostics.Process? tienTrinhNotepad = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "notepad.exe",
+                    Arguments = $"\"{dsFilePath}\"",
+                    UseShellExecute = true
+                });
+
+                CapNhatTrangThai("Đã mở ds.txt để nhập thêm danh sách.", Color.SteelBlue);
+
+                if (tienTrinhNotepad == null)
+                {
+                    return;
+                }
+
+                try
+                {
+                    tienTrinhNotepad.EnableRaisingEvents = true;
+                    tienTrinhNotepad.Exited += (_, _) =>
+                    {
+                        try
+                        {
+                            if (IsDisposed || !IsHandleCreated)
+                            {
+                                return;                                                       // Form đã đóng thì không cần cố cập nhật lại UI
+                            }
+
+                            BeginInvoke(() =>
+                            {
+                                CapNhatThongTinSoLuong();                                     // Khi đóng Notepad thì đọc lại ds.txt để label Danh Sách khớp ngay
+                                CapNhatTrangThai("Đã đọc lại ds.txt sau khi cập nhật danh sách.", Color.SeaGreen);
+                            });
+                        }
+                        catch
+                        {
+                            // Đóng form đúng lúc Notepad thoát thì bỏ qua, không ảnh hưởng nghiệp vụ chính.
+                        }
+                    };
+                }
+                catch
+                {
+                    // Không gắn được sự kiện Exited thì vẫn giữ hành vi chính là mở Notepad cho người dùng nhập ds.txt.
+                }
+            }
+            catch (Exception ex)
+            {
+                CapNhatTrangThai($"Mở ds.txt thất bại: {ex.Message}", Color.Firebrick);
+                MessageBox.Show($"Không thể mở ds.txt để nhập thêm danh sách.\r\n{ex.Message}");
+            }
+        }
+
         private bool TryLayTaiKhoanMoiTuDs(out string uid, out string password)              // Hàm này sẽ tìm và trả ra một dòng hợp lệ đầu tiên trong ds.txt mà UID chưa có trên grid, nếu không còn dòng nào hợp lệ thì trả về false
         {
             uid = string.Empty;                                                               // Giá trị UID trả ra ngoài nếu tìm thấy dòng hợp lệ
@@ -955,12 +1026,7 @@ namespace DANG_NHAP_FACEBOOK
             if (lines.Length == 0)                                                            // Nếu file không có dòng nào
             {
                 MessageBox.Show("ds.txt đang rỗng, vui lòng nhập thêm tài khoản.");
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                {
-                    FileName = "notepad.exe",                                                 // Mở bằng Notepad để người dùng tự nhập thêm
-                    Arguments = $"\"{dsFilePath}\"",
-                    UseShellExecute = true
-                });
+                MoDsTxtBangNotepadDeNhapThem();                                               // Dùng chung đúng luồng mở ds.txt để người dùng nhập thêm danh sách
                 return false;                                                                 // Thoát hàm vì chưa có tài khoản để lấy
             }
 
@@ -1055,6 +1121,11 @@ namespace DANG_NHAP_FACEBOOK
         private void mởChromeMẫuToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MoChromeMau();                                                                     // Menu "Mở Chrome mẫu" chỉ gọi đúng hàm mở profile_mau
+        }
+
+        private void nhậpDanhSáchToolStripMenuItem_Click(object? sender, EventArgs e)
+        {
+            MoDsTxtBangNotepadDeNhapThem();                                                   // Menu chuột phải Nhập/Cập nhật danh sách dùng lại đúng luồng mở ds.txt sẵn có
         }
 
         private void btnDangNhap_Click(object sender, EventArgs e)
