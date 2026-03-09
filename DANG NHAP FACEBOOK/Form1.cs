@@ -2671,13 +2671,31 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
 
   const wrongPasswordNeedles = [
     'sai mat khau',
+    'mat khau ban nhap khong chinh xac',
     'mat khau ban da nhap khong chinh xac',
+    'mat khau ma ban nhap khong chinh xac',
     'the password you entered is incorrect',
     "the password that you've entered is incorrect",
+    'the password you entered was incorrect',
     'incorrect password'
   ];
-  if (includesAny(wrongPasswordNeedles)) {
-    return makeResult('blocked', 'wrong_password', firstMatch(wrongPasswordNeedles));
+
+  const forgotPasswordNeedles = [
+    'quen mat khau',
+    'forgot password'
+  ];
+
+  const matchedForgotPasswordAction = actionHints.find((action) =>
+    forgotPasswordNeedles.some((needle) => action.text.includes(needle))
+  );
+
+  if (includesAny(wrongPasswordNeedles) || (matchedForgotPasswordAction && includesAny(wrongPasswordNeedles))) {
+    const chiTietWrongPassword =
+      firstMatch(wrongPasswordNeedles) ||
+      matchedForgotPasswordAction?.text ||
+      titleText ||
+      href;
+    return makeResult('blocked', 'wrong_password', chiTietWrongPassword);
   }
 
   const noAccountNeedles = [
