@@ -101,7 +101,7 @@ namespace DANG_NHAP_FACEBOOK
                 return;
             }
 
-            tssTrangThai.Text = $"Trạng thái: {noiDung}";                                      // Gom toàn bộ diễn giải tiến trình về đúng một nhãn trung tâm ở cạnh dưới form
+            tssTrangThai.Text = $"{noiDung}";                                      // Gom toàn bộ diễn giải tiến trình về đúng một nhãn trung tâm ở cạnh dưới form
             tssTrangThai.ForeColor = mauChu;
             tssTrangThai.Owner?.Refresh();                                                     // Ép refresh ngay để người dùng thấy trạng thái mới trong lúc app còn đang xử lý
             statusStrip1.Refresh();
@@ -142,7 +142,9 @@ namespace DANG_NHAP_FACEBOOK
                 break;
             }
         }
-
+        //
+        //   CẬP NHẬT MÀU TRONG GIRD
+        //
         private void CapNhatMauDongGrid(DataGridViewRow? dongCanCapNhat = null)
         {
             if (InvokeRequired)
@@ -1744,7 +1746,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                             _ => "lỗi chặn đăng nhập"
                         };
 
-                        CapNhatKetQuaTheoCheDo(uid, $"Dừng: {dienGiaiLyDo}", $"UID {uid} dừng xử lý vì {dienGiaiLyDo}.", Color.Firebrick, tuDongDongVaChayTiep);
+                        CapNhatKetQuaTheoCheDo(uid, $"{dienGiaiLyDo}", $"UID {uid} dừng xử lý vì {dienGiaiLyDo}.", Color.Firebrick, tuDongDongVaChayTiep);
                         return;
                     }
 
@@ -1753,7 +1755,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                         laFacebookThuong &&
                         daThuLaiLanHai)
                     {
-                        CapNhatKetQuaTheoCheDo(uid, "Dừng: sai tài khoản/mật khẩu", $"UID {uid} vẫn rơi vào trang tìm tài khoản sau 2 lần đăng nhập. Kết luận: sai tài khoản/mật khẩu.", Color.Firebrick, tuDongDongVaChayTiep);
+                        CapNhatKetQuaTheoCheDo(uid, "Sai tài khoản/mật khẩu", $"UID {uid} vẫn rơi vào trang tìm tài khoản sau 2 lần đăng nhập.  Sai tài khoản/mật khẩu.", Color.Firebrick, tuDongDongVaChayTiep);
                         return;
                     }
 
