@@ -2634,11 +2634,81 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                           allLowerHrefs.includes('device-based') ||
                           allLowerHrefs.includes('facebook.com/?sk=welcome');
 
+  const successTextNeedles = [
+    "what's on your mind",
+    'ban dang nghi gi',
+    'create post',
+    'tao bai viet',
+    'news feed',
+    'messenger',
+    'marketplace',
+    'watch',
+    'groups',
+    'thong bao',
+    'notifications',
+    'ban be',
+    'friends'
+  ];
+
+  const successUrlHints = [
+    '/home.php',
+    '/friends/',
+    '/messages/',
+    '/marketplace/',
+    '/watch/',
+    '/groups/',
+    '/notifications',
+    '/bookmarks/',
+    '/profile.php',
+    '/me/',
+    '/settings'
+  ];
+
+  const hasNavigationShell = documents.some((doc) => {
+    try {
+      return !!doc.querySelector('nav, [role="navigation"], [role="banner"]');
+    } catch {
+      return false;
+    }
+  });
+
+  const hasProfileOrAccountSurface = documents.some((doc) => {
+    try {
+      return !!doc.querySelector(
+        'a[href*="/logout" i], form[action*="logout" i], a[href*="/me/" i], a[href*="/profile.php" i], a[href*="/settings" i], [aria-label*="Profile" i], [aria-label*="Trang cá nhân" i], [aria-label*="Your profile" i]'
+      );
+    } catch {
+      return false;
+    }
+  });
+
+  const hasLoggedInFeatureSurface = documents.some((doc) => {
+    try {
+      return !!doc.querySelector(
+        'a[href*="/friends/" i], a[href*="/messages/" i], a[href*="/marketplace/" i], a[href*="/watch/" i], a[href*="/groups/" i], a[href*="/notifications" i], a[href*="/bookmarks/" i]'
+      );
+    } catch {
+      return false;
+    }
+  });
+
+  const hasSuccessText = includesAny(successTextNeedles);
+  const hasSuccessUrl = successUrlHints.some((hint) => allLowerHrefs.includes(hint));
+  const hasStrongSuccessSignal =
+    hasProfileOrAccountSurface ||
+    (hasNavigationShell && hasLoggedInFeatureSurface) ||
+    (hasNavigationShell && hasSuccessText) ||
+    (hasSuccessUrl && (hasNavigationShell || hasLoggedInFeatureSurface || hasSuccessText));
+
   if (hasPasswordInput || hasLoginButton || isLoginLikePage) {
     return makeResult('pending', '', titleText || href);
   }
 
-  return makeResult('success', '', titleText || href);
+  if (hasStrongSuccessSignal) {
+    return makeResult('success', '', titleText || href);
+  }
+
+  return makeResult('pending', '', titleText || href);
 })();
 """;
         }
