@@ -2431,15 +2431,37 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     'are you a real person'
   ];
 
-  const hasCaptchaElement = documents.some((doc) => {
+  const captchaAudioNeedles = [
+    'phat am thanh',
+    'nghe am thanh',
+    'play audio',
+    'listen to the audio',
+    'audio challenge'
+  ];
+
+  const hasCaptchaImage = documents.some((doc) => {
     try {
       return !!doc.querySelector(
-        'input[name*="captcha" i], input[id*="captcha" i], img[src*="captcha" i], img[alt*="captcha" i], iframe[src*="captcha" i], iframe[src*="recaptcha" i], iframe[src*="hcaptcha" i], [id*="captcha" i], [class*="captcha" i]'
+        'img[src*="captcha/tfbimage" i], img[src*="/captcha/" i], img[src*="captcha" i], img[alt*="captcha" i], iframe[src*="captcha" i], iframe[src*="recaptcha" i], iframe[src*="hcaptcha" i]'
       );
     } catch {
       return false;
     }
   });
+
+  const hasCaptchaInput = documents.some((doc) => {
+    try {
+      return !!doc.querySelector(
+        'input[name*="captcha" i], input[id*="captcha" i], input[aria-label*="captcha" i], input[type="text"], input[inputmode="text"]'
+      );
+    } catch {
+      return false;
+    }
+  });
+
+  const matchedCaptchaAudioAction = actionHints.find((action) =>
+    captchaAudioNeedles.some((needle) => action.text.includes(needle))
+  );
 
   const hasContinueAction = actionHints.some((action) =>
     action.text === 'tiep tuc' ||
@@ -2448,9 +2470,25 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     action.text.includes('continue')
   );
 
-  if (includesAny(captchaNeedles) || allLowerHrefs.includes('captcha') || (hasCaptchaElement && hasContinueAction)) {
+  const hasStrongCaptchaText = includesAny(captchaNeedles);
+  const hasStrongCaptchaHref = allLowerHrefs.includes('captcha/tfbimage') || allLowerHrefs.includes('/captcha/');
+  const duDauHieuCaptcha =
+    hasCaptchaImage ||
+    !!matchedCaptchaAudioAction ||
+    hasStrongCaptchaText ||
+    hasStrongCaptchaHref;
+
+  const duDauHieuNhapCaptcha =
+    hasCaptchaInput ||
+    hasContinueAction ||
+    hasCaptchaImage;
+
+  if (duDauHieuCaptcha && duDauHieuNhapCaptcha) {
     const chiTietCaptcha =
-      hasContinueAction ? 'tiep tuc' :
+      matchedCaptchaAudioAction?.text ||
+      (hasCaptchaImage ? 'captcha/tfbimage' : '') ||
+      firstMatch(captchaNeedles) ||
+      (hasContinueAction ? 'tiep tuc' : '') ||
       firstMatch(captchaNeedles) ||
       titleText ||
       href;
