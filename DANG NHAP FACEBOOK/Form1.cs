@@ -1,6 +1,8 @@
 ﻿using System.Text;
 using System.Text.Json;
 
+using System.Globalization;
+
 namespace DANG_NHAP_FACEBOOK
 {
     public partial class Form1 : Form
@@ -135,8 +137,113 @@ namespace DANG_NHAP_FACEBOOK
 
                 row.Cells["colTrangThai"].Value = trangThai;
                 row.Cells["colTuongTacCuoi"].Value = DateTime.Now.ToString("dd/MM HH:mm:ss");
+                CapNhatMauDongGrid(row);
                 LuuDuLieuGridRaFile();
                 break;
+            }
+        }
+
+        private void CapNhatMauDongGrid(DataGridViewRow? dongCanCapNhat = null)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(() => CapNhatMauDongGrid(dongCanCapNhat));                         // Mọi thay đổi màu dòng đều phải quay về UI thread để tránh lỗi cross-thread
+                return;
+            }
+
+            static string ChuanHoaTrangThai(string? trangThai)
+            {
+                if (string.IsNullOrWhiteSpace(trangThai))
+                {
+                    return string.Empty;
+                }
+
+                string daChuanHoa = trangThai.Trim().Normalize(NormalizationForm.FormD);
+                var builder = new StringBuilder(daChuanHoa.Length);
+                foreach (char kyTu in daChuanHoa)
+                {
+                    if (CharUnicodeInfo.GetUnicodeCategory(kyTu) != UnicodeCategory.NonSpacingMark)
+                    {
+                        builder.Append(char.ToLowerInvariant(kyTu));
+                    }
+                }
+
+                return builder.ToString().Normalize(NormalizationForm.FormC);
+            }
+
+            static bool ChuaBatKyCumTuNao(string trangThaiDaChuanHoa, params string[] cumTu)
+            {
+                foreach (string item in cumTu)
+                {
+                    if (trangThaiDaChuanHoa.Contains(item, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            static (Color MauNen, Color MauChu) LayMauTheoTrangThai(string trangThai)
+            {
+                string trangThaiDaChuanHoa = ChuanHoaTrangThai(trangThai);
+                if (string.IsNullOrWhiteSpace(trangThaiDaChuanHoa))
+                {
+                    return (Color.White, Color.Black);
+                }
+
+                if (ChuaBatKyCumTuNao(trangThaiDaChuanHoa, "dang nhap thanh cong", "thanh cong"))
+                {
+                    return (Color.FromArgb(212, 237, 182), Color.FromArgb(33, 87, 50));       // Xanh nhạt kiểu MaxCare cho kết quả tốt
+                }
+
+                if (ChuaBatKyCumTuNao(trangThaiDaChuanHoa, "da dung thu cong"))
+                {
+                    return (Color.FromArgb(238, 242, 247), Color.FromArgb(71, 85, 105));      // Dừng thủ công là trạng thái trung tính, không nên nhuộm đỏ như lỗi thật
+                }
+
+                if (ChuaBatKyCumTuNao(trangThaiDaChuanHoa, "dang ", "cho ", "mo phien moi sau", "da gui dang nhap", "da thu lai lan 2"))
+                {
+                    return (Color.FromArgb(219, 234, 254), Color.FromArgb(30, 64, 175));      // Màu xanh dương nhạt cho luồng đang xử lý/chờ
+                }
+
+                if (ChuaBatKyCumTuNao(trangThaiDaChuanHoa, "captcha", "checkpoint", "can nhap", "can xac minh", "mat khau da thay doi", "956"))
+                {
+                    return (Color.FromArgb(255, 236, 179), Color.FromArgb(146, 64, 14));      // Vàng cam nhạt cho trạng thái cần chú ý nhưng chưa coi là lỗi đứt hẳn
+                }
+
+                if (ChuaBatKyCumTuNao(trangThaiDaChuanHoa, "dung:", "sai ", "khong ", "loi", "het thoi gian cho", "bi khoa", "vo hieu hoa", "thu lai sau"))
+                {
+                    return (Color.FromArgb(255, 182, 193), Color.FromArgb(127, 29, 29));      // Hồng đỏ nhạt kiểu MaxCare cho kết quả xấu/lỗi
+                }
+
+                return (Color.White, Color.Black);
+            }
+
+            static void ApMauChoDong(DataGridViewRow row)
+            {
+                if (row.IsNewRow)
+                {
+                    return;
+                }
+
+                string trangThai = row.Cells["colTrangThai"].Value?.ToString() ?? string.Empty;
+                (Color mauNen, Color mauChu) = LayMauTheoTrangThai(trangThai);
+                row.DefaultCellStyle.BackColor = mauNen;
+                row.DefaultCellStyle.ForeColor = mauChu;
+                row.DefaultCellStyle.SelectionBackColor = mauNen;
+                row.DefaultCellStyle.SelectionForeColor = mauChu;
+            }
+
+            if (dongCanCapNhat != null)
+            {
+                ApMauChoDong(dongCanCapNhat);
+                return;
+            }
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                ApMauChoDong(row);
             }
         }
 
@@ -928,6 +1035,7 @@ namespace DANG_NHAP_FACEBOOK
             row.Cells["colTrangThai"].Value = string.Empty;                                   // Trạng thái để trống, ưu tiên hiện ở label phía dưới
             row.Cells["colCookie"].Value = string.Empty;                                      // Cookie để trống, sau này mới tính tới
 
+            CapNhatMauDongGrid(row);
             dataGridView1.ClearSelection();                                                   // Bỏ toàn bộ lựa chọn cũ để chỉ giữ đúng dòng mới
             row.Selected = true;                                                              // Tự chọn ngay dòng vừa được thêm
             dataGridView1.CurrentCell = row.Cells["colUID"];                                  // Đưa con trỏ hiện tại về cột UID của dòng mới
@@ -2926,6 +3034,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                     row.Cells["colCookie"].Value = dong.Cookie;
                 }
 
+                CapNhatMauDongGrid();
                 dataGridView1.ClearSelection();
                 CapNhatTrangThai($"Đã nạp {dataGridView1.Rows.Count} dòng từ grid.json.", Color.ForestGreen);
             }
