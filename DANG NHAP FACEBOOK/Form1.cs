@@ -1959,6 +1959,25 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                             return;
                         }
 
+                        if (string.Equals(lyDo, "wrong_password", StringComparison.OrdinalIgnoreCase) && !daThuLaiLanHai)
+                        {
+                            bool daGuiLanHai = await ThuChayScriptTuDongDienAsync(webSocketDebuggerUrl, scriptTuDongDienVaSubmit);
+                            daThuLaiLanHai = true;
+
+                            if (daGuiLanHai)
+                            {
+                                CapNhatTrangThaiDongTheoUid(uid, "Đã thử lại lần 2, chờ kết quả");
+                                CapNhatTrangThai($"UID {uid}: phát hiện sai mật khẩu ở lần 1, app đang thử đăng nhập lần 2.", Color.DarkGoldenrod);
+                            }
+                            else
+                            {
+                                CapNhatTrangThaiDongTheoUid(uid, "Lần 2 không thấy form đăng nhập");
+                                CapNhatTrangThai($"UID {uid}: phát hiện sai mật khẩu ở lần 1 nhưng không thể gửi lại lần 2.", Color.Firebrick);
+                            }
+                            await Task.Delay(1000);
+                            continue;
+                        }
+
                         string dienGiaiLyDo = lyDo switch
                         {
                             "password_changed" => "mật khẩu đã thay đổi",
