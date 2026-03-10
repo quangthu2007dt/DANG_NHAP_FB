@@ -2675,9 +2675,13 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
 
   const wrongPasswordNeedles = [
     'sai mat khau',
+    'ten nguoi dung hoac mat khau khong hop le',
+    'ten dang nhap hoac mat khau khong hop le',
     'mat khau ban nhap khong chinh xac',
     'mat khau ban da nhap khong chinh xac',
     'mat khau ma ban nhap khong chinh xac',
+    'invalid username or password',
+    'username or password is invalid',
     'the password you entered is incorrect',
     "the password that you've entered is incorrect",
     'the password you entered was incorrect',
