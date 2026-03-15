@@ -2194,6 +2194,42 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '');
 
+  const layTextNode = (node) => normalizeText((node?.innerText || node?.textContent || node?.getAttribute?.('aria-label') || node?.getAttribute?.('value') || '').trim());
+
+  const laTrangChuaDuongDan = (root, needle) => {
+    try {
+      const href = String(root?.location?.href || root?.ownerDocument?.location?.href || window.location.href || '').toLowerCase();
+      return href.includes(needle);
+    } catch {
+      return String(window.location.href || '').toLowerCase().includes(needle);
+    }
+  };
+
+  const timNutTheoText = (root, exactTexts) => {
+    if (!root || typeof root.querySelectorAll !== 'function') return null;
+
+    const nodes = Array.from(root.querySelectorAll('button, [role="button"], a[role="button"], div[role="button"], input[type="submit"], input[name="login"]'));
+    for (const node of nodes) {
+      if (!isVisible(node) || node.disabled) continue;
+      const text = layTextNode(node);
+      if (!text) continue;
+      if (exactTexts.some((exactText) => text === exactText)) {
+        return node;                                                                  // Với link login/identify phải ưu tiên đúng nút có text "Đăng nhập" thay vì nút submit chung dễ bắt nhầm
+      }
+    }
+
+    for (const node of nodes) {
+      if (!isVisible(node) || node.disabled) continue;
+      const text = layTextNode(node);
+      if (!text) continue;
+      if (exactTexts.some((exactText) => text.includes(exactText))) {
+        return node;
+      }
+    }
+
+    return null;
+  };
+
   const laHopDangNhap = (container) => {
     if (!container || !(container instanceof Element)) return false;
 
@@ -2402,7 +2438,16 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
   }
 
   const submitLogin = () => {
-    const loginButton = (loginButtonTheoRoot && isVisible(loginButtonTheoRoot))
+    const formRoot = passwordInput.form || emailInput.form || rootChuaForm || document;
+    const dangOTrangLoginIdentify = [formRoot, rootChuaForm, document].some((root) => laTrangChuaDuongDan(root, '/login/identify'));
+    const nutDangNhapTheoText = dangOTrangLoginIdentify
+      ? timNutTheoText(formRoot, ['dang nhap', 'log in', 'login']) ||
+        timNutTheoText(rootChuaForm || document, ['dang nhap', 'log in', 'login']) ||
+        timNutTheoText(document, ['dang nhap', 'log in', 'login'])
+      : null;
+    const loginButton = (nutDangNhapTheoText && isVisible(nutDangNhapTheoText))
+      ? nutDangNhapTheoText
+      : (loginButtonTheoRoot && isVisible(loginButtonTheoRoot))
       ? loginButtonTheoRoot
       : firstVisibleInRoot(rootChuaForm || document, [
       'button[name="login"]',
