@@ -2230,6 +2230,19 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     return null;
   };
 
+  const timNutDangNhapChoLoginIdentify = (root) => {
+    if (!root || typeof root.querySelector !== 'function') return null;
+
+    return firstVisibleInRoot(root, [
+      'div[role="button"][aria-label="Đăng nhập"]',
+      '[role="button"][aria-label="Đăng nhập"]',
+      'div[role="button"][aria-label="Log in"]',
+      '[role="button"][aria-label="Log in"]',
+      'button[aria-label="Đăng nhập"]',
+      'button[aria-label="Log in"]'
+    ]) || timNutTheoText(root, ['dang nhap', 'log in', 'login']);                           // Với login/identify ưu tiên đúng selector aria-label của nút Đăng nhập trước rồi mới fallback theo text
+  };
+
   const laHopDangNhap = (container) => {
     if (!container || !(container instanceof Element)) return false;
 
@@ -2398,6 +2411,10 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     ]);
 
     const loginButton = queryVisible([
+      'div[role="button"][aria-label="Đăng nhập"]',
+      '[role="button"][aria-label="Đăng nhập"]',
+      'div[role="button"][aria-label="Log in"]',
+      '[role="button"][aria-label="Log in"]',
       'button[name="login"]',
       'button[id="loginbutton"]',
       '#loginbutton',
@@ -2441,9 +2458,9 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     const formRoot = passwordInput.form || emailInput.form || rootChuaForm || document;
     const dangOTrangLoginIdentify = [formRoot, rootChuaForm, document].some((root) => laTrangChuaDuongDan(root, '/login/identify'));
     const nutDangNhapTheoText = dangOTrangLoginIdentify
-      ? timNutTheoText(formRoot, ['dang nhap', 'log in', 'login']) ||
-        timNutTheoText(rootChuaForm || document, ['dang nhap', 'log in', 'login']) ||
-        timNutTheoText(document, ['dang nhap', 'log in', 'login'])
+      ? timNutDangNhapChoLoginIdentify(formRoot) ||
+        timNutDangNhapChoLoginIdentify(rootChuaForm || document) ||
+        timNutDangNhapChoLoginIdentify(document)
       : null;
     const loginButton = (nutDangNhapTheoText && isVisible(nutDangNhapTheoText))
       ? nutDangNhapTheoText
