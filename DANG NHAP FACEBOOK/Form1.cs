@@ -67,6 +67,14 @@ namespace DANG_NHAP_FACEBOOK
             public string Cookie { get; set; } = string.Empty;
         }
 
+        private sealed class KetQuaGuiDangNhapTuDong
+        {
+            public string TrangThai { get; set; } = string.Empty;
+            public string HanhDong { get; set; } = string.Empty;
+            public string ChiTiet { get; set; } = string.Empty;
+            public bool ThanhCong => string.Equals(TrangThai, "ok", StringComparison.OrdinalIgnoreCase);
+        }
+
         public Form1()
         {
             InitializeComponent();
@@ -94,6 +102,7 @@ namespace DANG_NHAP_FACEBOOK
                 cboUrl.SelectedIndex = 0;                                                     // Mặc định chọn giao diện đầu tiên để khi bấm Mở dòng không bị thiếu URL
             }
 
+            ttMain.SetToolTip(chkTatMo, "Tick để ẩn toàn bộ Chrome do app mở. Bỏ tick để hiện lại các cửa sổ Chrome này."); // Giữ đúng thiết kế mới nhưng thêm diễn giải rõ ràng để người dùng hiểu checkbox tác động lên cửa sổ Chrome nào
             TaiDanhSachUserAgentLenCombobox();                                                 // Nạp danh sách User-Agent từ file txt lên combobox ngay khi app khởi động
             GanMenuUserAgentChoCombobox();                                                     // Gắn menu chuột phải để thêm và xóa User-Agent ngay trên app mà không phải sửa txt bằng tay
             CapNhatTrangThai("Sẵn sàng.", Color.RoyalBlue);                                    // Sau khi khởi tạo xong thì đưa app về trạng thái chờ thao tác
@@ -159,6 +168,53 @@ namespace DANG_NHAP_FACEBOOK
                 LuuDuLieuGridRaFile();
                 break;
             }
+        }
+
+        private void CapNhatTrangThaiChiTietTheoUid(string uid, string noiDungThanhTrangThai, string trangThaiDong, Color mauChu)
+        {
+            if (!string.IsNullOrWhiteSpace(trangThaiDong))
+            {
+                CapNhatTrangThaiDongTheoUid(uid, trangThaiDong);                               // Khi tiến trình đang chạy từng bước thì cập nhật song song cả grid và thanh trạng thái dưới để người dùng không bị mất ngữ cảnh
+            }
+
+            if (string.IsNullOrWhiteSpace(uid))
+            {
+                CapNhatTrangThai(noiDungThanhTrangThai, mauChu);
+                return;
+            }
+
+            CapNhatTrangThai($"UID {uid}: {noiDungThanhTrangThai}", mauChu);
+        }
+
+        private static string LayNhanLanDangNhap(int lanDangNhap)
+        {
+            return $"lần {lanDangNhap}";
+        }
+
+        private static string LayDienGiaiHanhDongGuiDangNhap(KetQuaGuiDangNhapTuDong ketQua, string nhanLanDangNhap)
+        {
+            string hauTo = string.IsNullOrWhiteSpace(nhanLanDangNhap) ? string.Empty : $" {nhanLanDangNhap}";
+            return ketQua.HanhDong switch
+            {
+                "click_login_button" => $"đã nhấn nút Đăng nhập{hauTo}",
+                "request_submit" => $"đã gửi form đăng nhập{hauTo} bằng requestSubmit",
+                "form_submit" => $"đã gửi form đăng nhập{hauTo} bằng form.submit",
+                "press_enter" => $"đã gửi đăng nhập{hauTo} bằng phím Enter",
+                _ => $"đã gửi đăng nhập{hauTo}"
+            };
+        }
+
+        private static string LayTrangThaiDongTheoHanhDongGuiDangNhap(KetQuaGuiDangNhapTuDong ketQua, string nhanLanDangNhap)
+        {
+            string hauTo = string.IsNullOrWhiteSpace(nhanLanDangNhap) ? string.Empty : $" {nhanLanDangNhap}";
+            return ketQua.HanhDong switch
+            {
+                "click_login_button" => $"Đã nhấn đăng nhập{hauTo}, chờ kết quả",
+                "request_submit" => $"Đã submit form{hauTo}, chờ kết quả",
+                "form_submit" => $"Đã submit form{hauTo}, chờ kết quả",
+                "press_enter" => $"Đã gửi Enter{hauTo}, chờ kết quả",
+                _ => $"Đã gửi đăng nhập{hauTo}, chờ kết quả"
+            };
         }
         //
         //   CẬP NHẬT MÀU TRONG GIRD
@@ -1641,10 +1697,15 @@ namespace DANG_NHAP_FACEBOOK
             {
                 GhiNhanPhienDangXuLy(session, uid);
                 GhiLaiUserAgentDangDung(urlCanMo, userAgentDangDung);
-                SessionRuntimeService.LaunchChromeForSession(session, chromeExe, arguments);
+                System.Diagnostics.Process chromeProcess = SessionRuntimeService.LaunchChromeForSession(session, chromeExe, arguments);
                 congDebugTheoUid[uid] = congDebugChrome;
-                CapNhatTrangThai($"Đang tự điền UID/Password cho {uid}...", Color.DarkGoldenrod);
-                CapNhatTrangThaiDongTheoUid(uid, "Đang tự điền UID/Password");
+                if (chkTatMo.Checked)
+                {
+                    _ = SessionRuntimeService.ThuDatTrangThaiAnHienChromeTheoProcessId(chromeProcess.Id, hienChrome: false); // Checkbox Ẩn/Hiện Chrome trong thiết kế mới phải tác động ngay cả với các cửa sổ Chrome vừa mở sau này
+                }
+
+                string moTaCheDoAnChrome = chkTatMo.Checked ? " ở chế độ ẩn Chrome" : string.Empty;
+                CapNhatTrangThaiChiTietTheoUid(uid, $"Chrome đã khởi chạy{moTaCheDoAnChrome}, đang chờ tab Facebook sẵn sàng cho lần đăng nhập 1...", "Lần 1: chờ tab Facebook", Color.DarkGoldenrod);
                 _ = TuDongDienThongTinDangNhapAsync(congDebugChrome, urlCanMo, uid, password, cheDo);
             }
             catch (Exception ex)
@@ -1800,6 +1861,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
 
             string script = TaoScriptTuDongDienDangNhap(uid, password);                        // Tạo script JavaScript để tìm ô email/password và đổ giá trị vào đúng cách của trình duyệt
             int soLanThuToiDa = LaGiaoDienXuLyNhuMeta(urlCanMo) ? 40 : 25;                    // Meta và login/identify thường render chậm hơn nên cho phép thử nhiều lần hơn
+            bool daBaoDaBamDuocTabFacebook = false;
 
             for (int i = 0; i < soLanThuToiDa; i++)
             {
@@ -1817,11 +1879,17 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                         continue;
                     }
 
-                    bool daDienThanhCong = await ThuChayScriptTuDongDienAsync(webSocketDebuggerUrl, script); // Chạy script bằng CDP, nếu ô đã hiện thì điền ngay UID và Password
-                    if (daDienThanhCong)
+                    if (!daBaoDaBamDuocTabFacebook)
                     {
-                        CapNhatTrangThai($"Đã tự điền và gửi đăng nhập cho {uid}.", Color.ForestGreen);
-                        CapNhatTrangThaiDongTheoUid(uid, "Đã gửi đăng nhập, đang chờ kết quả");
+                        CapNhatTrangThaiChiTietTheoUid(uid, "đã bám được tab Facebook, đang tìm form đăng nhập lần 1...", "Lần 1: đang tìm form đăng nhập", Color.DarkGoldenrod);
+                        daBaoDaBamDuocTabFacebook = true;
+                    }
+
+                    KetQuaGuiDangNhapTuDong ketQuaGuiDangNhap = await ThuChayScriptTuDongDienAsync(webSocketDebuggerUrl, script); // Chạy script bằng CDP để biết chính xác app đã nhấn nút Đăng nhập hay submit form theo cách nào
+                    if (ketQuaGuiDangNhap.ThanhCong)
+                    {
+                        string nhanLanDangNhap = LayNhanLanDangNhap(1);
+                        CapNhatTrangThaiChiTietTheoUid(uid, $"{LayDienGiaiHanhDongGuiDangNhap(ketQuaGuiDangNhap, nhanLanDangNhap)}, đang chờ kết quả...", LayTrangThaiDongTheoHanhDongGuiDangNhap(ketQuaGuiDangNhap, nhanLanDangNhap), Color.ForestGreen);
                         _ = TheoDoiKetQuaDangNhapSauKhiSubmitAsync(congDebugChrome, uid, password, urlCanMo, cheDo);
                         return;
                     }
@@ -1919,7 +1987,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         //
         //  HÀM THỬ CHẠY SCRIPT TỰ ĐIỀN
         //
-        private async Task<bool> ThuChayScriptTuDongDienAsync(string webSocketDebuggerUrl, string script)
+        private async Task<KetQuaGuiDangNhapTuDong> ThuChayScriptTuDongDienAsync(string webSocketDebuggerUrl, string script)
         {
             using var webSocket = new System.Net.WebSockets.ClientWebSocket();
             await webSocket.ConnectAsync(new Uri(webSocketDebuggerUrl), CancellationToken.None); // Kết nối thẳng vào tab Facebook bằng giao thức DevTools Protocol
@@ -1932,21 +2000,38 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
 
             if (!ketQua.RootElement.TryGetProperty("result", out JsonElement resultElement))
             {
-                return false;
+                return new KetQuaGuiDangNhapTuDong();                                          // Không có payload kết quả thì coi như script chưa tự điền được bước nào
             }
 
             if (!resultElement.TryGetProperty("result", out JsonElement evaluateResult))
             {
-                return false;
+                return new KetQuaGuiDangNhapTuDong();
             }
 
             if (!evaluateResult.TryGetProperty("value", out JsonElement valueElement))
             {
-                return false;
+                return new KetQuaGuiDangNhapTuDong();
             }
 
-            string trangThai = valueElement.GetString() ?? string.Empty;                       // Script trả về 'ok' khi đã tìm thấy đủ ô và điền xong, còn lại là 'wait'
-            return string.Equals(trangThai, "ok", StringComparison.OrdinalIgnoreCase);
+            if (valueElement.ValueKind == JsonValueKind.String)
+            {
+                return new KetQuaGuiDangNhapTuDong
+                {
+                    TrangThai = valueElement.GetString() ?? string.Empty
+                };
+            }
+
+            if (valueElement.ValueKind != JsonValueKind.Object)
+            {
+                return new KetQuaGuiDangNhapTuDong();
+            }
+
+            return new KetQuaGuiDangNhapTuDong
+            {
+                TrangThai = valueElement.TryGetProperty("status", out JsonElement statusElement) ? statusElement.GetString() ?? string.Empty : string.Empty,
+                HanhDong = valueElement.TryGetProperty("action", out JsonElement actionElement) ? actionElement.GetString() ?? string.Empty : string.Empty,
+                ChiTiet = valueElement.TryGetProperty("detail", out JsonElement detailElement) ? detailElement.GetString() ?? string.Empty : string.Empty
+            };
         }
         //
         //  HÀM THEO DÕI KẾT QUẢ ĐĂNG NHẬP SAU KHI APP ĐÃ TỰ GỬI ĐĂNG NHẬP
@@ -2015,13 +2100,14 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
 
                         if (string.Equals(lyDo, "wrong_password", StringComparison.OrdinalIgnoreCase) && !daThuLaiLanHai)
                         {
-                            bool daGuiLanHai = await ThuChayScriptTuDongDienAsync(webSocketDebuggerUrl, scriptTuDongDienVaSubmit);
+                            CapNhatTrangThaiChiTietTheoUid(uid, "phát hiện sai mật khẩu ở lần 1, đang tự điền lại để thử đăng nhập lần 2...", "Lần 2: đang điền lại UID/Password", Color.DarkGoldenrod);
+                            KetQuaGuiDangNhapTuDong ketQuaGuiLanHai = await ThuChayScriptTuDongDienAsync(webSocketDebuggerUrl, scriptTuDongDienVaSubmit);
                             daThuLaiLanHai = true;
 
-                            if (daGuiLanHai)
+                            if (ketQuaGuiLanHai.ThanhCong)
                             {
-                                CapNhatTrangThaiDongTheoUid(uid, "Đã thử lại lần 2, chờ kết quả");
-                                CapNhatTrangThai($"UID {uid}: phát hiện sai mật khẩu ở lần 1, app đang thử đăng nhập lần 2.", Color.DarkGoldenrod);
+                                string nhanLanDangNhap = LayNhanLanDangNhap(2);
+                                CapNhatTrangThaiChiTietTheoUid(uid, $"{LayDienGiaiHanhDongGuiDangNhap(ketQuaGuiLanHai, nhanLanDangNhap)}, đang chờ kết quả...", LayTrangThaiDongTheoHanhDongGuiDangNhap(ketQuaGuiLanHai, nhanLanDangNhap), Color.DarkGoldenrod);
                             }
                             else
                             {
@@ -2062,13 +2148,14 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
 
                     if (string.Equals(trangThai, "pending", StringComparison.OrdinalIgnoreCase) && !daThuLaiLanHai && i >= 8)
                     {
-                        bool daGuiLanHai = await ThuChayScriptTuDongDienAsync(webSocketDebuggerUrl, scriptTuDongDienVaSubmit);
+                        CapNhatTrangThaiChiTietTheoUid(uid, "đã chờ khá lâu sau lần 1, app đang tự thử lại đăng nhập lần 2...", "Lần 2: đang tự thử lại đăng nhập", Color.DarkGoldenrod);
+                        KetQuaGuiDangNhapTuDong ketQuaGuiLanHai = await ThuChayScriptTuDongDienAsync(webSocketDebuggerUrl, scriptTuDongDienVaSubmit);
                         daThuLaiLanHai = true;
 
-                        if (daGuiLanHai)
+                        if (ketQuaGuiLanHai.ThanhCong)
                         {
-                            CapNhatTrangThaiDongTheoUid(uid, "Đã thử lại lần 2, chờ kết quả");
-                            CapNhatTrangThai($"UID {uid}: đã tự điền + gửi đăng nhập lần 2.", Color.DarkGoldenrod);
+                            string nhanLanDangNhap = LayNhanLanDangNhap(2);
+                            CapNhatTrangThaiChiTietTheoUid(uid, $"{LayDienGiaiHanhDongGuiDangNhap(ketQuaGuiLanHai, nhanLanDangNhap)}, đang chờ kết quả...", LayTrangThaiDongTheoHanhDongGuiDangNhap(ketQuaGuiLanHai, nhanLanDangNhap), Color.DarkGoldenrod);
                         }
                         else
                         {
@@ -2181,6 +2268,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
   const password = {{passwordJson}};
 
   const isVisible = (el) => !!(el && (el.offsetWidth || el.offsetHeight || el.getClientRects().length));
+  const makeResult = (status, action = '', detail = '') => ({ status, action, detail });
   const firstVisibleInRoot = (root, selectors) => {
     for (const selector of selectors) {
       const element = root.querySelector(selector);
@@ -2446,7 +2534,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
   }
 
   if (!emailInput || !passwordInput) {
-    return 'wait';
+    return makeResult('wait', 'waiting_inputs', 'Chưa thấy đủ ô email/password');
   }
 
   dongPopupCanTro(document);
@@ -2491,7 +2579,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     if (loginButton && !loginButton.disabled) {
       loginButton.scrollIntoView({ block: 'center', inline: 'center' });
       loginButton.click();
-      return true;
+      return makeResult('ok', 'click_login_button', layTextNode(loginButton));
     }
 
     const enterEvent = {
@@ -2510,15 +2598,15 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     const form = passwordInput.form || emailInput.form;
     if (form && typeof form.requestSubmit === 'function') {
       form.requestSubmit();
-      return true;
+      return makeResult('ok', 'request_submit', 'requestSubmit');
     }
 
     if (form) {
       form.submit();
-      return true;
+      return makeResult('ok', 'form_submit', 'form.submit');
     }
 
-    return true;
+    return makeResult('ok', 'press_enter', 'Enter');
   };
 
   setNativeValue(emailInput, uid);
@@ -2527,8 +2615,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
   if (rootChuaForm && rootChuaForm !== document) {
     dongPopupCanTro(rootChuaForm);
   }
-  submitLogin();
-  return 'ok';
+  return submitLogin();
 })();
 """;
         }
@@ -3773,15 +3860,15 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                 }
 
                 string script = TaoScriptTuDongDienDangNhap(uid, password);                    // Dùng lại cùng một script tự điền đã ổn định ở các luồng khác để tránh tách logic rời rạc
-                bool daDienThanhCong = await ThuChayScriptTuDongDienAsync(webSocketDebuggerUrl, script);
-                if (!daDienThanhCong)
+                KetQuaGuiDangNhapTuDong ketQuaGuiDangNhap = await ThuChayScriptTuDongDienAsync(webSocketDebuggerUrl, script);
+                if (!ketQuaGuiDangNhap.ThanhCong)
                 {
                     CapNhatTrangThai("Điền UID/Password thất bại: không tìm thấy ô đăng nhập.", Color.Firebrick);
                     MessageBox.Show("Không tìm thấy ô đăng nhập trên tab Facebook đang mở.");
                     return;
                 }
 
-                CapNhatTrangThai($"Đã điền lại UID/Password cho {uid}.", Color.ForestGreen);
+                CapNhatTrangThai($"UID {uid}: {LayDienGiaiHanhDongGuiDangNhap(ketQuaGuiDangNhap, string.Empty)} trên Chrome đang mở.", Color.ForestGreen);
             }
             catch
             {
@@ -3811,6 +3898,26 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
             }
 
             CapNhatTrangThai("Đã dừng thủ công. App sẽ không mở phiên mới cho đến khi bạn bấm Next lại.", Color.RoyalBlue);
+        }
+
+        private void chkTatMo_CheckedChanged(object sender, EventArgs e)
+        {
+            bool dangBatCheDoAnChrome = chkTatMo.Checked;
+            int soCuaSoDaXuLy = SessionRuntimeService.ThuDatTrangThaiAnHienChoTatCaChromeDangChay(hienChrome: !dangBatCheDoAnChrome);
+
+            if (dangBatCheDoAnChrome)
+            {
+                string noiDung = soCuaSoDaXuLy > 0
+                    ? $"Đã ẩn {soCuaSoDaXuLy} cửa sổ Chrome do app mở. Các Chrome mở tiếp theo cũng sẽ tự ẩn."
+                    : "Đã bật chế độ ẩn Chrome. Các Chrome app mở tiếp theo sẽ tự ẩn.";
+                CapNhatTrangThai(noiDung, Color.SteelBlue);
+                return;
+            }
+
+            string noiDungHienChrome = soCuaSoDaXuLy > 0
+                ? $"Đã hiện lại {soCuaSoDaXuLy} cửa sổ Chrome do app mở."
+                : "Đã tắt chế độ ẩn Chrome. Các Chrome app mở tiếp theo sẽ hiện bình thường.";
+            CapNhatTrangThai(noiDungHienChrome, Color.SeaGreen);
         }
     }
 }

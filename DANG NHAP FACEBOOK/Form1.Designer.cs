@@ -99,6 +99,7 @@
             lblDanhSach = new Label();
             timer1 = new System.Windows.Forms.Timer(components);
             btnStop = new Button();
+            chkTatMo = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             cmsGirdRightClick.SuspendLayout();
             statusStrip1.SuspendLayout();
@@ -448,7 +449,7 @@
             // 
             // btnDangNhap
             // 
-            btnDangNhap.BackColor = Color.FromArgb(128, 255, 255);
+            btnDangNhap.BackColor = Color.Transparent;
             resources.ApplyResources(btnDangNhap, "btnDangNhap");
             btnDangNhap.ForeColor = Color.Blue;
             btnDangNhap.Name = "btnDangNhap";
@@ -458,9 +459,9 @@
             // 
             // btnTiepTuc
             // 
-            btnTiepTuc.BackColor = Color.Teal;
+            btnTiepTuc.BackColor = Color.Transparent;
             resources.ApplyResources(btnTiepTuc, "btnTiepTuc");
-            btnTiepTuc.ForeColor = Color.Yellow;
+            btnTiepTuc.ForeColor = Color.OliveDrab;
             btnTiepTuc.Name = "btnTiepTuc";
             ttMain.SetToolTip(btnTiepTuc, resources.GetString("btnTiepTuc.ToolTip"));
             btnTiepTuc.UseVisualStyleBackColor = false;
@@ -496,7 +497,7 @@
             // 
             // btnXoa
             // 
-            btnXoa.BackColor = Color.FromArgb(255, 192, 192);
+            btnXoa.BackColor = Color.Transparent;
             resources.ApplyResources(btnXoa, "btnXoa");
             btnXoa.ForeColor = Color.Red;
             btnXoa.Name = "btnXoa";
@@ -518,18 +519,27 @@
             // 
             // btnStop
             // 
-            btnStop.BackColor = Color.FromArgb(192, 192, 255);
+            btnStop.BackColor = Color.Transparent;
             resources.ApplyResources(btnStop, "btnStop");
             btnStop.ForeColor = Color.Fuchsia;
             btnStop.Name = "btnStop";
             btnStop.UseVisualStyleBackColor = false;
             btnStop.Click += btnStop_Click;
             // 
+            // chkTatMo
+            // 
+            resources.ApplyResources(chkTatMo, "chkTatMo");
+            chkTatMo.Name = "chkTatMo";
+            chkTatMo.UseVisualStyleBackColor = true;
+            chkTatMo.CheckedChanged += chkTatMo_CheckedChanged;
+            // 
             // Form1
             // 
             resources.ApplyResources(this, "$this");
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.ButtonHighlight;
             ContextMenuStrip = cmsGirdRightClick;
+            Controls.Add(chkTatMo);
             Controls.Add(btnStop);
             Controls.Add(lblDanhSach);
             Controls.Add(btnXoa);
@@ -621,5 +631,6 @@
         private DataGridViewTextBoxColumn colTuongTacCuoi;
         private DataGridViewTextBoxColumn colTrangThai;
         private DataGridViewTextBoxColumn colCookie;
+        private CheckBox chkTatMo;
     }
 }

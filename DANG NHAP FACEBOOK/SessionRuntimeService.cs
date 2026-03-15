@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -6,6 +7,28 @@ namespace DANG_NHAP_FACEBOOK
 {
     internal static class SessionRuntimeService
     {
+        private const int SW_HIDE = 0;
+        private const int SW_SHOW = 5;
+        private const int SW_RESTORE = 9;
+        private const uint GW_OWNER = 4;
+
+        private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        private static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetWindow(IntPtr hWnd, uint uCmd);
+
+        [DllImport("user32.dll")]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
         public static SessionModel CreateSessionFromTemplate(string uid)
         {
             string sessionId = TaoSessionId(uid);
@@ -52,6 +75,59 @@ namespace DANG_NHAP_FACEBOOK
             SessionRegistryService.UpsertSession(session);
             _ = TheoDoiVaDonDepPhienKhiChromeThoatAsync(session.SessionId, process.Id);
             return process;
+        }
+
+        public static int ThuDatTrangThaiAnHienChoTatCaChromeDangChay(bool hienChrome)
+        {
+            List<SessionModel> sessions = SessionRegistryService.LoadRegistry();
+            HashSet<int> processIdsDaXuLy = new();
+            int soCuaSoDaXuLy = 0;
+
+            foreach (SessionModel session in sessions)
+            {
+                if (!session.ProcessId.HasValue || session.Status != SessionStatus.Running)
+                {
+                    continue;
+                }
+
+                int processId = session.ProcessId.Value;
+                if (!processIdsDaXuLy.Add(processId))
+                {
+                    continue;
+                }
+
+                if (ThuDatTrangThaiAnHienChromeTheoProcessId(processId, hienChrome))
+                {
+                    soCuaSoDaXuLy++;
+                }
+            }
+
+            return soCuaSoDaXuLy;
+        }
+
+        public static bool ThuDatTrangThaiAnHienChromeTheoProcessId(int? processId, bool hienChrome)
+        {
+            if (!processId.HasValue)
+            {
+                return false;
+            }
+
+            IntPtr cuaSoChrome = TimCuaSoChromeTheoProcessId(processId.Value);
+            if (cuaSoChrome == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            if (hienChrome)
+            {
+                ShowWindow(cuaSoChrome, SW_RESTORE);
+                ShowWindow(cuaSoChrome, SW_SHOW);
+                SetForegroundWindow(cuaSoChrome);
+                return true;
+            }
+
+            ShowWindow(cuaSoChrome, SW_HIDE);
+            return true;
         }
 
         public static int TryCloseAndCleanupSessionsByUid(string uid)
@@ -184,6 +260,47 @@ namespace DANG_NHAP_FACEBOOK
             {
                 return false;
             }
+        }
+
+        private static IntPtr TimCuaSoChromeTheoProcessId(int processId)
+        {
+            try
+            {
+                using Process process = Process.GetProcessById(processId);
+                for (int i = 0; i < 8; i++)
+                {
+                    process.Refresh();
+                    if (process.MainWindowHandle != IntPtr.Zero)
+                    {
+                        return process.MainWindowHandle;
+                    }
+
+                    Thread.Sleep(150);
+                }
+            }
+            catch
+            {
+            }
+
+            IntPtr ketQua = IntPtr.Zero;
+            EnumWindows((hWnd, _) =>
+            {
+                GetWindowThreadProcessId(hWnd, out uint pid);
+                if (pid != processId)
+                {
+                    return true;
+                }
+
+                if (GetWindow(hWnd, GW_OWNER) != IntPtr.Zero)
+                {
+                    return true;                                                             // Chỉ lấy cửa sổ top-level thật của tiến trình Chrome để tránh đụng popup con
+                }
+
+                ketQua = hWnd;
+                return false;
+            }, IntPtr.Zero);
+
+            return ketQua;
         }
 
         private static bool ThuXoaSessionPath(string sessionPath)

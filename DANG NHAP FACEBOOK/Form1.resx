@@ -426,7 +426,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;dataGridView1.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>13</value>
   </data>
   <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
@@ -516,7 +516,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;statusStrip1.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>12</value>
   </data>
   <data name="lblTieuDe.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -546,7 +546,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;lblTieuDe.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="btnDangNhap.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
@@ -583,7 +583,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btnDangNhap.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <data name="btnTiepTuc.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -619,7 +619,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btnTiepTuc.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="lblUserAgent.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -646,7 +646,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;lblUserAgent.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="cboUserAgent.Location" type="System.Drawing.Point, System.Drawing">
     <value>118, 109</value>
@@ -670,7 +670,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;cboUserAgent.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="lblChonGiaoDien.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -700,7 +700,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;lblChonGiaoDien.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="cboUrl.Items" xml:space="preserve">
     <value>https://www.facebook.com/login/identify?ctx=login&amp;next=%2Fx%2Fcheckpoint%2Fhacked_cleanup%2F%3Freason%3Dlogin_handler_hacked_cookie%26next_uri%3Dhttps%253A%252F%252Fwww.facebook.com%252FMeta%252F%26ext%3D1773533442%26hash%3DAecIGFX7AEgkcVwgKuGIKSPSDwo&amp;lwv=120&amp;lwc=1348131</value>
@@ -733,7 +733,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;cboUrl.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="btnXoa.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -766,13 +766,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btnXoa.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="lblDanhSach.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9pt</value>
   </data>
   <data name="lblDanhSach.Location" type="System.Drawing.Point, System.Drawing">
-    <value>623, 67</value>
+    <value>399, 69</value>
   </data>
   <data name="lblDanhSach.Size" type="System.Drawing.Size, System.Drawing">
     <value>180, 23</value>
@@ -782,6 +782,9 @@
   </data>
   <data name="lblDanhSach.Text" xml:space="preserve">
     <value>Số Lượng DS :</value>
+  </data>
+  <data name="lblDanhSach.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>BottomLeft</value>
   </data>
   <data name="lblDanhSach.ToolTip" xml:space="preserve">
     <value>Danh sách tài khoản đã nạp</value>
@@ -796,7 +799,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;lblDanhSach.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>373, 17</value>
@@ -829,6 +832,33 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btnStop.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="chkTatMo.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkTatMo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>233, 73</value>
+  </data>
+  <data name="chkTatMo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>117, 19</value>
+  </data>
+  <data name="chkTatMo.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="chkTatMo.Text" xml:space="preserve">
+    <value>Ẩn/Hiện Chrome</value>
+  </data>
+  <data name="&gt;&gt;chkTatMo.Name" xml:space="preserve">
+    <value>chkTatMo</value>
+  </data>
+  <data name="&gt;&gt;chkTatMo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkTatMo.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;chkTatMo.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">

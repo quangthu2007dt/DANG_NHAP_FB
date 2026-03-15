@@ -1,9 +1,9 @@
 {
     "appName":  "DANG NHAP FACEBOOK V2",
     "channel":  "stable",
-    "latestVersion":  "V2.57",
+    "latestVersion":  "V2.58",
     "releaseDate":  "2026-03-15",
-    "packageFileName":  "DANG_NHAP_FACEBOOK_V2_57.zip",
-    "packageUrl":  "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/v2/session-runtime/release/stable/DANG_NHAP_FACEBOOK_V2_57.zip",
-    "notes":  "Phat hanh V2.57 bo delay tu dang nhap va giu nguyen tick khi mo Chrome thu cong."
+    "packageFileName":  "DANG_NHAP_FACEBOOK_V2_58.zip",
+    "packageUrl":  "https://raw.githubusercontent.com/quangthu2007dt/DANG_NHAP_FB/v2/session-runtime/release/stable/DANG_NHAP_FACEBOOK_V2_58.zip",
+    "notes":  "Phat hanh V2.58 them su kien an hien Chrome theo checkbox va cap nhat trang thai dang nhap chi tiet hon."
 }
