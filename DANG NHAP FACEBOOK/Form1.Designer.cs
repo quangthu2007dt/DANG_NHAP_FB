@@ -489,7 +489,7 @@
             // 
             cboUrl.DropDownStyle = ComboBoxStyle.DropDownList;
             cboUrl.FormattingEnabled = true;
-            cboUrl.Items.AddRange(new object[] { resources.GetString("cboUrl.Items"), resources.GetString("cboUrl.Items1") });
+            cboUrl.Items.AddRange(new object[] { resources.GetString("cboUrl.Items"), resources.GetString("cboUrl.Items1"), resources.GetString("cboUrl.Items2") });
             resources.ApplyResources(cboUrl, "cboUrl");
             cboUrl.Name = "cboUrl";
             ttMain.SetToolTip(cboUrl, resources.GetString("cboUrl.ToolTip"));

@@ -19,6 +19,8 @@ namespace DANG_NHAP_FACEBOOK
         private const string facebookDesktopUserAgentMacDinh = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36";
         private const string mobileUserAgentMacDinh = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36";
         private const string metaDesktopUserAgentMacDinh = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36";
+        private const string urlFacebookMetaMacDinh = "https://facebook.com/meta";
+        private const string urlFacebookLoginIdentifyMacDinh = "https://www.facebook.com/login/identify?ctx=login&next=%2Fx%2Fcheckpoint%2Fhacked_cleanup%2F%3Freason%3Dlogin_handler_hacked_cookie%26next_uri%3Dhttps%253A%252F%252Fwww.facebook.com%252FMeta%252F%26ext%3D1773533442%26hash%3DAecIGFX7AEgkcVwgKuGIKSPSDwo&lwv=120&lwc=1348131";
         private const int soGiayChoMoPhienMoi = 5;
         private const int khoangNghiSauKhiDongChromeMs = 500;
         private const int khoangNghiNhinKetQuaTruocKhiDongChromeMs = 5000;
@@ -1655,20 +1657,72 @@ namespace DANG_NHAP_FACEBOOK
             }
         }
         //
+        //  HÀM NHẬN DIỆN GIAO DIỆN URL ĐẶC BIỆT
+        //
+        private static bool LaLuaChonFacebookLoginIdentify(string? giaTri)
+        {
+            return !string.IsNullOrWhiteSpace(giaTri) &&
+                giaTri.Contains("login/identify", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool LaLuaChonFacebookMeta(string? giaTri)
+        {
+            return !string.IsNullOrWhiteSpace(giaTri) &&
+                giaTri.Contains("facebook.com/meta", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool LaGiaoDienXuLyNhuMeta(string? giaTri)
+        {
+            return LaLuaChonFacebookMeta(giaTri) || LaLuaChonFacebookLoginIdentify(giaTri);
+        }
+
+        private static bool LaUrlTabPhuHopVoiGiaoDienDangChon(string urlTab, string urlCanMo)
+        {
+            if (string.IsNullOrWhiteSpace(urlTab) || string.IsNullOrWhiteSpace(urlCanMo))
+            {
+                return false;                                                                 // Thiếu URL nguồn hoặc URL đích thì chưa thể kết luận tab hiện tại có đúng giao diện đang chọn hay không
+            }
+
+            if (urlTab.Contains(urlCanMo, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;                                                                  // Nếu tab đang mở chứa trọn URL cần mở thì ưu tiên dùng ngay vì đây là trường hợp khớp chắc chắn nhất
+            }
+
+            if (LaLuaChonFacebookLoginIdentify(urlCanMo) && LaLuaChonFacebookLoginIdentify(urlTab))
+            {
+                return true;                                                                  // Link login/identify có thể đổi query khi redirect nên chỉ cần nhận ra đúng luồng khôi phục tài khoản là đủ
+            }
+
+            if (LaLuaChonFacebookMeta(urlCanMo) && LaLuaChonFacebookMeta(urlTab))
+            {
+                return true;                                                                  // Giao diện meta đôi khi thêm slash hoặc redirect nhẹ, nên so theo mẫu URL sẽ bền hơn so với so chuỗi tuyệt đối
+            }
+
+            return urlCanMo.Contains("m.facebook.com", StringComparison.OrdinalIgnoreCase) &&
+                urlTab.Contains("m.facebook.com", StringComparison.OrdinalIgnoreCase);        // Mobile cũng có thể nhảy qua vài path phụ nên chỉ cần giữ đúng host m.facebook là đủ để bắt tab
+        }
+        //
         //  HÀM LẤY URL FACEBOOK ĐANG CHỌN
         //
         private string LayUrlFacebookDaChon()
         {
             string luaChon = cboUrl.SelectedItem?.ToString()?.Trim() ?? string.Empty;         // Lấy nội dung người dùng đang chọn trong combobox giao diện
 
+            if (LaLuaChonFacebookLoginIdentify(luaChon))
+            {
+                return luaChon.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                    ? luaChon
+                    : urlFacebookLoginIdentifyMacDinh;                                        // Nếu combobox đang chứa URL khôi phục tài khoản thì mở đúng chính link đó như một lựa chọn riêng
+            }
+
             if (luaChon.Contains("m.facebook", StringComparison.OrdinalIgnoreCase))
             {
                 return "https://m.facebook.com/";                                              // Nếu chọn giao diện mobile thì mở đúng URL mobile
             }
 
-            if (luaChon.Contains("meta", StringComparison.OrdinalIgnoreCase))
+            if (LaLuaChonFacebookMeta(luaChon))
             {
-                return "https://facebook.com/meta";                                            // Nếu chọn giao diện meta thì mở đúng URL meta
+                return urlFacebookMetaMacDinh;                                                 // Nếu chọn giao diện meta thì mở đúng URL meta
             }
 
             return "https://facebook.com/";                                                    // Mặc định còn lại sẽ mở giao diện Facebook thông thường
@@ -1697,9 +1751,9 @@ namespace DANG_NHAP_FACEBOOK
                 return mobileUserAgentMacDinh;                                                 // Giao diện mobile luôn phải ép UA mobile thì Facebook mới chịu giữ giao diện m.facebook
             }
 
-            if (urlCanMo.Contains("facebook.com/meta", StringComparison.OrdinalIgnoreCase))
+            if (LaGiaoDienXuLyNhuMeta(urlCanMo))
             {
-                return metaDesktopUserAgentMacDinh;                                            // Meta sẽ dùng một UA desktop cố định để mình còn lưu lại và test ổn định hơn
+                return metaDesktopUserAgentMacDinh;                                            // Meta và login/identify cùng dùng một UA desktop cố định để giữ hành vi ổn định hơn
             }
 
             return LayUserAgentFacebookThuongDangChon();                                       // Facebook thường phải lấy đúng UA đang chọn trên combobox thì mới đúng ý đồ test của app
@@ -1745,7 +1799,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
             }
 
             string script = TaoScriptTuDongDienDangNhap(uid, password);                        // Tạo script JavaScript để tìm ô email/password và đổ giá trị vào đúng cách của trình duyệt
-            int soLanThuToiDa = urlCanMo.Contains("meta", StringComparison.OrdinalIgnoreCase) ? 40 : 25; // Giao diện meta thường render chậm hơn nên cho phép thử nhiều lần hơn
+            int soLanThuToiDa = LaGiaoDienXuLyNhuMeta(urlCanMo) ? 40 : 25;                    // Meta và login/identify thường render chậm hơn nên cho phép thử nhiều lần hơn
 
             for (int i = 0; i < soLanThuToiDa; i++)
             {
@@ -1814,9 +1868,9 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
                     continue;
                 }
 
-                if (url.Contains(urlCanMo, StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(webSocketDebuggerUrl))
+                if (LaUrlTabPhuHopVoiGiaoDienDangChon(url, urlCanMo) && !string.IsNullOrWhiteSpace(webSocketDebuggerUrl))
                 {
-                    return webSocketDebuggerUrl;                                               // Ưu tiên đúng tab của giao diện đang chọn, đặc biệt quan trọng với facebook.com/meta
+                    return webSocketDebuggerUrl;                                               // Ưu tiên đúng tab của giao diện đang chọn, đặc biệt quan trọng với meta và login/identify
                 }
 
                 if (!string.IsNullOrWhiteSpace(webSocketDebuggerUrl))
