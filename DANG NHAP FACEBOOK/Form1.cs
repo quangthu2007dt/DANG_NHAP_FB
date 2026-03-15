@@ -1688,9 +1688,12 @@ namespace DANG_NHAP_FACEBOOK
             int chieuCaoCuaSo = Math.Min(vungLamViec.Height, Math.Max(760, (int)(vungLamViec.Height * 0.88)));
             int viTriX = vungLamViec.Left;                                                    // Neo sát mép trái màn hình để chừa khoảng trống bên phải cho người dùng theo dõi app
             int viTriY = Math.Max(0, (vungLamViec.Height - chieuCaoCuaSo) / 2);
+            bool moChromeTrongCheDoAn = chkTatMo.Checked;
 
             string thamSoChanPopupChrome = "--disable-notifications --disable-save-password-bubble --disable-session-crashed-bubble --disable-features=PasswordManagerOnboarding,Translate";
-            string thamSoKichThuocCuaSo = $"--window-size={chieuRongCuaSo},{chieuCaoCuaSo} --window-position={viTriX},{viTriY}";
+            string thamSoKichThuocCuaSo = moChromeTrongCheDoAn
+                ? $"--window-size={chieuRongCuaSo},{chieuCaoCuaSo} --window-position=-32000,-32000 --start-minimized" // Mode ẩn phải mở Chrome ra ngoài vùng nhìn thấy ngay từ đầu để tránh nhá cửa sổ rồi mới Hide
+                : $"--window-size={chieuRongCuaSo},{chieuCaoCuaSo} --window-position={viTriX},{viTriY}";
             string arguments = $"--new-window {thamSoKichThuocCuaSo} --remote-debugging-port={congDebugChrome} --user-data-dir=\"{session.SessionPath}\" {thamSoUserAgent} {thamSoChanPopupChrome} {urlCanMo}".Trim();
 
             try
@@ -1699,12 +1702,12 @@ namespace DANG_NHAP_FACEBOOK
                 GhiLaiUserAgentDangDung(urlCanMo, userAgentDangDung);
                 System.Diagnostics.Process chromeProcess = SessionRuntimeService.LaunchChromeForSession(session, chromeExe, arguments);
                 congDebugTheoUid[uid] = congDebugChrome;
-                if (chkTatMo.Checked)
+                if (moChromeTrongCheDoAn)
                 {
                     _ = SessionRuntimeService.ThuDatTrangThaiAnHienChromeTheoProcessId(chromeProcess.Id, hienChrome: false); // Checkbox Ẩn/Hiện Chrome trong thiết kế mới phải tác động ngay cả với các cửa sổ Chrome vừa mở sau này
                 }
 
-                string moTaCheDoAnChrome = chkTatMo.Checked ? " ở chế độ ẩn Chrome" : string.Empty;
+                string moTaCheDoAnChrome = moChromeTrongCheDoAn ? " ở chế độ ẩn Chrome" : string.Empty;
                 CapNhatTrangThaiChiTietTheoUid(uid, $"Chrome đã khởi chạy{moTaCheDoAnChrome}, đang chờ tab Facebook sẵn sàng cho lần đăng nhập 1...", "Lần 1: chờ tab Facebook", Color.DarkGoldenrod);
                 _ = TuDongDienThongTinDangNhapAsync(congDebugChrome, urlCanMo, uid, password, cheDo);
             }

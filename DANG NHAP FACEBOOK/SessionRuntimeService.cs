@@ -1,7 +1,9 @@
 using System.Diagnostics;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows.Forms;
 
 namespace DANG_NHAP_FACEBOOK
 {
@@ -28,6 +30,9 @@ namespace DANG_NHAP_FACEBOOK
 
         [DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        private static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
 
         public static SessionModel CreateSessionFromTemplate(string uid)
         {
@@ -120,6 +125,7 @@ namespace DANG_NHAP_FACEBOOK
 
             if (hienChrome)
             {
+                DuaCuaSoChromeVeManHinhChinh(cuaSoChrome);
                 ShowWindow(cuaSoChrome, SW_RESTORE);
                 ShowWindow(cuaSoChrome, SW_SHOW);
                 SetForegroundWindow(cuaSoChrome);
@@ -301,6 +307,17 @@ namespace DANG_NHAP_FACEBOOK
             }, IntPtr.Zero);
 
             return ketQua;
+        }
+
+        private static void DuaCuaSoChromeVeManHinhChinh(IntPtr cuaSoChrome)
+        {
+            Rectangle vungLamViec = Screen.PrimaryScreen?.WorkingArea ?? new Rectangle(0, 0, 1200, 900);
+            int chieuRongCuaSo = Math.Min(vungLamViec.Width, Math.Max(1000, (int)(vungLamViec.Width * 0.75)));
+            int chieuCaoCuaSo = Math.Min(vungLamViec.Height, Math.Max(760, (int)(vungLamViec.Height * 0.88)));
+            int viTriX = vungLamViec.Left;
+            int viTriY = Math.Max(vungLamViec.Top, vungLamViec.Top + (vungLamViec.Height - chieuCaoCuaSo) / 2);
+
+            MoveWindow(cuaSoChrome, viTriX, viTriY, chieuRongCuaSo, chieuCaoCuaSo, true);    // Khi hiện lại từ mode ẩn thì kéo hẳn cửa sổ về vùng nhìn thấy thay vì chỉ ShowWindow trên vị trí off-screen cũ
         }
 
         private static bool ThuXoaSessionPath(string sessionPath)
