@@ -21,6 +21,7 @@ namespace DANG_NHAP_FACEBOOK
         private const string metaDesktopUserAgentMacDinh = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36";
         private const string urlFacebookMetaMacDinh = "https://facebook.com/meta";
         private const string urlFacebookLoginIdentifyMacDinh = "https://www.facebook.com/login/identify?ctx=login&next=%2Fx%2Fcheckpoint%2Fhacked_cleanup%2F%3Freason%3Dlogin_handler_hacked_cookie%26next_uri%3Dhttps%253A%252F%252Fwww.facebook.com%252FMeta%252F%26ext%3D1773533442%26hash%3DAecIGFX7AEgkcVwgKuGIKSPSDwo&lwv=120&lwc=1348131";
+        private const int doTreAnToanMoiHanhDongMs = 3000;
         private const int soGiayChoMoPhienMoi = 5;
         private const int khoangNghiSauKhiDongChromeMs = 500;
         private const int khoangNghiNhinKetQuaTruocKhiDongChromeMs = 5000;
@@ -1927,7 +1928,8 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
             using JsonDocument ketQua = await GuiLenhCdpAsync(webSocket, "Runtime.evaluate", new
             {
                 expression = script,
-                returnByValue = true
+                returnByValue = true,
+                awaitPromise = true
             });
 
             if (!ketQua.RootElement.TryGetProperty("result", out JsonElement resultElement))
@@ -2174,11 +2176,14 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         {
             string uidJson = JsonSerializer.Serialize(uid);
             string passwordJson = JsonSerializer.Serialize(password);
+            string doTreAnToanMoiHanhDongMsJson = JsonSerializer.Serialize(doTreAnToanMoiHanhDongMs);
 
             return $$"""
-(() => {
+((async () => {
   const uid = {{uidJson}};
   const password = {{passwordJson}};
+  const doTreAnToanMoiHanhDongMs = {{doTreAnToanMoiHanhDongMsJson}};
+  const choAnToan = () => new Promise((resolve) => window.setTimeout(resolve, doTreAnToanMoiHanhDongMs));
 
   const isVisible = (el) => !!(el && (el.offsetWidth || el.offsetHeight || el.getClientRects().length));
   const firstVisibleInRoot = (root, selectors) => {
@@ -2449,6 +2454,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     return 'wait';
   }
 
+  await choAnToan();
   dongPopupCanTro(document);
   if (rootChuaForm && rootChuaForm !== document) {
     dongPopupCanTro(rootChuaForm);
@@ -2521,15 +2527,19 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     return true;
   };
 
+  await choAnToan();
   setNativeValue(emailInput, uid);
+  await choAnToan();
   setNativeValue(passwordInput, password);
+  await choAnToan();
   dongPopupCanTro(document);
   if (rootChuaForm && rootChuaForm !== document) {
     dongPopupCanTro(rootChuaForm);
   }
+  await choAnToan();
   submitLogin();
   return 'ok';
-})();
+})());
 """;
         }
 
