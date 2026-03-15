@@ -21,7 +21,6 @@ namespace DANG_NHAP_FACEBOOK
         private const string metaDesktopUserAgentMacDinh = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36";
         private const string urlFacebookMetaMacDinh = "https://facebook.com/meta";
         private const string urlFacebookLoginIdentifyMacDinh = "https://www.facebook.com/login/identify?ctx=login&next=%2Fx%2Fcheckpoint%2Fhacked_cleanup%2F%3Freason%3Dlogin_handler_hacked_cookie%26next_uri%3Dhttps%253A%252F%252Fwww.facebook.com%252FMeta%252F%26ext%3D1773533442%26hash%3DAecIGFX7AEgkcVwgKuGIKSPSDwo&lwv=120&lwc=1348131";
-        private const int doTreAnToanMoiHanhDongMs = 3000;
         private const int soGiayChoMoPhienMoi = 5;
         private const int khoangNghiSauKhiDongChromeMs = 500;
         private const int khoangNghiNhinKetQuaTruocKhiDongChromeMs = 5000;
@@ -500,7 +499,7 @@ namespace DANG_NHAP_FACEBOOK
                 CapNhatTrangThaiDongTheoUid(uid, trangThaiDong);                               // Grid luôn phải được cập nhật trước để người dùng nhìn thấy kết quả ngay trên dòng đang xử lý
             }
 
-            DanhDauDongDaXuLyTrongBatch(uid, cheDo);                                           // Batch tick phải bỏ check ngay khi dòng đã có kết quả cuối để lần sau không chạy lại dòng cũ
+            DanhDauDongDaXuLyTrongBatch(uid, cheDo);                                           // Batch Đăng nhập sẽ bỏ tick khi có kết quả cuối; mở Chrome thì giữ nguyên checkbox để người dùng theo dõi tiếp
 
             if (LaCheDoCanChayTiepSauKetQua(cheDo) || LaCheDoCanDongChromeSauKetQua(cheDo))
             {
@@ -1587,7 +1586,7 @@ namespace DANG_NHAP_FACEBOOK
             if (!TaoSessionTuProfileMau(uid, out SessionModel session))
             {
                 CapNhatTrangThaiDongTheoUid(uid, "Lỗi tạo phiên");
-                DanhDauDongDaXuLyTrongBatch(uid, cheDo);                                      // Không tạo được phiên thì coi như dòng này đã xử lý xong và bỏ tick để batch đi tiếp
+                DanhDauDongDaXuLyTrongBatch(uid, cheDo);                                      // Không tạo được phiên thì đánh dấu xong dòng hiện tại theo đúng quy ước của mode đang chạy
                 CapNhatTrangThai($"Bỏ qua UID {uid}: không tạo được phiên tạm.", Color.Firebrick);
                 DieuPhoiBuocTiepTheoSauKetQua(cheDo);
                 return;
@@ -1928,8 +1927,7 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
             using JsonDocument ketQua = await GuiLenhCdpAsync(webSocket, "Runtime.evaluate", new
             {
                 expression = script,
-                returnByValue = true,
-                awaitPromise = true
+                returnByValue = true
             });
 
             if (!ketQua.RootElement.TryGetProperty("result", out JsonElement resultElement))
@@ -2176,14 +2174,11 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
         {
             string uidJson = JsonSerializer.Serialize(uid);
             string passwordJson = JsonSerializer.Serialize(password);
-            string doTreAnToanMoiHanhDongMsJson = JsonSerializer.Serialize(doTreAnToanMoiHanhDongMs);
 
             return $$"""
-((async () => {
+(() => {
   const uid = {{uidJson}};
   const password = {{passwordJson}};
-  const doTreAnToanMoiHanhDongMs = {{doTreAnToanMoiHanhDongMsJson}};
-  const choAnToan = () => new Promise((resolve) => window.setTimeout(resolve, doTreAnToanMoiHanhDongMs));
 
   const isVisible = (el) => !!(el && (el.offsetWidth || el.offsetHeight || el.getClientRects().length));
   const firstVisibleInRoot = (root, selectors) => {
@@ -2454,7 +2449,6 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     return 'wait';
   }
 
-  await choAnToan();
   dongPopupCanTro(document);
   if (rootChuaForm && rootChuaForm !== document) {
     dongPopupCanTro(rootChuaForm);
@@ -2527,19 +2521,15 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
     return true;
   };
 
-  await choAnToan();
   setNativeValue(emailInput, uid);
-  await choAnToan();
   setNativeValue(passwordInput, password);
-  await choAnToan();
   dongPopupCanTro(document);
   if (rootChuaForm && rootChuaForm !== document) {
     dongPopupCanTro(rootChuaForm);
   }
-  await choAnToan();
   submitLogin();
   return 'ok';
-})());
+})();
 """;
         }
 
@@ -3121,9 +3111,9 @@ User-Agent: {(string.IsNullOrWhiteSpace(userAgentDangDung) ? "Dùng User-Agent m
 
         private void DanhDauDongDaXuLyTrongBatch(string uid, CheDoDieuPhoiPhien cheDo)
         {
-            if (!LaCheDoChayTiepTheoDanhSachDaTick(cheDo) || string.IsNullOrWhiteSpace(uid))
+            if (cheDo != CheDoDieuPhoiPhien.DangNhapDanhSachDaTick || string.IsNullOrWhiteSpace(uid))
             {
-                return;                                                                        // Chỉ batch các dòng đã tick mới cần tự bỏ check khi hoàn tất một dòng
+                return;                                                                        // Chỉ batch Đăng nhập mới tự bỏ tick; mở Chrome thủ công phải giữ nguyên dòng đang chọn
             }
 
             BoTickDongTheoUid(uid);
